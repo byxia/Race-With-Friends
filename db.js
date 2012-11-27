@@ -1,4 +1,4 @@
-var dbError = function(msg){
+function dbError(msg){
   console.log("------------Database Error Report Begins------------");
   console.log("Message: " + msg);
   console.log("Time   :"  + new Date());
@@ -12,6 +12,19 @@ var mongo = require('mongodb'),
 
 var server = new Server('localhost', 27017, {auto_reconnect: true});
 var db = new Db('exampleDb', server,{ w : 1});
+
+db.open(function(err, db) {
+  
+  if(!err) {
+    console.log("We are connected");
+
+
+  }
+  else{
+    dbError("Error occured in db.open(): \n" + err);
+  }
+
+});
 
 
 /*====TABLE (Collection) NAMES =====*/
@@ -36,8 +49,10 @@ function createTable(tableName){
 
 function dropTable(tableName){
   if(!validString(tableName)){
-
+    dbError("Invalid table name : " + tableName + " in dropTable()");
+    return;
   }
+
 }
 
 
@@ -53,14 +68,3 @@ function isNull(obj){
           || obj === undefined || obj === null;
 }
 
-db.open(function(err, db) {
-	
-  if(!err) {
-    console.log("We are connected");
-  }
-  else{
-  	console.log("==ERROR==");
-  	console.log(err);
-  }
-  console.log(db);
-});
