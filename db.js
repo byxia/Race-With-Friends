@@ -58,6 +58,11 @@ db.once('open', function callback () {
     first_name : "Zi",
     last_name : "Wang"
   });
+  getAllUsers(log);
+  // creatUser({
+  //   first_name : "ZiZ",
+  //   last_name : "WangZ"
+  // },log);
   
   // USER.find({_id: "50b42d98a7df94501f000001"},function(err,user){
   //   log(user);
@@ -94,43 +99,147 @@ db.once('open', function callback () {
 });
 
 
-/*====CRUD Ops====*/
+/*====CRUD Ops for USER====*/
 
-function getAllUsers(successCallback,errorCallback){
+function getAllUsers(successCallback){
   if(isNull(USER)){
     dbError("No database connection or no user schema defined.");
-    errorCallback("No database connection or no user schema defined.");
   }
   USER.find(function(err,users){
     if(err){
-        errorCallback(err);
+        dbError(err);
     }
-    else{
+    else if(successCallback){
         successCallback(users);
     }
   });
 }
 
-function getUserById(id,successCallback,errorCallback){
+function getUserById(id,successCallback){
   if(isNull(id) || !validString(id)){
     dbError("Invalid id provided to getUserById().");
-    errorCallback("Invalid id provided to getUserById().");
     return;
   }
   if(isNull(USER)){
     dbError("No database connection or no user schema defined.");
-    errorCallback("No database connection or no user schema defined.");
     return;
   }
   USER.find({_id : id},function(err,user){
     if(err){
-      errorCallback(err);
+      dbError(err);
     }
-    else{
+    else if(successCallback){
       successCallback(user);
     }
   });
 }
+
+/*
+* Insert the given user into the database
+* user is an object that matches USER_SCHEMA
+*/
+function creatUser(user){
+  if(isNull(USER) || isNull(user)){
+    dbError("No user schema defined or no user is provided in creatUser()");
+    return;
+  }
+  var newUser  = new USER(user);
+  newUser.save(function(err){
+    if(err){
+      dbError(err);
+    }
+  });
+}
+
+/*
+* Remove the user with the given _id 
+*/
+function removeUser(id, callback){
+  if(!validString(id)){
+    dbError("Invalid user id provided to removeUser()");
+    return;
+  }
+  if(isNull(USER)){
+    dbError("No database connection or no user schema defined.");
+    return;
+  }
+  USER.remove({_id : id},function(err){
+    if(err){
+      dbError(err);
+    }
+    else if(callback){
+      callback();
+    }
+  });
+}
+
+
+
+/*====CRUD Ops for RACE====*/
+function getAllRaces(callback){
+  if(isNull(RACE)){
+    dbError("No database connection or no race schema defined.");
+    return;
+  }
+  RACE.find(function(err,races){
+    if(err){
+      dbError(err);
+    }
+    else if(callback){
+      callback(races);
+    }
+  });
+}
+
+function getRaceById(id,successCallback){
+  if(isNull(id) || !validString(id)){
+    dbError("Invalid id provided to getRaceById().");
+    return;
+  }
+  if(isNull(RACE)){
+    dbError("No database connection or no user schema defined.");
+    return;
+  }
+  RACE.find({_id : id},function(err,race){
+    if(err){
+      dbError(err);
+    }
+    else if(successCallback){
+      successCallback(race);
+    }
+  });  
+}
+
+function createRace(race){
+  if(isNull(race) || isNull(RACE)){
+    dbError("No race schema defined or no race is provided in createRace()");
+    return;
+  }
+  var newRace = new RACE(race);
+  newRace.save(function(err){
+    dbError(err);
+  });
+}
+
+function removeRace(id, callback){
+  if(!validString(id)){
+    dbError("Invalid user id provided to removeRace()");
+    return;
+  }
+  if(isNull(RACE)){
+    dbError("No database connection or no race schema defined.");
+    return;
+  }
+  RACE.remove({_id : id},function(err){
+    if(err){
+      dbError(err);
+    }
+    else if(callback){
+      callback();
+    }
+  });  
+}
+
 
 
 
