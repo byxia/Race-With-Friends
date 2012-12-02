@@ -1,0 +1,131 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page">
+	<div data-role="header"><h1>Race With Friends</h1></div>
+	<div data-role="content">
+		<ul data-role="listview" data-dividertheme="f" class="race-list">
+			<li data-role="list-divider">Waiting for Your Run</li>
+
+			<li>
+				<div class="ui-grid-c">
+					<div class="ui-block-a">
+						<div class="person">
+							<img class="avatar"></img>
+							<div class="name">Luke S.</div>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div class="info">
+							2.3mi run<br/>
+							4mi away
+						</div>
+					</div>
+					<div class="ui-block-c">
+						<div class="btn">
+							<a href="details.html" data-role="button">Details</a>
+						</div>
+					</div>
+					<div class="ui-block-d">
+						<div class="btn">
+							<a href="race.html" data-role="button" data-theme="f">Race!</a>
+						</div>
+					</div>
+				</div>
+			</li>
+
+			<li>
+				<div class="ui-grid-c">
+					<div class="ui-block-a">
+						<div class="person">
+							<img class="avatar"></img>
+							<div class="name">Luke S.</div>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div class="info">
+							2.3mi run<br/>
+							4mi away
+						</div>
+					</div>
+					<div class="ui-block-c">
+						<div class="btn">
+							<a href="details.html" data-role="button">Details</a>
+						</div>
+					</div>
+					<div class="ui-block-d">
+						<div class="btn">
+							<a href="race.html" data-role="button" data-theme="f">Race!</a>
+						</div>
+					</div>
+				</div>
+			</li>
+
+		</ul>
+		<ul data-role="listview" data-dividertheme="g" class="race-list">
+			<li data-role="list-divider">Waiting for Their Run</li>
+			<li>
+				<div class="ui-grid-c">
+					<div class="ui-block-a">
+						<div class="person">
+							<img class="avatar"></img>
+							<div class="name">Luke S.</div>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<div class="info">
+							2.3mi run<br/>
+							4mi away
+						</div>
+					</div>
+					<div class="ui-block-c">
+						<div class="btn">
+							<a href="details.html" data-role="button">Details</a>
+						</div>
+					</div>
+					<div class="ui-block-d">
+						<div class="btn">
+							<a href="race.html" data-role="button" data-theme="g">Cancel</a>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+
+		<div id="newbtn-wrapper">
+			<a href="new.html" data-role="button" data-icon="new" data-theme="e" id="new-btn">Start New Race</a>
+		</div>
+	</div>
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="" data-transition="slide"  class="ui-btn-active ui-state-persist" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="verify-link" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html" data-transition="slide" class="info-link" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>

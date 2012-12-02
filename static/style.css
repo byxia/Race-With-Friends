@@ -1,0 +1,234 @@
+/* FONTS */
+
+@font-face {
+    font-family: 'Museo';
+    src: url('fonts/Museo300-Regular.otf') format('opentype');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Museo';
+    src: url('fonts/Museo500-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*@font-face {
+    font-family: 'MuseoSans';
+    src: url('fonts/MuseoSans_500.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}*/
+
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTS55F.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTS75F.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+#login-btn, .ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c{
+	font-family: 'PTSans', sans-serif;
+}
+
+.ui-btn-text{
+	font-family: 'PTSans', sans-serif;
+}
+
+.ui-navbar .ui-btn-text{
+	font-family: 'Museo', sans-serif;
+}
+
+
+
+/* BASICS */
+
+.ui-content .ui-listview{
+	margin-bottom: 15px;
+}
+
+.ui-btn-corner-all{
+	border-radius: 10px;
+}
+
+.ui-btn-inner{
+	padding: 8px 5px;
+}
+
+.ui-btn-icon-right .ui-btn-inner {
+	padding-right: 5px;
+}
+
+.ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
+padding: .4em 15px;
+display: block;
+}
+
+.ui-grid-c{
+	padding-top: -20px;
+}
+
+/* HEADER */
+
+.ui-header .ui-title, .ui-footer .ui-title {
+	margin: .6em 0px !important;
+}
+
+.ui-title{
+	font-size: 20px !important;
+	text-overflow: ellipsis;
+	overflow: visible;
+	white-space: normal !important;
+	margin: none !important;
+}
+
+.ui-header:after{
+	content: '';
+	display: block;
+	height: 12px;
+	width: 100%;
+	background: url('images/checker.png') top left repeat-x;
+}
+
+
+/* LOGIN */
+
+#login{
+	background: #dc2511; /* Old browsers */
+	background:url('images/noise.png'),  -moz-linear-gradient(top, #dc2511 0%, #6f0000 100%); 
+	background:url('images/noise.png'),  -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dc2511), color-stop(100%,#6f0000)); 
+	background:url('images/noise.png'),  -webkit-linear-gradient(top, #dc2511 0%,#6f0000 100%);
+	background:url('images/noise.png'),  -o-linear-gradient(top, #dc2511 0%,#6f0000 100%);
+	background:url('images/noise.png'),  -ms-linear-gradient(top, #dc2511 0%,#6f0000 100%); 
+	background:url('images/noise.png'),  linear-gradient(to bottom, #dc2511 0%,#6f0000 100%); 
+}
+
+.checker-bar{
+	height: 12px;
+	background: url('images/checker.png') top left repeat-x;
+}
+
+.checker-bar.bottom{
+	position: absolute;
+	height: 12px;
+	width: 100%;
+	bottom: 0px;
+}
+
+#login .ui-content{
+	background: 
+}
+
+#login h1{
+	color: white;
+	text-shadow: none;
+	text-align: center;
+	font-size: 30px;
+}
+
+#login-logo{
+	width: 245px;
+	height: 167px;
+	background: url('images/logo-large.png');
+	margin: 40px auto 50px auto;
+}
+
+#login-btn-wrapper{
+	width: 260px;
+	margin: auto;
+}
+
+#login-btn-wrapper .ui-btn-inner{
+	padding-left: 50px;
+}
+
+#login-btn{
+/*	padding-left: 10px;*/
+	border-radius: 5px;
+}
+
+.ui-icon-fb {
+	background-image: url("images/icons/fb.png");
+	width: 22px;
+	height: 22px;
+	moz-border-radius : 0 px ; -webkit-border-radius :  0px ; border-radius :  0px ;
+	margin-left: 7px;
+}
+
+.ui-icon-active-races, .ui-icon-finished-races, .ui-icon-profile{
+	background-color: transparent;
+	box-shadow: none;
+	moz-border-radius : 0 px ; -webkit-border-radius :  0px ; border-radius :  0px ;
+}
+
+.ui-icon-active-races {
+	background-image: url("images/icons/active-races.png");
+	width: 20px;
+	height: 19px;
+}
+
+.ui-icon-finished-races {
+	background-image: url("images/icons/finished-races.png");
+	width: 18px;
+	height: 20px;
+}
+
+.ui-icon-profile {
+	background-image: url("images/icons/profile.png");
+	width: 19px;
+	height: 19px;
+}
+
+
+/* active races */
+
+#newbtn-wrapper{
+	width: 250px;
+	margin: auto;
+	margin-top: 30px;
+}
+
+#new-btn{
+	padding: 8px 15px;
+}
+
+.avatar{
+	width: 40px;
+	height: 40px;
+	background: #ccc;
+	display: inline-block;
+	border: 3px solid #fff;
+	box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+}
+
+.race-list .person{
+	color: #990000;
+	font-size: 13px;
+	padding-left: 3px;
+	margin-top: 3px;
+	margin-bottom: 5px;
+}
+
+.race-list .info{
+	color: #555;
+	font-size: 14px;
+	padding-top: 8px;
+	line-height: 26px;
+	margin-left: -10px;
+}
+
+.race-list .btn{
+	padding-top: 6px;
+}
+
+.race-list .ui-btn-inner{
+	font-size: 14px;
+}
