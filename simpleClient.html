@@ -38,55 +38,7 @@
 
     </script>
 
-    <script type="text/javascript">
-
-    function sendAjaxRequest (requestURL, isAsync, onSuccess, onError) {
-        if(isNull(onSuccess) || typeof(onSuccess)!=="function") {
-            onSuccess = function(obj){
-                log(obj);
-            }
-        }
-        if(isNull(onError) || typeof(onError)!=="function"){
-            onError = function(obj){
-                log(obj);
-            }
-        }
-        if(!validString(requestURL)){
-            onError("No url provided to the ajax request.");
-            return;
-        }
-        if(isNull(isAsync)){
-            isAsync = true;
-        }
-        $.ajax({
-            url : requestURL,
-            async : isAsync,
-            timeout : 10000,
-            type : "GET",
-            success: function(data, textStatus, jqXHR) {
-                onSuccess(data);
-            },
-            error: function(jqXHR, textStatus, errorThrown){
-                onError(jqXHR);
-            }
-
-        });
-    }
-
-    /*=====Util=====*/
-    function validString(s){
-      return (!isNull(s)) && typeof(s)==="string" && s.trim().length >0 ;
-    }
-
-    function isNull(obj){
-      return obj == undefined || obj == null
-              || obj === undefined || obj === null;
-    }
-
-    function log(obj){
-      console.log(obj);
-    }
-
+    <script type="text/javascript" src="clientAjax.js">
 
     </script>
     
