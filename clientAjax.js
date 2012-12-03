@@ -3,20 +3,30 @@ var port  = ":8888";
 var url = "http://" + _URL_ + port;
 var DEFAULT_CLIENT_ERR = "An error occurred on the client side.";
 
-var cmdToURL = {
+//a list of command
+var GET_USER_BY_ID = "getUserById";
+var GET_USER_BY_EMAIL = "getUserByEmail";
+var GET_ALL_USERS = "getAllUsers";
+var CREATE_USER = "createUser";
 
 
-};
-
-
-function registerAPI() {
-
+//========================
+//       Ajax Request
+//========================
+function getAllUsers(successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_ALL_USERS),true, successCallback,errorCallback);
 }
 
-
-function createUser (user) {
-	
+function getUserById(id,successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_USER_BY_ID,{_id : id}),
+						successCallback, errorCallback);
 }
+
+function getUserByEmail(userEmail, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_USER_BY_EMAIL,{email:userEmail}),
+						successCallback, errorCallback);
+}
+
 
 
 //======================
@@ -28,10 +38,9 @@ function prepareURL (cmd,obj) {
 		return;
 	}
 	if(isNull(obj)){
-		clientError("No obj given to prepareURL()");
-		return;
+		return "/api/"+cmd;
 	}
-	var ajaxURL = "/"+cmd;
+	var ajaxURL = "/api/"+cmd;
 	var seperator = "?";
 	for(var propertyName in obj){
 		ajaxURL += seperator;

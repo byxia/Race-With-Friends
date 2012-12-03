@@ -10,7 +10,10 @@ var path = require("path");
 var express = require("express");
 var flash = require("connect-flash");
 var errorMsg = "Error occurred in processing the request.";
-var ERROR_OBJ = {error : errorMsg};
+var ERROR_OBJ = {error : errorMsg,
+                 status: 0};
+var SUCCESS_OBJ={status: 1};
+var PORT = 8888;
 var cmdHandler = {};
 var db = mongoose.createConnection('mongodb://localhost/race');
 var app = express();
@@ -33,6 +36,7 @@ var CLIENT_ERR_MSG = errorMsg;
 //======================================
 
 function onStart(){
+    initCommandHandler();
     app.configure(function(){
         app.use(express.cookieParser());
         app.use(express.bodyParser());
@@ -44,19 +48,18 @@ function onStart(){
 
     app.get("/:staticFilename", serveStaticFile);
     app.get("/api/:cmd", handleCommands);
-    app.get("/err/:msg", function(req,res){
+    app.get("/err/:msg", handleClientError);
 
-    });
-
-    app.listen(8888);
+    app.listen(PORT);
 
     process.on("uncaughtException", onUncaughtException);
-
+    console.log("Server started successfully");
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback () {
       console.log("Database Connection Success");
 
       var USER_SCHEMA = new mongoose.Schema({
+        email        : String,
         first_name   : String,
         last_name    : String,
         password     : String,
@@ -92,7 +95,7 @@ function onStart(){
       };
 
       // creatUser(me); 
-      getAllUsers(log,log); 
+      // getAllUsers(log,log); 
     });
 
 
@@ -204,6 +207,10 @@ function getUserById(id,successCallback, errorCallback){
     _readFromUSER_({_id : id},successCallback, errorCallback);
 }
 
+function getUserByEmail(userEmail,successCallback, errorCallback){
+    _readFromUSER_({email : userEmail},successCallback,errorCallback);
+}
+
 function creatUser(user, successCallback, errorCallback){
     _createNewInstance_(USER,user,successCallback,errorCallback,"User model");
 }
@@ -212,11 +219,6 @@ function creatUser(user, successCallback, errorCallback){
 * Remove the user with the given _id 
 */
 function removeUserById(id, successCallback,errorCallback){
-  if(!validString(id)){
-    dbError("Invalid user id provided to removeUser()");
-    errorCallback(CLIENT_ERR_MSG);
-    return;
-  }
   _removeInstance_(USER,{_id : id},successCallback, errorCallback, "User model");
   
 }
@@ -231,6 +233,7 @@ function getAllRaces(successCallback, errorCallback){
 function getRaceById(id,successCallback, errorCallback){
     _readFromRACE_({_id : id}, successCallback, errorCallback); 
 }
+
 
 /*
 *   Get all races owned by user with the given id
@@ -283,23 +286,81 @@ function handleCommands(request, response){
 
     if(isNull(requestQuery)){
         serverErr("Invalid url: " + requestURL +". No query can be parsed.");
-        response.send(ERROR_OBJ);
+        sendErrorObject(response);
         return;
     }
     var cmd = requestQuery.pathname.toString().substring(5);
     var args = querystring.parse(requestQuery.query);
     if(isNull(cmd)){
         serverErr("Invalid ajax request: " + requestURL + ". No command found.");
-        response.send(ERROR_OBJ);
+        sendErrorObject(response);
         return;
     }
     if(isNull(cmdHandler[cmd]) ||
         typeof(cmdHandler[cmd])!=="function"){
         serverErr("Invalid command. Server can't handle command: "+ cmd);
-        response.send(ERROR_OBJ);
+        sendErrorObject(response);
         return;
     }
+
+    console.log("Handling cmd: " + cmd);
     cmdHandler[cmd](args,response);
+}
+
+function initCommandHandler(){
+    cmdHandler.getAllUsers = function(args, response){
+        //no args needed
+        getAllUsers(function(results){response.send(results);},
+             function(){sendErrorObject(response)});
+    };
+
+    cmdHandler.getUserById = function(args,response){
+        if(isNull(args)){
+            serverErr("No args given to cmdHandler.getUserById");
+            sendErrorObject(response);
+            return;
+        }
+        if(!validString(args._id)){
+            serverErr("No _id given to cmdHandler.getUserById");
+            // sendErrorObject(response);
+            response.send(ERROR_OBJ);
+            return;
+        }
+        getUserById(args._id, function(result){response.send(result);},
+            function(){sendErrorObject(response)});
+    };
+
+    cmdHandler.getUserByEmail = function(args, response){
+        if(isNull(args)){
+            serverErr("No args given to cmdHandler.getUserByEmail");
+            sendErrorObject(response);
+            return;
+        }
+        if(!validString(args.email)){
+            serverErr("No email given to cmdHandler.getUserByEmail");
+            sendErrorObject(response);
+            return;
+        }
+        getUserByEmail(args.email, function(result){response.send(result);},
+            function(){sendErrorObject(response)});        
+    };
+
+    cmdHandler.createUser = function(args, response){
+        if(isNull(args)){
+            serverErr("No args given to cmdHandler.createUser");
+            sendErrorObject(response);
+            return;
+        }
+        if(!validString(args.first_name) || !validString(args.last_name)
+            || !validString(email)){
+            serverErr("No names / email given to cmdHandler.createUser");
+            sendErrorObject(response);
+            return;
+        }
+        createUser(args,function(){response.send(SUCCESS_OBJ)},
+            function(){sendErrorObject(response)});
+    };
+
 }
 
 
@@ -310,6 +371,13 @@ function handleCommands(request, response){
 function onUncaughtException(err) {
     var err = "uncaught exception: " + err;
     serverErr(err);
+}
+
+function sendErrorObject(response){
+    if(isNull(response)){
+        return;
+    }
+    response.send(ERROR_OBJ);
 }
 
 function serverErr(msg){
@@ -332,6 +400,9 @@ function dbError(msg){
 //=================
 //      Util
 //=================
+function argsToObj(args){
+
+}
 
 function validString(s){
   return (!isNull(s)) && typeof(s)==="string" && s.trim().length >0 ;
