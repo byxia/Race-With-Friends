@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page">
+	<div data-role="header">
+		<h1>Race With Friends</h1>
+	</div>
+
+	<div class="bar dark finished">
+		<p id="race-num">13 finished races</p>
+		<p id="win-num">you won 8</p>
+	</div>
+
+	<div data-role="content" id="finished-list">
+		<ul data-role="listview">
+			<li>
+				<div class="vs">
+					<div class="person">
+						<img class="avatar">
+						<div class="name">Luke S.</div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person">
+						<img class="avatar won">
+						<div class="crown"></div>
+						<div class="name">You</div>
+					</div>
+				</div>
+				<a href="details.html" class="info">
+					<p class="winner won">You won!</p>
+					<p class="result">
+						2.3mi race<br/>
+						winner: 01'32"
+					</p>
+				</a>
+			</li>
+			<li>
+				<div class="vs">
+					<div class="person">
+						<img class="avatar won">
+						<div class="crown"></div>
+						<div class="name">Luke S.</div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person">
+						<img class="avatar">
+						<div class="name">You</div>
+					</div>
+				</div>
+				<a href="details.html" class="info">
+					<p class="winner lost">You lost.</p>
+					<p class="result">
+						2.3mi race<br/>
+						winner: 01'32"
+					</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" data-transition="slide" data-direction="reverse" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="ui-btn-active ui-state-persist" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html" data-transition="slide" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>

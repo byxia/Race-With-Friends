@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page">
+	<div data-role="header">
+		<a href="active.html" data-role="button" data-icon="arrow-l" data-transition="slide" data-direction="reverse" >
+			back
+		</a>
+		<h1>Race With Friends</h1>
+	</div>
+	
+	<div class="bar detail-info">
+		<div class="ui-grid-a">
+			<div class="ui-block-a">
+				<div class="vs">
+					<div class="person">
+						<img class="avatar">
+						<div class="name">Luke S.</div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person">
+						<img class="avatar">
+						<div class="name">You</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui-block-b">
+				<div class="status waiting">
+					Waiting for your run
+				</div>
+				<div class="dist-button">
+					<div class="dist">
+						<span class="small">distance</span><br/>
+						2.4mi
+					</div>
+					<div class="action-btn">
+						<a href="race.html" data-role="button" data-theme="f">Race!</a>
+					</div>
+				</div>
+			</div>
+		</div><!-- /grid-a -->
+	</div>
+
+	<div class="map">
+		<div class="playbtn"></div>
+	</div>
+
+	<div class="bar detail-stats">
+		<div class="wrapper">
+			<div class="left finished">
+				<div class="person">
+					<img class="avatar">
+				</div>
+				<div class="stats">
+					<div class="line">
+						<span class="small">their time</span><br/>
+						00:16:28
+					</div>
+					<div class="line">
+						<span class="small">their pace</span><br/>
+						08'14"<span class="small">/mi</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="right waiting">
+				<p>waiting for your data</p>
+			</div>
+
+			<div class="center">
+				<div class="icon time"></div>
+				<div class="icon pace"></div>
+			</div>
+			<div class="right finished">
+				<div class="stats">
+					<div class="line">
+						<span class="small">your time</span><br/>
+						00:16:28
+					</div>
+					<div class="line">
+						<span class="small">your pace</span><br/>
+						07'44"<span class="small">/mi</span>
+					</div>
+				</div>
+				<div class="person">
+					<img class="avatar">
+				</div>
+			</div>
+
+			<div class="right waiting">
+				<p>waiting for your data</p>
+			</div>
+		</div>
+	</div>
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" class="ui-btn-active ui-state-persist" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="verify-link" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html" data-transition="slide" class="info-link" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>

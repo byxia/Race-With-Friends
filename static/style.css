@@ -47,6 +47,38 @@
 	font-family: 'Museo', sans-serif;
 }
 
+.small{
+	font-size: 12px;
+}
+
+
+
+.bar{
+	padding: 10px 10px 5px 10px;
+	background: #ffffff;
+	background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed));
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+}
+
+.bar.dark{
+	color: #fff;
+	text-shadow: none;
+	background: #333333;
+	background: -moz-linear-gradient(top,  #333333 0%, #111111 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#111111));
+	background: -webkit-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: -o-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: -ms-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: linear-gradient(to bottom,  #333333 0%,#111111 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#111111',GradientType=0 );
+
+}
+
 
 
 /* BASICS */
@@ -68,8 +100,8 @@
 }
 
 .ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
-padding: .4em 15px;
-display: block;
+	padding: .4em 15px;
+	display: block;
 }
 
 .ui-grid-c{
@@ -79,7 +111,7 @@ display: block;
 /* HEADER */
 
 .ui-header .ui-title, .ui-footer .ui-title {
-	margin: .6em 0px !important;
+	margin: .5em 0px !important;
 }
 
 .ui-title{
@@ -90,12 +122,26 @@ display: block;
 	margin: none !important;
 }
 
+.ui-header .ui-btn-left{
+	top:5px;
+}
+
+a + .ui-title{
+	padding-left: 50px !important;
+}
+
 .ui-header:after{
 	content: '';
 	display: block;
 	height: 12px;
 	width: 100%;
 	background: url('images/checker.png') top left repeat-x;
+}
+
+/* navbar */
+
+.footer .ui-btn-text{
+	text-shadow: none;
 }
 
 
@@ -173,6 +219,7 @@ display: block;
 	background-image: url("images/icons/active-races.png");
 	width: 20px;
 	height: 19px;
+	margin-top: 1px;
 }
 
 .ui-icon-finished-races {
@@ -185,6 +232,7 @@ display: block;
 	background-image: url("images/icons/profile.png");
 	width: 19px;
 	height: 19px;
+	margin-top: 1px;
 }
 
 
@@ -196,25 +244,66 @@ display: block;
 	margin-top: 30px;
 }
 
-#new-btn{
-	padding: 8px 15px;
+#new-btn .ui-btn-inner{
+	padding: 15px 30px;
 }
+
+#new-btn .ui-icon, #new-btn .ui-btn-text{
+	margin-left: 15px;
+	font-size: 18px;
+}
+
+/*a .avatar{
+	border: 3px solid #fff;
+}*/
 
 .avatar{
 	width: 40px;
 	height: 40px;
-	background: #ccc;
+	background: #fff;
 	display: inline-block;
-	border: 3px solid #fff;
+	position: relative;
+/*	border: 3px solid #fff;*/
+	padding: 3px;
 	box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
 }
 
-.race-list .person{
+.avatar.won{
+	/*border: 3px solid #ffd45a;*/
+	background-color: #ffd45a;
+}
+/*.avatar:before{
+	position: absolute;
+	content:'';
+	right: -10px;
+	top: -10px;
+	width: 32px;
+	height: 32px;
+	background: url('images/crown.png') no-repeat;
+}*/
+.crown{
+	position: absolute;
+	top: -14px;
+	right: -14px;
+	width: 32px;
+	height: 32px;
+	background: url('images/crown.png') no-repeat;
+	border: none;
+}
+
+.person{
 	color: #990000;
 	font-size: 13px;
 	padding-left: 3px;
 	margin-top: 3px;
 	margin-bottom: 5px;
+	position: relative;
+}
+
+.person .name{
+	width: 46px;
+	overflow: hidden;
+	text-align: center;
 }
 
 .race-list .info{
@@ -232,3 +321,287 @@ display: block;
 .race-list .ui-btn-inner{
 	font-size: 14px;
 }
+
+
+/* race details */
+
+.vs .person, .vs .vs-text{
+	float: left;
+}
+
+.vs .vs-text{
+	margin: 20px 5px 0px 7px;
+	color: #990000;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.detail-info .status{
+	padding: 5px;
+	border-radius: 5px;
+	color: #fff;
+	text-shadow: none;
+	text-align: center;
+	margin-bottom: 5px;
+	font-size: 13px;
+}
+
+.status.waiting{
+	background-color: #888;
+}
+.status.won{
+	background-color: #51ac14;
+}
+.status.lost{
+	background-color: #9e1414;
+}
+
+.dist-button .dist{
+	float: left;
+	margin-left: 3px;
+	margin-top: 6px;
+	line-height: 14px;
+}
+.dist-button .action-btn{
+	float: right;
+}
+.dist-button .action-btn .ui-btn-inner{
+	padding: 4px 10px;
+	width: 60px;
+}
+
+.map{
+	height: 200px;
+	background-color: #aaa;
+	position: relative;
+	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.6);
+}
+
+.map .playbtn{
+	width: 34px;
+	height: 34px;
+	background: url('images/play-btn.png');
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+.detail-stats{
+	height: 90px;
+}
+.detail-stats .wrapper{
+	width: 320px;
+	margin: auto;
+}
+.detail-stats .left, .detail-stats .center, .detail-stats .right, .detail-stats .person, .detail-stats .stats{
+	float: left;
+}
+
+.detail-stats .left .person{
+	margin-right: 10px;
+	margin-top: 20px;
+}
+.detail-stats .right .person{
+	margin-left: 10px;
+	margin-top: 20px;
+}
+
+.detail-stats .line{
+	margin-bottom: 5px;
+}
+
+.detail-stats .center{
+	margin: 0px 12px;
+}
+
+.detail-stats .center .icon{
+	width: 22px;
+	height: 22px;
+}
+
+.detail-stats .center .icon.time{
+	background: url('images/icons/time.png') no-repeat;
+	margin-top: 12px;
+}
+.detail-stats .center .icon.pace{
+	background: url('images/icons/pace.png') no-repeat;
+	margin-top: 23px;
+}
+
+.detail-stats .left.waiting p, .detail-stats .right.waiting p{
+	width: 90px;
+	margin-left: 25px;
+	margin-top: 25px;
+	color: #999;
+	text-shadow: none;
+}
+
+.detail-stats .left.waiting, .detail-stats .right.waiting{
+	display: none;
+}
+
+
+
+/* new race */
+
+.new-instruction p{
+	text-align: center;
+}
+
+.bar.new-instruction p{
+	margin: 0px 15px 0px 15px;
+	padding-top: 10px;
+}
+
+#friend-list li{
+	height: 70px;
+}
+#friend-list .avatar, #friend-list a{
+	float: left;
+}
+#friend-list .avatar{
+	margin-top: 10px;
+	margin-left: 10px;
+}
+#friend-list a{
+	margin-top: 15px;
+	font-size: 18px;
+}
+
+#friend-list .ui-icon{
+	margin-top: 30px;
+}
+
+/* accept race */
+
+.race-info .info p{
+	margin-bottom: 6px;
+	margin-top: 10px;
+	font-size: 14px;
+}
+.race-info .info .label{
+	color: #fff;
+	text-shadow: none;
+	padding: 3px;
+	background-color: #429311;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 13px;
+}
+
+.accept-btns .ui-btn{
+	margin: 15px 10px;
+	height: 200px;
+}
+
+.accept-btns .ui-btn-text{
+	font-size: 18px;
+	line-height: 14px;
+	font-weight: normal;
+}
+
+.accept-btns .ui-btn-text .small{
+	font-size: 13px;
+	color: #666;
+}
+
+.accept-btns .icon{
+	height: 122px;
+	margin: 5px 0px 15px 0px;
+	display: block;
+	background-position: center bottom;
+	background-repeat: no-repeat;
+}
+
+.accept-btns .same .icon{
+	background-image: url('images/icons/same-route.png');
+}
+
+.accept-btns .diff .icon{
+	background-image: url('images/icons/diff-route.png');
+}
+
+
+
+/* running */
+
+#running-map{
+	width: 100%;
+	height: 300px;
+	background-color: #ccc;
+}
+
+#running-actions p{
+	color: #fff;
+	text-shadow: none;
+	text-align: center;
+	font-size: 18px;
+}
+
+#running-actions{
+	padding: 5px 20px;
+}
+
+#running-actions .ui-btn-text{
+	font-size: 26px !important;
+}
+
+
+/* finished races */
+
+.bar.finished, .bar.new-instruction{
+	height: 40px;
+	padding: 0px;
+}
+
+.bar.finished p{
+	margin: 10px 15px 0px 15px;
+}
+
+.bar.finished #race-num{
+	float: left;
+}
+.bar.finished #win-num{
+	float: right;
+}
+
+#finished-list li{
+	height: 70px;
+	padding: 10px;
+	padding-top: 15px;
+}
+
+#finished-list .ui-icon{
+	margin-top: 25px;
+	margin-right: -10px;
+}
+
+#finished-list .vs{
+	float:left;
+}
+#finished-list .vs .vs-text{
+	margin: 20px 10px 0px 13px;
+}
+
+
+#finished-list .info{
+	float:left;
+	margin-left: 10px;
+	margin-top: 3px;
+}
+#finished-list .winner{
+	font-size: 18px;
+	font-weight: bold;
+}
+#finished-list .winner.won{
+	color: #398e01;
+}
+#finished-list .winner.lost{
+	color: #b10202;
+}
+#finished-list .result{
+	font-size: 14px;
+}
+
+
+

@@ -120,7 +120,7 @@
 	color: #FFFFFF /*{a-bup-color}*/;
 }
 .ui-btn-hover-a {
-	border: 1px solid #FFFFFF /*{a-bhover-border}*/;
+	border: 1px solid #990000 /*{a-bhover-border}*/;
 	background: #FFFFFF /*{a-bhover-background-color}*/;
 	font-weight: bold;
 	color: #000000 /*{a-bhover-color}*/;
@@ -139,7 +139,7 @@
 	color: #fff /*{a-bhover-color}*/;
 }
 .ui-btn-down-a {
-	border: 1px solid #FFFFFF /*{a-bdown-border}*/;
+	border: 1px solid #990000 /*{a-bdown-border}*/;
 	background: #FFFFFF /*{a-bdown-background-color}*/;
 	font-weight: bold;
 	color: #000000 /*{a-bdown-color}*/;
