@@ -2,6 +2,7 @@ var express = require('express');
 var util = require('util');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
+var FB = require('fb');
 
 // on server side so this is safe, won't be exposed to users
 var FB_APP_ID = "173419086133939";
@@ -30,7 +31,7 @@ passport.use(new FacebookStrategy({
     clientID: FB_APP_ID,
     clientSecret: FB_APP_SECRET,
     // TODO: only place to change for local vs. remote testing
-    callbackURL: "http://localhost:5000/auth/facebook/callback"
+    callbackURL: "http://localhost/auth/facebook/callback"
     // callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
 },
 function(accessToken, refreshToken, profile, done) {
@@ -43,10 +44,16 @@ function(accessToken, refreshToken, profile, done) {
     // and return that user instead.
     console.log("accessToken ==========================>");
     console.log(accessToken);
+    FB.setAccessToken(accessToken);
     console.log("refreshToken ========================>");
     console.log(refreshToken);
     console.log("profile ==================================>");
     console.log(profile);
+
+    console.log("me ==================================>");
+    FB.api('/me/friends', function(response) {
+        console.log(response);
+    });
     return done(null, profile);
     // });
 }

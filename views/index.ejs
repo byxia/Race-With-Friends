@@ -17,6 +17,13 @@
 
             // Additional initialization code such as adding Event Listeners goes here
             console.log("api finish loading");
+            FB.api('/me', function(response) {
+                console.log(response);
+            });
+            var at = 'AACduUcGurMBAK7sHQNHVTK0cF54GI7FkZCXFZByWdvn3kBZAJjytrhUHjm0P7cIXoMmvoVXPwvXRJDeD0U55y7mYcDKAlnjlukN4kqLgZDZD';
+            FB.api('/me/friends', 'post', { access_token: at}, function(response) {
+                console.log(response);
+            });
         };
 
         // Load the SDK's source Asynchronously
