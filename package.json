@@ -1,9 +1,17 @@
 {
-  "name": "run-with-friends",
-  "version": "0.0.0",
-  "dependencies": {
-    "express": "3.0.3",
-    "mongodb": "1.2.0",
-    "mongoose": "3.4.0"
-  }
+    "name": "race-with-friends",
+    "version": "0.0.1",
+    "dependencies": {
+        "connect-flash": "0.1.x",
+        "ejs": "0.8.x",
+        "express": "3.0.x",
+        "mongodb": "1.2.x",
+        "mongoose": "3.4.x",
+        "passport": "0.1.x",
+        "passport-facebook": "0.1.x"
+    },
+    "engines": {
+        "node": "0.8.x",
+        "npm": "1.1.x"
+    }
 }
