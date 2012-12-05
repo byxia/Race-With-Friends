@@ -30,8 +30,8 @@ passport.use(new FacebookStrategy({
     clientID: FB_APP_ID,
     clientSecret: FB_APP_SECRET,
     // TODO: only place to change for local vs. remote testing
-    // callbackURL: "http://localhost:5000/auth/facebook/callback"
-    callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
+    callbackURL: "http://localhost:5000/auth/facebook/callback"
+    // callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
 },
 function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
