@@ -58,9 +58,9 @@
 .ui-body-a,
 .ui-overlay-a {
 	border: 1px solid #858282 /*{a-body-border}*/;
-	color: #000000 /*{a-body-color}*/;
+	color: #ffffff /*{a-body-color}*/;
 	text-shadow: 0 /*{a-body-shadow-x}*/ 1px /*{a-body-shadow-y}*/ 0 /*{a-body-shadow-radius}*/ #eeeeee /*{a-body-shadow-color}*/;
-	background: #f3eeee /*{a-body-background-color}*/;
+	background: #000000 /*{a-body-background-color}*/;
 	background-image: -webkit-gradient(linear, left top, left bottom, from( #FFFFFF /*{a-body-background-start}*/), to( #dad6d6 /*{a-body-background-end}*/)); /* Saf4+, Chrome */
 	background-image: -webkit-linear-gradient( #FFFFFF /*{a-body-background-start}*/, #dad6d6 /*{a-body-background-end}*/); /* Chrome 10+, Saf5.1+ */
 	background-image:    -moz-linear-gradient( #FFFFFF /*{a-body-background-start}*/, #dad6d6 /*{a-body-background-end}*/); /* FF3.6 */

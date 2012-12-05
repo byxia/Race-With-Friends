@@ -1,0 +1,119 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page">
+	<div data-role="header">
+		<h1>Race With Friends</h1>
+	</div>
+	
+	<div class="bar" id="profile">
+		<div class="ui-grid-a">
+			<div class="ui-block-a">
+				<div class="avatar">
+					<img/>
+					<div class="name">Darth Vader</div>
+				</div>
+			</div>
+			<div class="ui-block-b">
+				<div class="stats-row">
+					<div class="icon wins"></div>
+					<div class="text">
+						<div class="small">total wins</div>
+						<div class="number">8 / 13 races</div>
+					</div>
+				</div>
+				<div class="stats-row">
+					<div class="icon distance"></div>
+					<div class="text">
+						<div class="small">total distance</div>
+						<div class="number">12.3mi</div>
+					</div>
+				</div>
+				<div class="stats-row">
+					<div class="icon time"></div>
+					<div class="text">
+						<div class="small">total time</div>
+						<div class="number">00:46:25</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /grid-a -->
+
+
+		<div class="challenge">
+			<a href="race-recording.html" data-role="button" data-theme="f">
+				Race with Darth!
+			</a>
+		</div>
+
+	</div>
+
+	
+
+	<div class="bar dark achievements">
+		Achievements
+	</div>
+
+	<div id="achievement-list">
+		<a href="#badge-popup" data-rel="popup">
+			<div class="badge bff"></div>
+		</a>
+		<a href="#badge-popup" data-rel="popup">
+			<div class="badge bff"></div>
+		</a>
+		<a href="#badge-popup" data-rel="popup">
+			<div class="badge bff"></div>
+		</a>
+		<a href="#badge-popup" data-rel="popup">
+			<div class="badge bff"></div>
+		</a>
+		<a href="#badge-popup" data-rel="popup">
+			<div class="badge bff"></div>
+		</a>
+	</div>
+
+	<div data-role="popup" id="badge-popup" class="ui-content" data-theme="d" data-overlay-theme="a">
+		<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		<div class="popup-content">
+			<div class="badge bff"></div>
+			<div class="description">
+			      <p class="title">BFF</p>
+			      <p>Complete 5 races with the same friend.</p>
+			</div>
+		</div>
+    </div>
+
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" data-transition="slide" data-direction="reverse" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" data-direction="reverse" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html" class="ui-btn-active ui-state-persist" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>
