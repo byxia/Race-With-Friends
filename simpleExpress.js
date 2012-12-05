@@ -31,6 +31,8 @@ var FRIEND;
 
 var CLIENT_ERR_MSG = errorMsg;  
 
+var dbUtil = require('./dbUtil.js').util;
+
 //======================================
 //      init/main
 //======================================
@@ -59,11 +61,14 @@ function onStart(){
       console.log("Database Connection Success");
 
       var USER_SCHEMA = new mongoose.Schema({
-        email        : String,
-        first_name   : String,
-        last_name    : String,
-        password     : String,
-        longest_run  : Number
+        email          : String,
+        first_name     : String,
+        last_name      : String,
+        password       : String,
+        last_login_date: Date,
+        last_login_ip  : String,
+        record_dist    : Number,
+        record_race_id : String
         //TODO add personal records & achievment
         //TODO add profile pic
       });
@@ -89,112 +94,78 @@ function onStart(){
       USER = db.model(T_USER,   USER_SCHEMA);
       RACE = db.model(T_RACE, RACE_SCHEMA);
       FRIEND = db.model(T_FRIEND,FRIEND_SCHEMA);
+
     var me = {
-        first_name : "hello",
-        last_name : "world"
+        first_name : "Zi",
+        last_name : "Wang"
       };
 
       // creatUser(me); 
       // getAllUsers(log,log); 
+        //   USER.update(
+        // {},
+        // {
+        //     last_name : "new"
+        // }  ,
+        // {multi: true},
+        // function(err, numberAffected, raw){
+        //     console.log(err);
+        //     console.log(numberAffected);
+        //     console.log(raw);
+        // }
+
+        // );
+
+        // USER.findOneAndUpdate({}, { last_name: 'jason borne' }, null, function(err, newInstance){
+        //     console.log(err);
+
+        //     console.log(newInstance);
+
+        // });
+
+        // _updateManyInstances_(USER,{}, {email : "Zi@me.com"},{multi:true}, log);
     });
 
 
+    // dbUtil.util.func("haha");
 }
 
 
-//======================
+//=========================
 //      Database Util
-//======================
+//=========================
 
+//--------Table-Specific Helper Methods-------
 
 function _readFromRACE_ (option, successCallback, errorCallback){
-    _readFromDatabase_(RACE,option,successCallback,errorCallback, "Race model");
+    // _readFromDatabase_(RACE,option,successCallback,errorCallback, "Race model");
+    dbUtil.readFromDatabase(RACE,option,successCallback, errorCallback, "Race Model");
 }
 
 function _readFromUSER_ (option, successCallback, errorCallback){
-    _readFromDatabase_(USER,option,successCallback,errorCallback, "User Model");
+    dbUtil.readFromDatabase(USER,option,successCallback,errorCallback, "User Model");
 }
 
 function _readFromFRIEND_(option, successCallback, errorCallback){
-    _readFromDatabase_(FRIEND,option,successCallback,errorCallback,"Friend Model");
+    dbUtil.readFromDatabase(FRIEND,option,successCallback,errorCallback,"Friend Model");
 }
 
-
-function _readFromDatabase_(model,option,successCallback,errorCallback, modelName){
-    if(isNull(model)){
-        dbError("Model: " +modelName + " is not defined or no database connection found. Can't read from db.");
-        if(errorCallback)
-            errorCallback(CLIENT_ERR_MSG);
-        return;
-    }
-    model.find(option,function(err, results){
-        if(err){
-            dbError(err);
-            if(errorCallback)
-                errorCallback(err);
-        }
-        else if(successCallback){
-            successCallback(results);
-        }
-    });
+function _updateUserUnique_(query,newInstance, options, successCallback, errorCallback){
+    dbUtil.updateOneInstance(USER,query,newInstance, options,successCallback,errorCallback,"User Model");
 }
 
-function _createNewInstance_(model,instance,successCallback,errorCallback, modelName){
-    if(isNull(model)){
-        dbError("Model: " +modelName + " is not defined or no database connection found. Can't create new instance.");
-        if(errorCallback){
-            errorCallback(CLIENT_ERR_MSG);
-        }
-        return;
-    }
-    if(isNull(instance)){
-        dbError("No instance provided when creating new " + modelName + " instance.") ;
-        if(errorCallback){
-            errorCallback(CLIENT_ERR_MSG);
-        }
-        return;
-    }
-
-    model.create(instance,function(err, newInstance){
-        if(err){
-            dbError(err);
-            if(errorCallback)
-                errorCallback(err);
-        }
-        else if(successCallback){
-            successCallback(newInstance);
-        }
-    });
+function _updateUserMulti_(query, newInstance,options, successCallback, errorCallback){
+    dbUtil.updateManyInstances(USER, query, newInstance, options, successCallback, errorCallback, "User Moel");
 }
 
-function _removeInstance_ (model, options, successCallback, errorCallback, modelName){
-    if(isNull(model)){
-        dbError("Model: " +modelName + " is not defined or no database connection found. Can't remove instance.");
-        if(errorCallback){
-            errorCallback(CLIENT_ERR_MSG);
-        }
-        return;
-    }
-    if(isNull(options)){
-        dbError("No options given when removing model: " + modelName+". This action will remove all stored documents and is forbidden."
-            + " Use admin tool to remove all instances.");
-        if(errorCallback){
-            errorCallback(CLIENT_ERR_MSG);
-        }
-        return;
-    }
-    model.remove(options,function(err){
-        if(err){
-            dbError(err);
-            if(errorCallback)
-                errorCallback(CLIENT_ERR_MSG);
-        }
-        else if(successCallback){
-            successCallback();
-        }
-    });
+function _updateRaceUnique_(){
+    dbUtil.updateOneInstance(RACE,query,newInstance,options,successCallback,errorCallback,"Race Model");
+
 }
 
+function _updateRaceMulti_(query, newInstance, options, successCallback, errorCallback){
+    dbUtil.updateManyInstances(RACE,query,newInstance,options,successCallback,errorCallback,"Race Model");
+}
 
 //==========================
 //     USER table CRUD
@@ -212,15 +183,16 @@ function getUserByEmail(userEmail,successCallback, errorCallback){
 }
 
 function creatUser(user, successCallback, errorCallback){
-    _createNewInstance_(USER,user,successCallback,errorCallback,"User model");
+    dbUtil.createNewInstance(USER,user,successCallback,errorCallback,"User model");
 }
 
-/*
-* Remove the user with the given _id 
-*/
 function removeUserById(id, successCallback,errorCallback){
-  _removeInstance_(USER,{_id : id},successCallback, errorCallback, "User model");
+    dbUtil.removeInstance(USER,{_id : id},successCallback, errorCallback, "User model");
   
+}
+
+function updateUserEmail(userId, newEmail, successCallback, errorCallback){
+
 }
 
 //==========================
@@ -381,27 +353,43 @@ function sendErrorObject(response){
 }
 
 function serverErr(msg){
+  console.log("\n");
   console.log("------------Server Error Report Begins------------");
   console.log("Message: " + msg);
   console.log("Time   :"  + new Date());
-  console.log("============Server Error Report Ends==========")
+  console.log("============Server Error Report Ends==========");
   console.log("\n");
 }
 
+
 function dbError(msg){
+  console.log("\n");
   console.log("------------Database Error Report Begins------------");
   console.log("Message: " + msg);
   console.log("Time   :"  + new Date());
-  console.log("============Database Error Report Ends==========")
+  console.log("============Database Error Report Ends==========");
   console.log("\n");
 }
 
+function dbWarning(msg){
+  console.log("\n");    
+  console.log("******** Database Warning Begins*********");
+  console.log("Warning: " + msg);
+  console.log("Time   :"  + new Date());
+  console.log("******** Database Warning Ends*********");
+  console.log("\n");
+
+}
 
 //=================
 //      Util
 //=================
-function argsToObj(args){
-
+function isEmptyObj(obj){
+    if(isNull(obj)) return false;
+    for (var name in obj) {
+                return false;
+    }
+    return true;
 }
 
 function validString(s){
