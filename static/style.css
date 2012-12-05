@@ -43,7 +43,7 @@
 	font-family: 'PTSans', sans-serif;
 }
 
-.ui-navbar .ui-btn-text{
+.ui-navbar .ui-btn-text, .challenge .ui-btn-text{
 	font-family: 'Museo', sans-serif;
 }
 
@@ -51,6 +51,9 @@
 	font-size: 12px;
 }
 
+
+
+/* BLOCK BACKGROUNDS */
 
 
 .bar{
@@ -136,6 +139,11 @@ a + .ui-title{
 	height: 12px;
 	width: 100%;
 	background: url('images/checker.png') top left repeat-x;
+}
+
+.ui-header.popup-link:after{
+	background: none;
+	height: 0px;
 }
 
 /* navbar */
@@ -326,6 +334,15 @@ a + .ui-title{
 	font-size: 14px;
 }
 
+#confirm .ui-btn-inner{
+	padding: 8px 40px;
+}
+
+#confirm .btns{
+	margin: auto;
+	width: 240px;
+}
+
 
 /* race details */
 
@@ -391,7 +408,7 @@ a + .ui-title{
 }
 
 .detail-stats{
-	height: 90px;
+	overflow: hidden;
 }
 .detail-stats .wrapper{
 	width: 320px;
@@ -458,7 +475,8 @@ a + .ui-title{
 }
 
 #friend-list li{
-	height: 70px;
+	overflow: hidden;
+	padding-bottom: 10px;
 }
 #friend-list .avatar, #friend-list a{
 	float: left;
@@ -473,7 +491,7 @@ a + .ui-title{
 }
 
 #friend-list .ui-icon{
-	margin-top: 30px;
+	margin-top: 25px;
 }
 
 /* accept race */
@@ -554,8 +572,9 @@ a + .ui-title{
 /* finished races */
 
 .bar.finished, .bar.new-instruction{
-	height: 40px;
+	overflow: hidden;
 	padding: 0px;
+	padding-bottom: 10px;
 }
 
 .bar.finished p{
@@ -570,14 +589,19 @@ a + .ui-title{
 }
 
 #finished-list li{
-	height: 70px;
-	padding: 10px;
-	padding-top: 15px;
+/*	padding: 15px 10px 5px 10px;*/
+	overflow: hidden;
+}
+
+#finished-list li .ui-btn-inner{
+	padding: 15px;
+	padding-bottom: 30px;
 }
 
 #finished-list .ui-icon{
-	margin-top: 25px;
-	margin-right: -10px;
+	margin-top: 17px;
+/*	margin-right: -10px;*/
+
 }
 
 #finished-list .vs{
@@ -636,9 +660,13 @@ a + .ui-title{
 	text-align: center;
 }
 
+#profile .ui-block-b{
+	padding-top: 5px;
+}
+
 #profile .stats-row{
-	height: 27px;
-	margin-top: 23px;
+	overflow: hidden;
+	margin-top: 19px;
 	margin-left: 20px;
 }
 
