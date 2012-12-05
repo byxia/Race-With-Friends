@@ -99,12 +99,25 @@
 					</div>
 					<div class="ui-block-d">
 						<div class="btn">
-							<a href="" data-role="button" data-theme="g">Cancel</a>
+							<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>
 						</div>
 					</div>
 				</div>
 			</li>
 		</ul>
+
+		<div data-role="popup" id="confirm" data-overlay-theme="a" data-theme="d" class="ui-corner-all">
+			<div data-role="header" data-theme="a" class="ui-corner-top popup-link">
+				<h1>Call off the race?</h1>
+			</div>
+			<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+				<h4>Are you sure you want to cancel your race with Luke?</h4>
+				<div class="btns">
+					<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Yes</a>    
+					<a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>  
+				</div>
+			</div>
+		</div>
 
 		<div id="newbtn-wrapper">
 			<a href="new-race.html" data-role="button" data-icon="new" data-theme="e" id="new-btn">Start New Race</a>
