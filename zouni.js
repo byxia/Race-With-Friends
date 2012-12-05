@@ -30,8 +30,8 @@ passport.use(new FacebookStrategy({
     clientID: FB_APP_ID,
     clientSecret: FB_APP_SECRET,
     // TODO: only place to change for local vs. remote testing
-    callbackURL: "http://localhost:5000/auth/facebook/callback"
-    // callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
+    // callbackURL: "http://localhost:5000/auth/facebook/callback"
+    callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
 },
 function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -78,6 +78,8 @@ app.get('/', function(req, res){
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(req.user);
     res.render('account', { user: req.user });
 });
 
@@ -104,7 +106,8 @@ app.get('/auth/facebook',
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/facebook/callback', 
         passport.authenticate('facebook', { successRedirect: '/', 
-                                            failureRedirect: '/login' }));
+                                            failureRedirect: '/login',
+                                            scope: ['read_friendlists', 'publish_actions'] }));
 
 app.get('/logout', function(req, res){
     req.logout();
