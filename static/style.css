@@ -14,13 +14,6 @@
     font-style: normal;
 }
 
-/*@font-face {
-    font-family: 'MuseoSans';
-    src: url('fonts/MuseoSans_500.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}*/
-
 @font-face {
     font-family: 'PTSans';
     src: url('fonts/PTS55F.ttf') format('truetype');
@@ -32,6 +25,13 @@
     font-family: 'PTSans';
     src: url('fonts/PTS75F.ttf') format('truetype');
     font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lobster';
+    src: url('fonts/Lobster.otf') format('opentype');
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -238,6 +238,10 @@ a + .ui-title{
 
 /* active races */
 
+.race-list li.ui-li-static{
+	padding: 10px 10px 5px 10px !important;
+}
+
 #newbtn-wrapper{
 	width: 250px;
 	margin: auto;
@@ -382,8 +386,8 @@ a + .ui-title{
 	height: 34px;
 	background: url('images/play-btn.png');
 	position: absolute;
-	bottom: 10px;
-	right: 10px;
+	bottom: 15px;
+	right: 15px;
 }
 
 .detail-stats{
@@ -602,3 +606,118 @@ a + .ui-title{
 #finished-list .result{
 	font-size: 14px;
 }
+
+
+
+/* profile */
+
+#profile{
+	margin: -15px;
+	margin-right: 0px;
+}
+
+#profile .avatar{
+	padding: 12px;
+	width: 100px;
+	height: 120px;
+	margin: 20px;
+	margin-left: 25px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+
+#profile .avatar img{
+	width: 100px;
+	height: 100px;
+}
+
+#profile .avatar .name{
+	font-family: 'Lobster';
+	font-size: 18px;
+	text-align: center;
+}
+
+#profile .stats-row{
+	height: 27px;
+	margin-top: 23px;
+	margin-left: 20px;
+}
+
+#profile .stats-row .icon, #profile .stats-row .text{
+	float: left;
+}
+
+#profile .stats-row .icon{
+	width: 27px;
+	height: 27px;
+	margin-right: 10px;
+	margin-top: 3px;
+}
+
+#profile .stats-row .icon.wins{
+	background: url('images/icons/wins.png') no-repeat;
+}
+#profile .stats-row .icon.distance{
+	background: url('images/icons/distance.png') no-repeat;
+}
+#profile .stats-row .icon.time{
+	background: url('images/icons/time-total.png') no-repeat;
+}
+
+#profile .challenge{
+	padding: 0px 10px 20px 25px;
+	margin-top: -5px;
+}
+
+#profile .challenge .ui-btn-text{
+	font-size: 22px;
+}
+
+.bar.achievements{
+	padding-bottom: 10px;
+	margin-bottom: 25px;
+	font-size: 18px;
+	text-align: center;
+}
+
+#achievement-list .badge{
+	width: 33%;
+	height: 64px;
+	float: left;
+	margin-bottom: 25px;
+}
+
+.badge.bff{
+	background: url('images/achievements/bff.png') center no-repeat;
+}
+
+#badge-popup{
+	margin:auto;
+}
+
+#badge-popup .popup-content{
+	overflow: hidden;
+}
+
+#badge-popup .badge, #badge-popup .description{
+	float: left;
+}
+
+
+#badge-popup .badge{
+	width: 64px;
+	height: 64px;
+	margin-top: 10px;
+}
+
+#badge-popup .description{
+	width: 170px;
+	margin-left: 20px;
+	margin-bottom: -10px;
+}
+
+#badge-popup .description p.title{
+	line-height: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
