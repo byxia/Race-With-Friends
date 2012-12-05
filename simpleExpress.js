@@ -1,5 +1,7 @@
-// simpleExpressServer.js
-// A simple Express server for 15-237.
+//html files that doesn't need FB login
+var entryPoint = [
+    "simpleClient.html"
+];
 
 var mongoose = require('mongoose');
 var querystring = require("querystring");
@@ -9,11 +11,20 @@ var fs = require("fs");
 var path = require("path");
 var express = require("express");
 var flash = require("connect-flash");
+var util = require('util');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
+var dbUtil = require('./dbUtil.js').util;
+var FB = require('fb');
+
 var errorMsg = "Error occurred in processing the request.";
 var ERROR_OBJ = {error : errorMsg,
                  status: 0};
 var SUCCESS_OBJ={status: 1};
 var PORT = 8888;
+var FB_APP_ID = "173419086133939";
+var FB_APP_SECRET = "2cb745277dce894015c75e2de5d49fcb";
+
 var cmdHandler = {};
 var db = mongoose.createConnection('mongodb://localhost/race');
 var app = express();
@@ -31,11 +42,20 @@ var FRIEND;
 
 var CLIENT_ERR_MSG = errorMsg;  
 
-var dbUtil = require('./dbUtil.js').util;
-
 //======================================
 //      init/main
 //======================================
+
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { return next(); }
+    res.redirect('/login.html');
+}
 
 function onStart(){
     initCommandHandler();
@@ -45,10 +65,99 @@ function onStart(){
         app.use(express.methodOverride());
         app.use(express.session({ secret: 'change me!' }));
         app.use(flash());
+        app.use(passport.initialize());
+        app.use(passport.session());
         app.use(app.router);
+        app.use('/static', express.static(__dirname + '/static'));
+        app.use(express.static(__dirname + '/'));
     });
 
-    app.get("/:staticFilename", serveStaticFile);
+
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+
+    passport.deserializeUser(function(obj, done) {
+        done(null, obj);
+    });
+
+    // Use the FacebookStrategy within Passport.
+    //   Strategies in Passport require a `verify` function, which accept
+    //   credentials (in this case, an accessToken, refreshToken, and Facebook
+    //   profile), and invoke a callback with a user object.
+    passport.use(new FacebookStrategy({
+        clientID: FB_APP_ID,
+        clientSecret: FB_APP_SECRET,
+        // TODO: only place to change for local vs. remote testing
+        callbackURL: "http://localhost:8888/auth/facebook/callback"
+        // callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
+        },
+        function(accessToken, refreshToken, profile, done) {
+
+            // FB.setAccessToken(accessToken);
+
+            // console.log("refreshToken ========================>");
+            // console.log(refreshToken);
+            console.log("profile ==================================>");
+            console.log(profile);
+
+            // FB.api('/me/friends', function(response) {
+            //     console.log(response);
+            // });
+    
+            getUserById(profile.id, function(user){
+                if(isNull(user) || isEmptyObj(user)){
+                    console.log("No such user exists. Creating new User");
+                    creatUser({
+                        id : profile.id,
+                        token : accessToken,
+                        first_name : profile.name.givenName,
+                        last_name  : profile.name.familyName,
+                        last_login_date : new Date()
+                    });
+                }
+                else{
+                    console.log("User exists. Update access token and last login time");
+                    _updateUserUnique_({id : profile.id},{token: accessToken, last_login_date : new Date()});
+                }
+            }, 
+            function(err){
+                console.log(err);
+            });
+            
+            return done(null, profile);
+            // });
+        }
+    ));
+
+
+    app.get('/', function(req, res){
+        res.redirect("/login.html");
+    }); 
+
+    app.get('/account', ensureAuthenticated, function(req, res){
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(req.user);
+        res.redirect('/success.html');
+    });
+
+    app.get('/auth/facebook',
+        passport.authenticate('facebook'),
+        function(req, res){
+            // The request will be redirected to Facebook for authentication, so this
+            // function will not be called.
+    });
+    app.get('/auth/facebook/callback', 
+        passport.authenticate('facebook', { successRedirect: '/success.html', 
+                                            failureRedirect: '/login.html',
+                                            scope: ['read_friendlists', 'publish_actions'] }));    
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/account');
+    });
+
+    // app.get("/static/:staticFilename", serveStaticFile);
+    // app.get("/:staticFilename", serveStaticFile);
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
 
@@ -61,12 +170,11 @@ function onStart(){
       console.log("Database Connection Success");
 
       var USER_SCHEMA = new mongoose.Schema({
-        email          : String,
+        id             : String,
+        token          : String,
         first_name     : String,
         last_name      : String,
-        password       : String,
         last_login_date: Date,
-        last_login_ip  : String,
         record_dist    : Number,
         record_race_id : String
         //TODO add personal records & achievment
@@ -99,7 +207,7 @@ function onStart(){
         first_name : "Zi",
         last_name : "Wang"
       };
-
+      // USER.remove(null,function(err){});
       // creatUser(me); 
       // getAllUsers(log,log); 
         //   USER.update(
@@ -170,12 +278,16 @@ function _updateRaceMulti_(query, newInstance, options, successCallback, errorCa
 //==========================
 //     USER table CRUD
 //==========================
+function createUser(user, successCallback, errorCallback){
+    dbUtil.createNewInstance(USER,user,successCallback,errorCallback,"User Model");
+}
+
 function getAllUsers(successCallback, errorCallback){
     _readFromUSER_(null,successCallback,errorCallback);
 }
 
 function getUserById(id,successCallback, errorCallback){
-    _readFromUSER_({_id : id},successCallback, errorCallback);
+    _readFromUSER_({id : id},successCallback, errorCallback);
 }
 
 function getUserByEmail(userEmail,successCallback, errorCallback){
@@ -187,7 +299,7 @@ function creatUser(user, successCallback, errorCallback){
 }
 
 function removeUserById(id, successCallback,errorCallback){
-    dbUtil.removeInstance(USER,{_id : id},successCallback, errorCallback, "User model");
+    dbUtil.removeInstance(USER,{id : id},successCallback, errorCallback, "User model");
   
 }
 
@@ -228,6 +340,7 @@ function getAllRacesChallenged(id, successCallback, errorCallback){
 
 
 function serveStaticFile(request, response) {
+
     response.sendfile(request.params.staticFilename);
     console.log("Serve static file: " + request.params.staticFilename);
 }
@@ -276,17 +389,17 @@ function handleCommands(request, response){
     }
 
     console.log("Handling cmd: " + cmd);
-    cmdHandler[cmd](args,response);
+    cmdHandler[cmd](args,request, response);
 }
 
 function initCommandHandler(){
-    cmdHandler.getAllUsers = function(args, response){
+    cmdHandler.getAllUsers = function(args,request,  response){
         //no args needed
         getAllUsers(function(results){response.send(results);},
              function(){sendErrorObject(response)});
     };
 
-    cmdHandler.getUserById = function(args,response){
+    cmdHandler.getUserById = function(args,request, response){
         if(isNull(args)){
             serverErr("No args given to cmdHandler.getUserById");
             sendErrorObject(response);
@@ -302,7 +415,7 @@ function initCommandHandler(){
             function(){sendErrorObject(response)});
     };
 
-    cmdHandler.getUserByEmail = function(args, response){
+    cmdHandler.getUserByEmail = function(args,request,  response){
         if(isNull(args)){
             serverErr("No args given to cmdHandler.getUserByEmail");
             sendErrorObject(response);
@@ -317,7 +430,7 @@ function initCommandHandler(){
             function(){sendErrorObject(response)});        
     };
 
-    cmdHandler.createUser = function(args, response){
+    cmdHandler.createUser = function(args,request,  response){
         if(isNull(args)){
             serverErr("No args given to cmdHandler.createUser");
             sendErrorObject(response);
@@ -332,6 +445,26 @@ function initCommandHandler(){
         createUser(args,function(){response.send(SUCCESS_OBJ)},
             function(){sendErrorObject(response)});
     };
+
+    cmdHandler.getAllFriends = function(args, request, response){
+        if(!request.isAuthenticated()){
+            response.redirect('/login.html');
+            return;
+        }
+        // console.log(request.user);
+        getUserById(request.user.id,function(data){
+            if(isNull(data) || isEmptyObj(data)){
+                response.send(ERROR_OBJ);
+                return;
+            }
+            console.log(data);
+            FB.setAccessToken(data[0].token);
+            FB.api('/me/friends',function(list){
+                response.send(list);
+            });
+
+        });
+    }
 
 }
 
