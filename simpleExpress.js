@@ -94,36 +94,36 @@ function onStart(){
         },
         function(accessToken, refreshToken, profile, done) {
 
-            // FB.setAccessToken(accessToken);
+            FB.setAccessToken(accessToken);
 
             // console.log("refreshToken ========================>");
             // console.log(refreshToken);
             console.log("profile ==================================>");
             console.log(profile);
 
-            // FB.api('/me/friends', function(response) {
-            //     console.log(response);
-            // });
-    
-            getUserById(profile.id, function(user){
-                if(isNull(user) || isEmptyObj(user)){
-                    console.log("No such user exists. Creating new User");
-                    creatUser({
-                        id : profile.id,
-                        token : accessToken,
-                        first_name : profile.name.givenName,
-                        last_name  : profile.name.familyName,
-                        last_login_date : new Date()
-                    });
-                }
-                else{
-                    console.log("User exists. Update access token and last login time");
-                    _updateUserUnique_({id : profile.id},{token: accessToken, last_login_date : new Date()});
-                }
-            }, 
-            function(err){
-                console.log(err);
+            FB.api('/me/friends', function(response) {
+                console.log(response);
             });
+    
+            // getUserById(profile.id, function(user){
+            //     if(isNull(user) || isEmptyObj(user)){
+            //         console.log("No such user exists. Creating new User");
+            //         creatUser({
+            //             id : profile.id,
+            //             token : accessToken,
+            //             first_name : profile.name.givenName,
+            //             last_name  : profile.name.familyName,
+            //             last_login_date : new Date()
+            //         });
+            //     }
+            //     else{
+            //         console.log("User exists. Update access token and last login time");
+            //         _updateUserUnique_({id : profile.id},{token: accessToken, last_login_date : new Date()});
+            //     }
+            // }, 
+            // function(err){
+            //     console.log(err);
+            // });
             
             return done(null, profile);
             // });
@@ -132,7 +132,14 @@ function onStart(){
 
 
     app.get('/', function(req, res){
-        res.redirect("/login.html");
+        if(!req.isAuthenticated()){
+            res.redirect("/static/login.html");
+            return;
+        }
+                    FB.api('/me/', function(response) {
+                console.log(response);
+            });
+        res.redirect("/static/active.html");
     }); 
 
     app.get('/account', ensureAuthenticated, function(req, res){
@@ -148,8 +155,8 @@ function onStart(){
             // function will not be called.
     });
     app.get('/auth/facebook/callback', 
-        passport.authenticate('facebook', { successRedirect: '/success.html', 
-                                            failureRedirect: '/login.html',
+        passport.authenticate('facebook', { successRedirect: '/', 
+                                            failureRedirect: '/',
                                             scope: ['read_friendlists', 'publish_actions'] }));    
     app.get('/logout', function(req, res){
         req.logout();
@@ -448,7 +455,7 @@ function initCommandHandler(){
 
     cmdHandler.getAllFriends = function(args, request, response){
         if(!request.isAuthenticated()){
-            response.redirect('/login.html');
+            response.redirect('/');
             return;
         }
         // console.log(request.user);
@@ -460,7 +467,7 @@ function initCommandHandler(){
             console.log(data);
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
-                response.send(list);
+                response.send(list.data);
             });
 
         });

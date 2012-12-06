@@ -8,13 +8,17 @@ var GET_USER_BY_ID = "getUserById";
 var GET_USER_BY_EMAIL = "getUserByEmail";
 var GET_ALL_USERS = "getAllUsers";
 var CREATE_USER = "createUser";
-
+var GET_ALL_FRIENDS = "getAllFriends";
 
 //========================
 //       Ajax Request
 //========================
 function getAllUsers(successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_ALL_USERS),true, successCallback,errorCallback);
+}
+
+function getAllFriends (successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_ALL_FRIENDS),true, successCallback,errorCallback);
 }
 
 function getUserById(id,successCallback, errorCallback){
