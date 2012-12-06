@@ -101,29 +101,29 @@ function onStart(){
             console.log("profile ==================================>");
             console.log(profile);
 
-            FB.api('/me/friends', function(response) {
-                console.log(response);
-            });
-    
-            // getUserById(profile.id, function(user){
-            //     if(isNull(user) || isEmptyObj(user)){
-            //         console.log("No such user exists. Creating new User");
-            //         creatUser({
-            //             id : profile.id,
-            //             token : accessToken,
-            //             first_name : profile.name.givenName,
-            //             last_name  : profile.name.familyName,
-            //             last_login_date : new Date()
-            //         });
-            //     }
-            //     else{
-            //         console.log("User exists. Update access token and last login time");
-            //         _updateUserUnique_({id : profile.id},{token: accessToken, last_login_date : new Date()});
-            //     }
-            // }, 
-            // function(err){
-            //     console.log(err);
+            // FB.api('/me/friends', function(response) {
+            //     console.log(response);
             // });
+    
+            getUserById(profile.id, function(user){
+                if(isNull(user) || isEmptyObj(user)){
+                    console.log("No such user exists. Creating new User");
+                    creatUser({
+                        id : profile.id,
+                        token : accessToken,
+                        first_name : profile.name.givenName,
+                        last_name  : profile.name.familyName,
+                        last_login_date : new Date()
+                    });
+                }
+                else{
+                    console.log("User exists. Update access token and last login time");
+                    _updateUserUnique_({id : profile.id},{token: accessToken, last_login_date : new Date()});
+                }
+            }, 
+            function(err){
+                console.log(err);
+            });
             
             return done(null, profile);
             // });
