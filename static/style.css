@@ -116,6 +116,9 @@
 .ui-header .ui-title, .ui-footer .ui-title {
 	margin: .5em 0px !important;
 }
+.ui-header.ui-bar-a{
+	border-bottom: 1px solid #000;
+}
 
 .ui-title{
 	font-size: 20px !important;
@@ -282,7 +285,7 @@ a + .ui-title{
 
 .avatar.won{
 	/*border: 3px solid #ffd45a;*/
-	background-color: #ffd45a;
+	background-color: #ffe18d;
 }
 /*.avatar:before{
 	position: absolute;
@@ -476,22 +479,28 @@ a + .ui-title{
 
 #friend-list li{
 	overflow: hidden;
-	padding-bottom: 10px;
+	padding-bottom: 5px;
 }
-#friend-list .avatar, #friend-list a{
+#friend-list .avatar, #friend-list img{
 	float: left;
+}
+#friend-list .avatar, #friend-list p{
+/*	float: left;*/
+	margin-top: 16px;
+	font-size: 18px;
+	font-weight: bold;
 }
 #friend-list .avatar{
 	margin-top: 10px;
 	margin-left: 10px;
 }
-#friend-list a{
+/*#friend-list a{
 	margin-top: 15px;
 	font-size: 18px;
-}
+}*/
 
 #friend-list .ui-icon{
-	margin-top: 25px;
+	margin-top: -5px;
 }
 
 /* accept race */
@@ -678,7 +687,7 @@ a + .ui-title{
 	width: 27px;
 	height: 27px;
 	margin-right: 10px;
-	margin-top: 3px;
+	margin-top: 5px;
 }
 
 #profile .stats-row .icon.wins{

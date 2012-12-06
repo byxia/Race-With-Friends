@@ -160,6 +160,11 @@ function onStart(){
         res.redirect('/account');
     });
 
+    app.get('/newrace',
+        function(req, res){
+            res.redirect('/static/new-race.html');
+        });
+
     // app.get("/static/:staticFilename", serveStaticFile);
     // app.get("/:staticFilename", serveStaticFile);
     app.get("/api/:cmd", handleCommands);

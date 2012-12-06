@@ -15,7 +15,7 @@
 </head> 
 <body> 
 
-<div data-role="page">
+<div data-role="page" id="active-races">
 	<div data-role="header"><h1>Race With Friends</h1></div>
 	<div data-role="content">
 		<ul data-role="listview" data-dividertheme="f" class="race-list">
@@ -120,7 +120,8 @@
 		</div>
 
 		<div id="newbtn-wrapper">
-			<a href="new-race.html" data-role="button" data-icon="new" data-theme="e" id="new-btn">Start New Race</a>
+<!-- 			<a href="new-race.html" data-role="button" data-icon="new" data-theme="e" id="new-btn">Start New Race</a> -->
+				<div data-role="button" data-icon="new" data-theme="e" id="new-btn">Start New Race</div>
 		</div>
 	</div>
 	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
@@ -131,11 +132,20 @@
 						Active Races
 					</a>
 				</li>
-				<li><a href="finished.html" data-transition="slide" class="verify-link" data-icon="finished-races">Past Races</a></li>
-				<li><a href="profile.html" data-transition="slide" class="info-link" data-icon="profile">Profile</a></li>
+				<li><a href="finished.html" data-transition="slide" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html" data-transition="slide" data-icon="profile">Profile</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div><!-- /footer --><!-- /footer -->
+
+	<script type="text/javascript">
+		$('#active-races').bind('pageshow', function(){
+			$('#new-btn').bind('click', function(){
+				window.location.href="/newrace";
+			});
+		});
+	</script>
+
 </div>
 
 
