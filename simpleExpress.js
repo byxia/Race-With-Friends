@@ -488,7 +488,15 @@ function initCommandHandler(){
             response.redirect('/');
             return;
         }
-        response.send(request.user);
+        getUserById(request.user.id, function(data){
+            if(isNull(data) || isEmptyObj(data)){
+                dbError("No user found with id: " + request.user.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(data);
+
+        });
     }
 
 }
