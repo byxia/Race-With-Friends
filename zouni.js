@@ -56,7 +56,10 @@ function(accessToken, refreshToken, profile, done) {
     //     console.log(response);
     // });
 
-    FB.api('/me/picture',function(response){
+    FB.api('/me/picture', function(response){
+        console.log(response);
+    });
+    FB.api('/me?fields=picture&type=large', function(response){
         console.log(response);
     });
     return done(null, profile);
