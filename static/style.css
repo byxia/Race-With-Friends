@@ -55,7 +55,6 @@
 
 /* BLOCK BACKGROUNDS */
 
-
 .bar{
 	padding: 10px 10px 5px 10px;
 	background: #ffffff;
@@ -85,6 +84,10 @@
 
 
 /* BASICS */
+
+.ui-loader .ui-icon{
+	border-radius: 8px;
+}
 
 .ui-content .ui-listview{
 	margin-bottom: 15px;

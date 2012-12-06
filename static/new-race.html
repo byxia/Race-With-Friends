@@ -67,7 +67,7 @@
 				});
 
 				for (var i=0; i<list.length; i++){
-					$("<li><img class='avatar'><a href='profile.html'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
+					$("<li><img class='avatar'><a href='profile.html?id="+list[i].id+"'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
 				}
 
 				$("#friend-list ul").listview("refresh");
@@ -77,9 +77,6 @@
 		function compare(el1, el2, index) {
 		  return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
 		}
-
-
-
 
 	</script>
 </div>
