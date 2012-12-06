@@ -23,17 +23,17 @@ function getAllFriends (successCallback, errorCallback) {
 }
 
 function getUserById(id,successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_USER_BY_ID,{_id : id}),
+	_sendAjaxRequest_(prepareURL(GET_USER_BY_ID,{_id : id}),true,
 						successCallback, errorCallback);
 }
 
 function getUserByEmail(userEmail, successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_USER_BY_EMAIL,{email:userEmail}),
+	_sendAjaxRequest_(prepareURL(GET_USER_BY_EMAIL,{email:userEmail}),true,
 						successCallback, errorCallback);
 }
 
 function getFBUserById (id, successCallback, errorCallback) {
-	_sendAjaxRequest_(prepareURL(GET_FB_USER_BY_ID,{id : id}),successCallback,errorCallback);
+	_sendAjaxRequest_(prepareURL(GET_FB_USER_BY_ID,{id : id}),true,successCallback,errorCallback);
 }
 
 
@@ -70,8 +70,8 @@ function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 			log(obj);
 		}
 	}
-	if(!validString(requestURL))
-{		onError("No url provided to the ajax request.");
+	if(!validString(requestURL)){
+		onError("No url provided to the ajax request.");
 		return;
 	}
 	if(isNull(isAsync)){
