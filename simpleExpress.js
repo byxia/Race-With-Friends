@@ -1,7 +1,4 @@
-//html files that doesn't need FB login
-var entryPoint = [
-    "simpleClient.html"
-];
+
 
 var mongoose = require('mongoose');
 var querystring = require("querystring");
@@ -454,20 +451,22 @@ function initCommandHandler(){
     };
 
     cmdHandler.getAllFriends = function(args, request, response){
-        if(!request.isAuthenticated()){
+        if(!request.isAuthenticated() || 
+            !request.user){
             response.redirect('/');
             return;
         }
         // console.log(request.user);
         getUserById(request.user.id,function(data){
             if(isNull(data) || isEmptyObj(data)){
+                dbError("No user found with id: " + request.user.id);
                 response.send(ERROR_OBJ);
                 return;
             }
-            console.log(data);
+            // console.log(data);
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
-                response.send(list.data);
+                response.send(list? list.data : ERROR_OBJ);
             });
 
         });

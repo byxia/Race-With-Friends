@@ -154,18 +154,6 @@ var dbUtil = {
 //      handling errors
 //===============================================
 
-
-
-function serverErr(msg){
-  console.log("\n");
-  console.log("------------Server Error Report Begins------------");
-  console.log("Message: " + msg);
-  console.log("Time   :"  + new Date());
-  console.log("============Server Error Report Ends==========");
-  console.log("\n");
-}
-
-
 function dbError(msg){
   console.log("\n");
   console.log("------------Database Error Report Begins------------");
@@ -208,7 +196,6 @@ function isNull(obj){
 function log(obj){
   console.log(obj);
 }
-
 
 
 exports.util = dbUtil;
