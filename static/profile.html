@@ -128,9 +128,19 @@
 
 			console.log(getUrlVars().id);
 
-			// getUserById(getUrlVars().id, function(user){
-			// 	console.log(user);
-			// })
+			getUserById(getUrlVars().id, function(user){
+				if (isNull(user)){
+					console.log("error - null");
+					return;
+				}
+				else if (user.status === 0){
+					console.log("error");
+					console.log(user.status);
+					return;
+				}
+
+				console.log(user);
+			})
 		});
 
 		function getUrlVars() {

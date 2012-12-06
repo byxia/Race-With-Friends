@@ -61,6 +61,17 @@
 			// alert("hello");
 
 			getAllFriends(function  (list) {
+				//check for error
+				if (isNull(list)){
+					console.log("error - null");
+					return;
+				}
+				else if (list.status === 0){
+					console.log("error");
+					console.log(list.status);
+					return;
+				}
+
 				// alert("world");
 				list.sort(function(a,b) {
 					return compare(a, b, "name"); 
