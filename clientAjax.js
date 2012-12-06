@@ -9,6 +9,7 @@ var GET_USER_BY_EMAIL = "getUserByEmail";
 var GET_ALL_USERS = "getAllUsers";
 var CREATE_USER = "createUser";
 var GET_ALL_FRIENDS = "getAllFriends";
+var GET_FB_USER_BY_ID = "getFBUserById";
 
 //========================
 //       Ajax Request
@@ -29,6 +30,10 @@ function getUserById(id,successCallback, errorCallback){
 function getUserByEmail(userEmail, successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_USER_BY_EMAIL,{email:userEmail}),
 						successCallback, errorCallback);
+}
+
+function getFBUserById (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_FB_USER_BY_ID,{id : id}),successCallback,errorCallback);
 }
 
 

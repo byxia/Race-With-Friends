@@ -95,12 +95,12 @@ function onStart(){
 
             // console.log("refreshToken ========================>");
             // console.log(refreshToken);
-            console.log("profile ==================================>");
-            console.log(profile);
+            // console.log("profile ==================================>");
+            // console.log(profile);
 
-            // FB.api('/me/friends', function(response) {
-            //     console.log(response);
-            // });
+            FB.api('/611558072', function(response) {
+                console.log(response);
+            });
     
             getUserById(profile.id, function(user){
                 if(isNull(user) || isEmptyObj(user)){
@@ -127,49 +127,7 @@ function onStart(){
         }
     ));
 
-
-    app.get('/', function(req, res){
-        if(!req.isAuthenticated()){
-            res.redirect("/static/login.html");
-            return;
-        }
-                    FB.api('/me/', function(response) {
-                console.log(response);
-            });
-        res.redirect("/static/active.html");
-    }); 
-
-    app.get('/account', ensureAuthenticated, function(req, res){
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        console.log(req.user);
-        res.redirect('/success.html');
-    });
-
-    app.get('/auth/facebook',
-        passport.authenticate('facebook'),
-        function(req, res){
-            // The request will be redirected to Facebook for authentication, so this
-            // function will not be called.
-    });
-    app.get('/auth/facebook/callback', 
-        passport.authenticate('facebook', { successRedirect: '/', 
-                                            failureRedirect: '/',
-                                            scope: ['read_friendlists', 'publish_actions'] }));    
-    app.get('/logout', function(req, res){
-        req.logout();
-        res.redirect('/account');
-    });
-
-    app.get('/newrace',
-        function(req, res){
-            res.redirect('/static/new-race.html');
-        });
-
-    // app.get("/static/:staticFilename", serveStaticFile);
-    // app.get("/:staticFilename", serveStaticFile);
-    app.get("/api/:cmd", handleCommands);
-    app.get("/err/:msg", handleClientError);
-
+    initRequestHandler();
     app.listen(PORT);
 
     process.on("uncaughtException", onUncaughtException);
@@ -216,35 +174,57 @@ function onStart(){
         first_name : "Zi",
         last_name : "Wang"
       };
-      // USER.remove(null,function(err){});
-      // creatUser(me); 
-      // getAllUsers(log,log); 
-        //   USER.update(
-        // {},
-        // {
-        //     last_name : "new"
-        // }  ,
-        // {multi: true},
-        // function(err, numberAffected, raw){
-        //     console.log(err);
-        //     console.log(numberAffected);
-        //     console.log(raw);
-        // }
+    });
+}
 
-        // );
+function initRequestHandler () {
+    if(!app){
+        serverErr("No app instance found. Can't init requestHandler");
+        return;
+    }
+    app.get('/', function(req, res){
+        if(!req.isAuthenticated()){
+            res.redirect("/static/login.html");
+            return;
+        }
+                    FB.api('/me/', function(response) {
+                console.log(response);
+            });
+        res.redirect("/static/active.html");
+    }); 
 
-        // USER.findOneAndUpdate({}, { last_name: 'jason borne' }, null, function(err, newInstance){
-        //     console.log(err);
-
-        //     console.log(newInstance);
-
-        // });
-
-        // _updateManyInstances_(USER,{}, {email : "Zi@me.com"},{multi:true}, log);
+    app.get('/account', ensureAuthenticated, function(req, res){
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(req.user);
+        res.redirect('/success.html');
     });
 
+    app.get('/auth/facebook',
+        passport.authenticate('facebook'),
+        function(req, res){
+            // The request will be redirected to Facebook for authentication, so this
+            // function will not be called.
+    });
+    app.get('/auth/facebook/callback', 
+        passport.authenticate('facebook', { successRedirect: '/', 
+                                            failureRedirect: '/',
+                                            scope: ['read_friendlists', 'publish_actions'] }));    
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/account');
+    });
 
-    // dbUtil.util.func("haha");
+    app.get('/newrace',
+        function(req, res){
+            res.redirect('/static/new-race.html');
+        });
+
+    // app.get("/static/:staticFilename", serveStaticFile);
+    // app.get("/:staticFilename", serveStaticFile);
+    app.get("/api/:cmd", handleCommands);
+    app.get("/err/:msg", handleClientError);
+
+
 }
 
 
@@ -472,6 +452,31 @@ function initCommandHandler(){
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
                 response.send(list? list.data : ERROR_OBJ);
+            });
+
+        });
+    }
+
+    cmdHandler.getFBUserById = function (args, request, response) {
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.redirect('/');
+            return;
+        }
+        getUserById(request.user.id,function(data){
+            if(isNull(data) || isEmptyObj(data)){
+                dbError("No user found with id: " + request.user.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            // console.log(data);
+            FB.setAccessToken(data[0].token);
+            if(!validString(args.id)){
+                dbError("No id given to getFBUserById. " );
+                response.send(ERROR_OBJ);
+            }
+            FB.api('/'+args.id,function(data){
+                response.send(data);
             });
 
         });
