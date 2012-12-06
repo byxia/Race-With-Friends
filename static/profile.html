@@ -27,7 +27,7 @@
 				<div class="ui-block-a">
 					<div class="avatar">
 						<img/>
-						<div class="name" id="profile-name">Darth Vader</div>
+						<div class="name" id="profile-name"></div>
 					</div>
 				</div>
 				<div class="ui-block-b">
@@ -58,7 +58,7 @@
 
 			<div class="challenge">
 				<a href="race-recording.html" data-role="button" data-theme="f" id="start-race-btn">
-					Race with Darth!
+					
 				</a>
 			</div>
 
@@ -117,37 +117,58 @@
 
 
 	<script type="text/javascript">
+		var maxProfileNameLength = 12;
 
 		$('#profile-page').bind('pageshow', function(){
 			// hide page and show loading screen
 			$('#profile-content').hide();
 			$.mobile.showPageLoadingMsg();
 
-			console.log(getUrlVars().id);
+			// console.log(getUrlVars().id);
+			if (getUrlVars().id === undefined){
 
-			getFBUserById(getUrlVars().id, function(user){
-				if (isNull(user)){
-					console.log("error - null");
-					return;
-				}
-				else if (user.status === 0){
-					console.log("error");
-					console.log(user.status);
-					return;
-				}
+			}
+			else{
+				getFBUserById(getUrlVars().id, function(user){
+					if (isNull(user)){
+						console.log("error - null");
+						return;
+					}
+					else if (user.status === 0){
+						console.log("error");
+						console.log(user.status);
+						return;
+					}
 
-				// show page after load
-				// $.mobile.hidePageLoadingMsg();
-				
-				// $('#profile-name').html(user.name);
-				// $('#start-race-btn').html("Race with "+user.first_name+"!");
+					// show page after load
+					$.mobile.hidePageLoadingMsg();
 
-				// $('#profile-content').show();
+					var firstName = user.first_name;
+					var lastName = user.last_name;
+					var displayName;
 
-				console.log(user);
-			}, function(error){
-				console.log(error);
-			});
+					// format name based on length
+					if (firstName.length >= maxProfileNameLength-3){
+						displayName = firstName;
+					}
+					else if (firstName.length + lastName.length +1 >= maxProfileNameLength){
+						displayName = firstName + " " + lastName.charAt(0) + ".";
+					}
+					else{
+						displayName = user.name;
+					}
+					
+					$('#profile-name').html(displayName);
+					$('#start-race-btn').find('.ui-btn-text').text("Race with "+user.first_name+"!");
+
+					$('#profile-content').show();
+
+					console.log(user);
+				}, function(error){
+					console.log(error);
+				});
+			}
+			
 		});
 
 		function getUrlVars() {
