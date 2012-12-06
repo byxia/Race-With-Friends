@@ -4,7 +4,7 @@ var url = "http://" + _URL_ + port;
 var DEFAULT_CLIENT_ERR = "An error occurred on the client side.";
 
 //a list of command
-var GET_MYSELF = "getMySelf";
+var GET_MYSELF = "getMyself";
 var GET_USER_BY_ID = "getUserById";
 var GET_USER_BY_EMAIL = "getUserByEmail";
 var GET_ALL_USERS = "getAllUsers";
@@ -15,7 +15,7 @@ var GET_FB_USER_BY_ID = "getFBUserById";
 //========================
 //       Ajax Request
 //========================
-function getMySelf (successCallback, errorCallback) {
+function getMyself (successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_MYSELF),true,successCallback, errorCallback);
 }
 
