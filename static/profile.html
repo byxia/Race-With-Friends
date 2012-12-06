@@ -11,6 +11,7 @@
 
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="../clientAjax.js"></script>
 
 </head> 
 <body> 
@@ -26,7 +27,7 @@
 				<div class="ui-block-a">
 					<div class="avatar">
 						<img/>
-						<div class="name">Darth Vader</div>
+						<div class="name" id="profile-name">Darth Vader</div>
 					</div>
 				</div>
 				<div class="ui-block-b">
@@ -56,7 +57,7 @@
 
 
 			<div class="challenge">
-				<a href="race-recording.html" data-role="button" data-theme="f">
+				<a href="race-recording.html" data-role="button" data-theme="f" id="start-race-btn">
 					Race with Darth!
 				</a>
 			</div>
@@ -122,13 +123,9 @@
 			$('#profile-content').hide();
 			$.mobile.showPageLoadingMsg();
 
-			// show page after load
-			// $.mobile.hidePageLoadingMsg();
-			// $('#profile-content').show();
-
 			console.log(getUrlVars().id);
 
-			getUserById(getUrlVars().id, function(user){
+			getFBUserById(getUrlVars().id, function(user){
 				if (isNull(user)){
 					console.log("error - null");
 					return;
@@ -139,8 +136,18 @@
 					return;
 				}
 
+				// show page after load
+				// $.mobile.hidePageLoadingMsg();
+				
+				// $('#profile-name').html(user.name);
+				// $('#start-race-btn').html("Race with "+user.first_name+"!");
+
+				// $('#profile-content').show();
+
 				console.log(user);
-			})
+			}, function(error){
+				console.log(error);
+			});
 		});
 
 		function getUrlVars() {
