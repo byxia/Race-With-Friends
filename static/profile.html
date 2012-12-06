@@ -126,13 +126,19 @@
 
 			// console.log(getUrlVars().id);
 			if (getUrlVars().id === "myself"){
-				console.log("myself");
-				getMySelf(function(myself){
+
+				getMyself(function(myself){
 					console.log(myself);
+					// show page after load
+					$.mobile.hidePageLoadingMsg();
+
+					var displayName = formatName(myself.first_name, myself.last_name);
+
+					$('#profile-name').html(displayName);
+					$('#start-race-btn').hide();
+
 				});
 
-				// show page after load
-				$.mobile.hidePageLoadingMsg();
 
 
 
