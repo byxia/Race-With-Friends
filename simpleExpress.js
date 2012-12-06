@@ -482,7 +482,7 @@ function initCommandHandler(){
         });
     }
 
-    cmdHandler.getMySelf = function(args, request, response) {
+    cmdHandler.getMyself = function(args, request, response) {
         if(!request.isAuthenticated() || 
             !request.user){
             response.redirect('/');
