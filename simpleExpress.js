@@ -494,7 +494,7 @@ function initCommandHandler(){
                 response.send(ERROR_OBJ);
                 return;
             }
-            response.send(data);
+            response.send(data[0]);
 
         });
     }
