@@ -154,10 +154,13 @@ var dbUtil = {
 //      handling errors
 //===============================================
 
+
+
 function dbError(msg){
   console.log("\n");
   console.log("------------Database Error Report Begins------------");
-  console.log("Message: " + msg);
+  console.log("Message: ");
+  console.log(msg);
   console.log("Time   :"  + new Date());
   console.log("============Database Error Report Ends==========");
   console.log("\n");
@@ -166,7 +169,8 @@ function dbError(msg){
 function dbWarning(msg){
   console.log("\n");    
   console.log("******** Database Warning Begins*********");
-  console.log("Warning: " + msg);
+  console.log("Warning: ");
+  console.log(msg);
   console.log("Time   :"  + new Date());
   console.log("******** Database Warning Ends*********");
   console.log("\n");

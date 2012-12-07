@@ -15,6 +15,10 @@ var CREATE_RACE = "createRace";
 var GET_OWNED_RACES = "getOwnedRaces";
 var GET_CHALLENGED_RACES = "getChallengedRaces";
 var GET_ALL_RACES = "getAllRaces";
+var GET_SMALL_PICTURE = "getSmallPicture";
+var GET_SQUARE_PICTURE= "getSquarePicture";
+var GET_LARGE_PICTURE = "getLargePicture";
+
 
 //========================
 //       Ajax Request
@@ -59,6 +63,18 @@ function getOwnedRaces(id, successCallback, errorCallback){
 
 function getAllRaces (id, successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_ALL_RACES,{id:id}),true,successCallback,errorCallback);
+}
+
+function getSmallPicture (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_SMALL_PICTURE, {id : id}),true,successCallback, errorCallback);
+}
+
+function getLargePicture (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_LARGE_PICTURE, {id : id}),true,successCallback, errorCallback);
+}
+
+function getSquarePicture(id, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),true,successCallback, errorCallback);
 }
 
 

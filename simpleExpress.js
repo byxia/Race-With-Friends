@@ -13,6 +13,7 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var dbUtil = require('./dbUtil.js').util;
 var FB = require('fb');
+var graph = require('fbgraph');
 
 var errorMsg = "Error occurred in processing the request.";
 var ERROR_OBJ = {error : errorMsg,
@@ -92,16 +93,19 @@ function onStart(){
         function(accessToken, refreshToken, profile, done) {
 
             FB.setAccessToken(accessToken);
-
+            graph.setAccessToken(accessToken);
             // console.log("refreshToken ========================>");
             // console.log(refreshToken);
             // console.log("profile ==================================>");
             // console.log(profile);
 
-            FB.api('/611558072', function(response) {
-                console.log(response);
-            });
-    
+            // FB.api('/611558072', function(response) {
+            //     console.log(response);
+            // });
+
+ 
+
+
             getUserById(profile.id, function(user){
                 if(isNull(user) || isEmptyObj(user)){
                     console.log("No such user exists. Creating new User");
@@ -287,6 +291,7 @@ function getAllUsers(successCallback, errorCallback){
 function getUserById(id,successCallback, errorCallback){
     _readFromUSER_({id : id},successCallback, errorCallback);
 }
+
 
 function getUserByEmail(userEmail,successCallback, errorCallback){
     _readFromUSER_({email : userEmail},successCallback,errorCallback);
@@ -600,27 +605,54 @@ function initCommandHandler(){
             response.send(userList);
         },function(){
             response.send(ERROR_OBJ);
-        });
+        });    
+    }
 
-        // getAllRacesOwnedBy(args.id,function(ownedList){
-        //     if(isNull(ownedList)){
-        //         serverErr("No races found owned by : "+ args.id);
-        //         response.send(ERROR_OBJ);
-        //         return;
-        //     }                
-        //     getAllRacesChallenged(args.id,function(challengedList){
-        //         if(isNull(challengedList)){
-        //             serverErr("No races found challenging : "+ args.id);
-        //             response.send(ERROR_OBJ);
-        //             return;
-        //         }                    
-        //         response.send(ownedList.concat(challengedList));
-        //     },function(){
-        //         response.send(ERROR_OBJ);
-        //     });
-        // },function(){   
-        //     response.send(ERROR_OBJ);
-        // });      
+    cmdHandler.getSmallPicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"small");
+
+    };
+
+    cmdHandler.getSquarePicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"square");
+    }
+
+    cmdHandler.getLargePicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"large");
+    }
+
+    function _getPictureHelp_(args,request,response,size){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            serverErr("No id given to getSmallPicture");
+            response.send(ERROR_OBJ);
+            return;            
+        }        
+        getUserById(request.user.id,function(user){
+            if(isNull(user)){
+                serverErr("No user found with id:" + id+". Can't get picture.");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            graph.setAccessToken(user.token);
+            graph.get(args.id+"/"+"picture?type="+size,function(err,res){
+                if(err){
+                    console.log(err);
+                    serverErr(err);
+                    response.send(ERROR_OBJ);
+                    return;
+                }
+                else{
+                    response.send(res);
+                }
+            });
+        },function(err){
+            response.send(ERROR_OBJ);
+        });
     }
 }
 
@@ -644,7 +676,8 @@ function sendErrorObject(response){
 function serverErr(msg){
   console.log("\n");
   console.log("------------Server Error Report Begins------------");
-  console.log("Message: " + msg);
+  console.log("Message: ");
+  console.log(msg);
   console.log("Time   :"  + new Date());
   console.log("============Server Error Report Ends==========");
   console.log("\n");
@@ -654,7 +687,8 @@ function serverErr(msg){
 function dbError(msg){
   console.log("\n");
   console.log("------------Database Error Report Begins------------");
-  console.log("Message: " + msg);
+  console.log("Message: ");
+  console.log(msg);
   console.log("Time   :"  + new Date());
   console.log("============Database Error Report Ends==========");
   console.log("\n");
@@ -663,7 +697,8 @@ function dbError(msg){
 function dbWarning(msg){
   console.log("\n");    
   console.log("******** Database Warning Begins*********");
-  console.log("Warning: " + msg);
+  console.log("Warning: ");
+  console.log(msg);
   console.log("Time   :"  + new Date());
   console.log("******** Database Warning Ends*********");
   console.log("\n");
