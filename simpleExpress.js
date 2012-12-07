@@ -299,6 +299,10 @@ function updateUserEmail(userId, newEmail, successCallback, errorCallback){
 //==========================
 //     RACE table CRUD
 //==========================
+function createRace(race,successCallback, errorCallback){
+    dbUtil.createNewInstance(RACE,race,successCallback,errorCallback,"Race Model");
+}
+
 function getAllRaces(successCallback, errorCallback){
     _readFromRACE_(null,successCallback, errorCallback);
 }
@@ -497,6 +501,19 @@ function initCommandHandler(){
             response.send(data[0]);
 
         });
+    }
+
+    cmdHandler.createRace = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.redirect('/');
+            return;
+        }
+        createRace(args,function(data){
+            response.send(data);
+        },function(){
+            response.send(ERROR_OBJ);
+        });        
     }
 
 }

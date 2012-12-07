@@ -11,6 +11,7 @@ var GET_ALL_USERS = "getAllUsers";
 var CREATE_USER = "createUser";
 var GET_ALL_FRIENDS = "getAllFriends";
 var GET_FB_USER_BY_ID = "getFBUserById";
+var CREATE_RACE = "createRace";
 
 //========================
 //       Ajax Request
@@ -41,7 +42,9 @@ function getFBUserById (id, successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_FB_USER_BY_ID,{id : id}),true,successCallback,errorCallback);
 }
 
-
+function createRace (race,successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(CREATE_RACE,race),true,successCallback,errorCallback);
+}
 
 //======================
 //       Util
