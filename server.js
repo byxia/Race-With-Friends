@@ -640,9 +640,14 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    res.first_name = user.first_name;
-                    res.last_name  = user.last_name;
-                    response.send(res);
+                    // res.first_name = user.first_name;
+                    // res.last_name  = user.last_name;
+                    response.send({
+                        first_name : user.first_name,
+                        last_name  : user.last_name,
+                        image      : res.image,
+                        location   : res.location
+                    });
                 }
             });
         },function(err){
