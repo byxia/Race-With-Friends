@@ -1,14 +1,41 @@
 // max # of char to display in profile page name label
 var maxProfileNameLength = 12;
 
+// max # of char to display in race pages name label
+var maxRaceNameLength = 9;
 
 
-// bind new race btn in active page
+// active races page
 $('#active-races').bind('pageshow', function(){
 	$('#new-btn').bind('click', function(){
 		window.location.href="/newrace";
 	});
 	$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+
+	//get owned races
+	getMyself(function(myself){
+		getOwnedRaces(myself.id, function(ownedRaces){
+			console.log(ownedRaces);
+
+			//sort array by recency
+			ownedRaces.sort(function(a,b){
+				// if (a.creation_date !== null && b.c)
+				if (a.creation_date < b.creation_date){
+					return 1;
+				}
+				else{
+					return -1;
+				}
+			});
+
+			//TODO: FILTER RACES TO ONLY WAITING
+			for (var i=0; i<ownedRaces.length; i++){
+				var opponent = ownedRaces[i].opponent_id;
+			};
+		});
+		
+	});
+
 });
 
 
@@ -101,8 +128,17 @@ $('#profile-page').bind('pageshow', function(){
 				$('#start-race-btn').bind('click', function(){
 					var race = {
 						owner_id: myself.id,
+						owner_name: {
+							first_name: myself.first_name;
+							last_name: myself.last_name;
+						},
 						opponent_id: user.id,
-						status: "created"
+						opponent_name: {
+							first_name: user.first_name;
+							last_name: user.last_name;
+						},
+						status: "created",
+
 					};
 					createRace(race, function(object){
 						if (isNull(object)){
