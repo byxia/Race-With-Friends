@@ -652,6 +652,7 @@ function initCommandHandler(){
                           }
                           res.first_name = data.first_name;
                           res.last_name = data.last_name;
+                          res.id = args.id;
                           response.send(res);
                     });
                 }
