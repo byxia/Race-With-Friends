@@ -41,16 +41,16 @@ $('#new-race').bind('pageshow', function(){
 });
 
 
-//populate profile page with given user's information
+//populate profile page with given user's information & hook up race button
 $('#profile-page').bind('pageshow', function(){
-	// hide page and show loading screen
-	$('#profile-content').hide();
-	$.mobile.showPageLoadingMsg();
 
-	// console.log(getUrlVars().id);
-	if (getUrlVars().id === "myself"){
+	getMyself(function(myself){
+		// hide page and show loading screen
+		$('#profile-content').hide();
+		$.mobile.showPageLoadingMsg();
 
-		getMyself(function(myself){
+		// console.log(getUrlVars().id);
+		if (getUrlVars().id === "myself"){
 			// show page after load
 			$.mobile.hidePageLoadingMsg();
 
@@ -64,44 +64,71 @@ $('#profile-page').bind('pageshow', function(){
 
 			$('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
 
-		});
-
-		$('#profile-content').show();
-	}
-	else{
-		getFBUserById(getUrlVars().id, function(user){
-			if (isNull(user)){
-				console.log("error - null");
-				return;
-			}
-			else if (user.status === 0){
-				console.log("error");
-				console.log(user.status);
-				return;
-			}
-
-			// hide loading spinner
-			$.mobile.hidePageLoadingMsg();
-
-			var displayName = formatName(user.first_name, user.last_name);
-			
-			// display user data
-			$('#profile-name').html(displayName);
-			$('#start-race-btn').find('.ui-btn-text').text("Race with "+user.first_name+"!");
-
-			// change current tab to active
-			$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
-			$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
-
-			// show page
 			$('#profile-content').show();
+		}
+		
+		else{
+			getFBUserById(getUrlVars().id, function(user){
+				if (isNull(user)){
+					console.log("error - null");
+					return;
+				}
+				else if (user.status === 0){
+					console.log("error");
+					console.log(user.status);
+					return;
+				}
 
-		}, function(error){
-			console.log(error);
-		});
-	}
+				// hide loading spinner
+				$.mobile.hidePageLoadingMsg();
+
+				var displayName = formatName(user.first_name, user.last_name);
+				
+				// display user data
+				$('#profile-name').html(displayName);
+				$('#start-race-btn').find('.ui-btn-text').text("Race with "+user.first_name+"!");
+
+				// change current tab to active
+				$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+				$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
+
+				// show page
+				$('#profile-content').show();
+
+
+				// bind create new race event
+				$('#start-race-btn').bind('click', function(){
+					var race = {
+						owner_id: myself.id,
+						opponent_id: user.id,
+						status: "created"
+					};
+				});
+
+			}, function(error){
+				console.log(error);
+			});
+
+		}
+		
+
 	
+
+	});
+
+
+
+
+
 });
+
+
+
+
+
+
+
+// --------- HELPER METHODS ---------- //
 
 
 //compareto function for strings
