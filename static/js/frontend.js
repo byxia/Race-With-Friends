@@ -110,34 +110,46 @@ $('#active-races').bind('pageshow', function(){
 					var race = ownedRaces[i];
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
-					$('#owned-races').append('<li><div class="ui-grid-c">\
-						<div class="ui-block-a">\
-							<div class="person">\
-								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar"></a>\
-								<div class="name">'+opponent+'</div>\
+
+					console.log(opponent);
+
+					getSquarePicture(opponentId, opponent, function(picture, opponent){
+						console.log
+						
+						$('#owned-races').append('<li><div class="ui-grid-c">\
+							<div class="ui-block-a">\
+								<div class="person">\
+									<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
+									<div class="name">'+opponent+'</div>\
+								</div>\
 							</div>\
-						</div>\
-						<div class="ui-block-b">\
-							<div class="info">\
-								2.3mi run<br/>\
-								4mi away\
+							<div class="ui-block-b">\
+								<div class="info">\
+									2.3mi run<br/>\
+									4mi away\
+								</div>\
 							</div>\
-						</div>\
-						<div class="ui-block-c">\
-							<div class="btn">\
-								<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+							<div class="ui-block-c">\
+								<div class="btn">\
+									<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+								</div>\
 							</div>\
-						</div>\
-						<div class="ui-block-d">\
-							<div class="btn">\
-								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+							<div class="ui-block-d">\
+								<div class="btn">\
+									<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+								</div>\
 							</div>\
-						</div>\
-					</div></li>');
+						</div></li>');
+
+						$("#owned-races").listview("refresh").trigger('create');
+
+					});
+
+					
 				};
 			};
 
-			$("#owned-races").listview("refresh").trigger('create');
+			
 		
 		});
 
@@ -179,6 +191,8 @@ $('#new-race').bind('pageshow', function(){
 //populate profile page with given user's information & hook up race button
 $('#profile-page').bind('pageshow', function(){
 
+	console.log("profile page showing");
+
 	getMyself(function(myself){
 		// hide page and show loading screen
 		$('#profile-content').hide();
@@ -198,6 +212,15 @@ $('#profile-page').bind('pageshow', function(){
 			$('#back-btn').remove();
 
 			$('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
+
+			getLargePicture(myself.id, function(picture){
+				var result = getPicture(picture);
+				if (result === true){
+					$('#profile .avatar img').attr("src", picture.location);
+				}
+
+				formatPicture(picture);
+			});
 
 			$('#profile-content').show();
 		}
@@ -229,8 +252,19 @@ $('#profile-page').bind('pageshow', function(){
 
 				// change back button destination
 				if (getUrlVars().source === "active"){
-					$('#back-btn').attr("href", "active.html")
+					$('#back-btn').attr("href", "active.html");
 				}
+
+				// set avatar image
+				getLargePicture(user.id, function(picture){
+					var result = getPicture(picture);
+					if (result === true){
+						$('#profile .avatar img').attr("src", picture.location);
+
+						formatPicture(picture);
+					}
+					
+				});
 
 				// show page
 				$('#profile-content').show();
@@ -341,4 +375,32 @@ function getUrlVars() {
       vars[hash[0]] = hash[1];
   }
   return vars;
+}
+
+function getPicture(picture){
+	if (isNull(picture)){
+		return false;
+	}
+	if (picture.status === 0){
+		return false;
+	}
+	if (picture.image === false){
+		return false;
+	}
+	return true;
+}
+
+// change avatar class based on width/height ratio
+function formatPicture(picture){
+	var icon = new Image();
+	icon.src = picture.location;
+	width = icon.width;
+	height = icon.height;
+
+	if (width>height){
+		$('#profile .avatar img').addClass("horizontal");
+	}
+	else{
+		$('#profile .avatar img').addClass("vertical");
+	}
 }
