@@ -672,6 +672,11 @@ function onUncaughtException(err) {
     util.serverErr(err);
 }
 
+function isNull(obj){
+      return obj == undefined || obj == null
+              || obj === undefined || obj === null;
+}
+
 //=================
 //      Util
 //=================
