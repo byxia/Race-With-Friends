@@ -12,6 +12,8 @@ var CREATE_USER = "createUser";
 var GET_ALL_FRIENDS = "getAllFriends";
 var GET_FB_USER_BY_ID = "getFBUserById";
 var CREATE_RACE = "createRace";
+var GET_OWNED_RACES = "getOwnedRaces";
+var GET_CHALLENGED_RACES = "getChallengedRaces";
 
 //========================
 //       Ajax Request
@@ -45,6 +47,15 @@ function getFBUserById (id, successCallback, errorCallback) {
 function createRace (race,successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(CREATE_RACE,race),true,successCallback,errorCallback);
 }
+
+function getChallengedRaces(id, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_CHALLENGED_RACES,{id : id}),true,successCallback,errorCallback);
+}
+
+function getOwnedRaces(id, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_OWNED_RACES,{id : id}),true,successCallback,errorCallback);
+}
+
 
 //======================
 //       Util
