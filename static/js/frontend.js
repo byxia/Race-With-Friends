@@ -111,10 +111,10 @@ $('#active-races').bind('pageshow', function(){
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
 
-					console.log(opponent);
+					// console.log(opponent);
 
-					getSquarePicture(opponentId, opponent, function(picture, opponent){
-						console.log
+					getSquarePicture(opponentId, function(picture){
+						console.log(picture.first_name +"/"+picture.last_name);
 						
 						$('#owned-races').append('<li><div class="ui-grid-c">\
 							<div class="ui-block-a">\
