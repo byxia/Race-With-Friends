@@ -490,7 +490,7 @@ function initCommandHandler(){
     cmdHandler.getMyself = function(args, request, response) {
         if(!request.isAuthenticated() || 
             !request.user){
-            response.redirect('/');
+            response.send(ERROR_OBJ);
             return;
         }
         getUserById(request.user.id, function(data){
@@ -507,7 +507,7 @@ function initCommandHandler(){
     cmdHandler.createRace = function(args, request, response){
         if(!request.isAuthenticated() || 
             !request.user){
-            response.redirect('/');
+            response.send(ERROR_OBJ);
             return;
         }
         createRace(args,function(data){
@@ -517,6 +517,53 @@ function initCommandHandler(){
         });        
     }
 
+    cmdHandler.getOwnedRaces = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            serverErr("No id given to getOwnedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+
+        getAllRacesOwnedBy(args.id,function(list){
+            if(isNull(list)){
+                serverErr("No races found owned by : "+ args.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(list);
+        },function(err){
+            response.send(ERROR_OBJ);
+        });        
+    }
+
+    cmdHandler.getChallengedRaces = function(args, request,response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            serverErr("No id given to getChallengedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+
+        getAllRacesChallenged(args.id,function(list){
+            if(isNull(list)){
+                serverErr("No races found owned by : "+ args.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(list);
+        },function(err){
+            response.send(ERROR_OBJ);
+        });            
+    }
 }
 
 
