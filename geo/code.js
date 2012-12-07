@@ -1,20 +1,23 @@
-// var nop = function() {};
-// if (!navigator.geolocation) {
-//     navigator.geolocation = {};
-// }
-// if (!navigator.geolocation.getCurrentPosition) {
-//     navigator.geolocation.getCurrentPosition = nop;
-// }
+var nop = function() {};
+if (!navigator.geolocation) {
+    navigator.geolocation = {};
+}
+if (!navigator.geolocation.getCurrentPosition) {
+    navigator.geolocation.getCurrentPosition = nop;
+}
 
 /////////////////////////////////////////////////
 var map;
 function initialize() {
-    var mapOptions = {
-        zoom: 8,
-        center: new google.maps.LatLng(-34.397, 150.644),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var mapOptions = {
+            zoom: 8,
+            center: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+    });
+
     console.log(map);
     // mobile specific style
     detectBrowser();
