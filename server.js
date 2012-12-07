@@ -485,6 +485,11 @@ function initCommandHandler(){
                 response.send(ERROR_OBJ);
             }
             FB.api('/'+args.id,function(data){
+                if(isNull(data) || data.error){
+                    serverErr('Error occurred in FB.api ' + '/'+args.id +", "+ data.error);
+                    response.send(ERROR_OBJ);
+                    return;
+                }
                 response.send(data);
             });
 
@@ -629,7 +634,7 @@ function initCommandHandler(){
                 response.send(ERROR_OBJ);
                 return;
             }
-            graph.setAccessToken(user.token);   
+            graph.setAccessToken(user[0].token);   
             graph.get(args.id+"/"+"picture?type="+size,function(err,res){
                 if(err){
                     console.log(err);
@@ -638,8 +643,17 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    res.name = args.name;
-                    response.send(res);
+                    FB.setAccessToken(user[0].token);
+                    FB.api("/"+args.id,function(data){
+                          if(!data || data.error) {
+                            serverErr("Error occurred in FB.api " + "/"+args.id +", "+ data.error);
+                            response.send(ERROR_OBJ);
+                            return;
+                          }
+                          res.first_name = data.first_name;
+                          res.last_name = data.last_name;
+                          response.send(res);
+                    });
                 }
             });
         },function(err){
