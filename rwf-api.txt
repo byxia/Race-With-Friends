@@ -11,3 +11,4 @@ getUser?_id=<user_id>              get the user with the given id
 getAllRaces?key=<admin_key>        get all races
 getRace?_id=<race_id>              get the race with the given id
 getRacesOwnedBy?owner=<owner_id>   get all races whose owner has the given owner id 
+
