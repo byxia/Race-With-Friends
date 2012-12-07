@@ -640,8 +640,7 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    res.first_name = user[0].first_name;
-                    res.last_name = user[0].last_name;
+                    res.name = args.name;
                     response.send(res);
                 }
             });
