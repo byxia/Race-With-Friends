@@ -1,6 +1,3 @@
-var _URL_ = "localhost";
-var port  = ":8888";
-var url = "http://" + _URL_ + port;
 var DEFAULT_CLIENT_ERR = "An error occurred on the client side.";
 
 //a list of api commands
