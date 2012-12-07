@@ -6,6 +6,7 @@
         "ejs": "0.8.x",
         "express": "3.0.x",
         "fb": "0.0.x",
+        "fbgraph": "0.2.x",
         "mongodb": "1.2.x",
         "mongoose": "3.4.x",
         "passport": "0.1.x",

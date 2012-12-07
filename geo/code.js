@@ -32,57 +32,75 @@ geo.prototype.initialize = function() {
     var that = this;
 
     navigator.geolocation.getCurrentPosition(function(position) {
-        that.startCoord = new google.maps.LatLng(position.coords.latitude, 
+        var startCoord = new google.maps.LatLng(position.coords.latitude, 
                                                 position.coords.longitude);
         var mapOptions = {
             zoom: 20,
-            center: that.startCoord,
+            center: startCoord,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
+        // start marker, can bounce when you click it
         var startMarker = new google.maps.Marker({
             map: this.map,
             draggable: true,
             animation: google.maps.Animation.DROP,
-            position: that.startCoord
+            position: startCoord
         });
         startMarker.setMap(that.map);
         google.maps.event.addListener(startMarker, 'click', bounce);
-
-        // timer
-        that.timer();
-
         function bounce() {
             startMarker.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function() { startMarker.setAnimation(null);}, 500);
         }
+
+        // init run path
+        var runPathOptions = {
+            strokeColor: "#3E7BED",
+            strokeOpacity: 0.8,
+            strokeWeight: 6
+        }
+        that.runPath = new google.maps.Polyline(runPathOptions);
+        that.runPath.setMap(that.map);
+        // debug
+        google.maps.event.addListener(that.map, 'click', that.addLatLng.bind(that));
+
+        // timer
+        that.timer();
+    });
+}
+
+/**
+ * Handles click events on a map, and adds a new point to the Polyline.
+ * @param {MouseEvent} mouseEvent
+ */
+geo.prototype.addLatLng = function(event) {
+    console.log(this);
+    var path = this.runPath.getPath();
+
+    // Because path is an MVCArray, we can simply append a new coordinate
+    // and it will automatically appear
+    path.push(event.latLng);
+
+    // Add a new marker at the new plotted point on the polyline.
+    var marker = new google.maps.Marker({
+        position: event.latLng,
+        title: '#' + path.getLength(),
+        map: this.map
     });
 }
 
 geo.prototype.timer = function() {
     var that = this;
 
-    var runPathCoords = [that.startCoord]; // preload starting point
-    var runPath;
-
     setInterval(function() {
         navigator.geolocation.getCurrentPosition(function(position) {
-            runPathCoords.push(new google.maps.LatLng(position.coords.latitude, 
-                                                        position.coords.longitude));
 
-            console.log([runPathCoords[runPathCoords.length-2], 
-                        runPathCoords[runPathCoords.length-1]]);
-
-            var runPath = new google.maps.Polyline({
-                path: [runPathCoords[runPathCoords.length-2], 
-                        runPathCoords[runPathCoords.length-1]],
-                strokeColor: "#3E7BED",
-                strokeOpacity: 0.8,
-                strokeWeight: 6,
-            });
-            // map new 2 points 
-            runPath.setMap(that.map); 
+            var path = that.runPath.getPath();
+            console.log(path);
+            path.push(new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude));
         });
     }, 1000);
 }
