@@ -49,17 +49,23 @@ function(accessToken, refreshToken, profile, done) {
     console.log("profile ==================================>");
     console.log(profile);
 
+    // FB.setAccessToken('AAACEdEose0cBABtEhPQT3l9BmSRJscxcDiLt2RdbZBR93sgifzckUCsm8rneyFyCEBZBMlXGQUDPLOGSWZCtCDZAZCVFbL3GQqfv5tVZAxUQZDZD');
     FB.setAccessToken(accessToken);
     console.log("me ==================================>");
 
-    // FB.api('/me/friends', function(response) {
+    var idStr = '/' + profile.id;
+    // FB.api(idStr + '/friends', function(response) {
     //     console.log(response);
     // });
 
-    FB.api('/me/picture', function(response){
+    // FB.api('/me/picture', function(response){
+    //     console.log(response);
+    // });
+    FB.api('/me?fields=picture&type=large', function(response){
         console.log(response);
     });
-    FB.api('/me?fields=picture&type=large', function(response){
+
+    FB.api(idStr + '?fields=likes', function(response) {
         console.log(response);
     });
     return done(null, profile);
@@ -122,7 +128,10 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback', 
         passport.authenticate('facebook', { successRedirect: '/', 
                                             failureRedirect: '/login',
-                                            scope: ['read_friendlists', 'publish_actions'] }));
+                                            scope: 
+                                            [   'read_friendlists', 
+                                                'user_photos', 
+                                                'publish_actions'] }));
 
 app.get('/logout', function(req, res){
     req.logout();
