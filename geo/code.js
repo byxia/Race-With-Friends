@@ -1,101 +1,108 @@
-// latitude, longitude: horizontal, vertical (x,y)
-// altitude, altitudeAccuracy
-// accuracy, speed
-// heading
-
-var nop = function() {};
-if (!navigator.geolocation) {
-    navigator.geolocation = {};
-}
-if (!navigator.geolocation.getCurrentPosition) {
-    navigator.geolocation.getCurrentPosition = nop;
+var geo = function() {
+    this.setup();
 }
 
-var points = [];
-var distance = 0;
+geo.prototype.setup = function() {
+    var nop = function() {};
+    if (!navigator.geolocation) {
+        navigator.geolocation = {};
+    }
+    if (!navigator.geolocation.getCurrentPosition) {
+        navigator.geolocation.getCurrentPosition = nop;
+    }
+    google.maps.event.addDomListener(window, 'load', this.initialize.bind(this));
+}
 
-// optional for geolocation.watchPosition
-var options = { 
-    enableHighAccuracy: true,
-    maximumAge: 250,
-    timeout: 10000
-};
+geo.prototype.detectBrowser = function() {
+    var useragent = navigator.userAgent;
+    var mapdiv = document.getElementById("map_canvas");
 
-$(document).ready(function() {
+    if (useragent.indexOf('iPhone') != -1 || useragent.indexOf('Android') != -1 ) {
+        mapdiv.style.width = '100%';
+        mapdiv.style.height = '100%';
+    } else {
+        mapdiv.style.width = '600px';
+        mapdiv.style.height = '800px';
+    }
+}
+
+geo.prototype.initialize = function() {
+    // mobile specific style
+    this.detectBrowser();
+    var that = this;
+
     navigator.geolocation.getCurrentPosition(function(position) {
-        debug(position.coords);
-    });
+        var startCoord = new google.maps.LatLng(position.coords.latitude, 
+                                                position.coords.longitude);
+        var mapOptions = {
+            zoom: 20,
+            center: startCoord,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-    // TODO, use getCurrentPosition with setInterval
-    var watchId;
-    $("#run-button").click(function() {
-        var text = $("#run-button-text").html();
-        if (text == "Start") {
-            $("#run-button-text").html("Finish");
-            watchId = navigator.geolocation.watchPosition(successCallback, errCallback, options);
-            points = [];
-        } else {
-            $("#run-button-text").html("Start");
-            navigator.geolocation.clearWatch(watchId);
+        // start marker, can bounce when you click it
+        var startMarker = new google.maps.Marker({
+            map: this.map,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            position: startCoord
+        });
+        startMarker.setMap(that.map);
+        google.maps.event.addListener(startMarker, 'click', bounce);
+        function bounce() {
+            startMarker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function() { startMarker.setAnimation(null);}, 500);
         }
-    });
 
-    /** Converts numeric degrees to radians */
-    if (typeof(Number.prototype.toRad) === "undefined") {
-        Number.prototype.toRad = function() {
-            return this * Math.PI / 180;
+        // init run path
+        var runPathOptions = {
+            strokeColor: "#3E7BED",
+            strokeOpacity: 0.8,
+            strokeWeight: 6
         }
-    }
+        that.runPath = new google.maps.Polyline(runPathOptions);
+        that.runPath.setMap(that.map);
+        // debug
+        google.maps.event.addListener(that.map, 'click', that.addLatLng.bind(that));
 
-});
-
-function successCallback(position) {
-    debug(position.coords);
+        // timer
+        that.timer();
+    });
 }
 
-function calculateDistance(a, b) {
+/**
+ * Handles click events on a map, and adds a new point to the Polyline.
+ * @param {MouseEvent} mouseEvent
+ */
+geo.prototype.addLatLng = function(event) {
+    console.log(this);
+    var path = this.runPath.getPath();
 
-    var lat1 = a.latitude;
-    var lon1 = a.longitude;
-    var lat2 = b.latitude;
-    var lon2 = b.longitude;
-    var R = 6371; // km
-    var dLat = (lat2-lat1).toRad();
-    var dLon = (lon2-lon1).toRad();
-    var lat1 = lat1.toRad();
-    var lat2 = lat2.toRad();
+    // Because path is an MVCArray, we can simply append a new coordinate
+    // and it will automatically appear
+    path.push(event.latLng);
 
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return R * c;
+    // Add a new marker at the new plotted point on the polyline.
+    var marker = new google.maps.Marker({
+        position: event.latLng,
+        title: '#' + path.getLength(),
+        map: this.map
+    });
 }
 
-// code = 0 => UNKNOWN_ERROR, 
-//        1 => PERMISSION_DENIED, 
-//        2 => POSITION_UNAVAILABLE, 
-//        3 => TIMEOUT
-function errCallback(err) {
-    var message = err.message;
-    var code = err.code;
-    alert("Erorr: " + code + ", " + err.message);
+geo.prototype.timer = function() {
+    var that = this;
+
+    setInterval(function() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            var path = that.runPath.getPath();
+            console.log(path);
+            path.push(new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude));
+        });
+    }, 1000);
 }
 
-function debug(coords) {
-    console.log(coords);
-    var latitude = coords.latitude;
-    var longitude = coords.longitude;
-    var toInsert = "<li>" + latitude + ", " + longitude;
-    var delta;
-
-    points.push(coords);
-    if (points.length >= 2) {
-        delta = calculateDistance(points[points.length-2], points[points.length-1]);
-        distance += delta;
-        console.log(delta, distance);
-    }
-
-    toInsert += " --" + delta + "</li>";
-    $("#geo-list").prepend(toInsert);
-    $("#geo-list").listview("refresh");
-}
+new geo();
