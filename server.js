@@ -162,14 +162,10 @@ function onStart(){
       var RACE_SCHEMA = new mongoose.Schema({
         owner_id        : String,
         opponent_id     : String,
-        owner_name      : {
-            first_name  : String,
-            last_name   : String
-        },
-        opponent_name   : {
-            first_name  : String,
-            last_name   : String
-        },
+        owner_first_name: String,
+        owner_last_name : String,
+        opponent_first_name:String,
+        opponent_last_name:String,
         status          : String,
         creation_date   : { type: Date, default: Date.now },
         finish_date     : Date, 
@@ -314,6 +310,8 @@ function removeUserById(id, successCallback,errorCallback){
 //     RACE table CRUD
 //==========================
 function createRace(race,successCallback, errorCallback){
+    console.log("creating race: ");
+    log(race);
     dbUtil.createNewInstance(RACE,race,successCallback,errorCallback,"Race Model");
 }
 
