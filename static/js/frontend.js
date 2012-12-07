@@ -25,6 +25,7 @@ $('#active-races').bind('pageshow', function(){
 					<li>\
 						<div class="faded">no races yet</div>\
 					</li>');
+				$("#challenged-races").listview("refresh").trigger('create');
 			}
 			else{
 				// sort races by recency
@@ -89,6 +90,7 @@ $('#active-races').bind('pageshow', function(){
 					<li>\
 						<div class="faded">no races yet</div>\
 					</li>');
+				$("#owned-races").listview("refresh").trigger('create');
 			}
 			else{
 
@@ -110,12 +112,12 @@ $('#active-races').bind('pageshow', function(){
 					var race = ownedRaces[i];
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
+					console.log(race);
+					console.log(opponent);
 
-					// console.log(opponent);
-
-					getSquarePicture(opponentId, function(picture){
-						console.log(picture.first_name +"/"+picture.last_name);
-						
+					getSquarePicture(opponentId, opponent, function(picture){
+						// console.log(picture.first_name +"/"+picture.last_name);
+						console.log(picture);
 						$('#owned-races').append('<li><div class="ui-grid-c">\
 							<div class="ui-block-a">\
 								<div class="person">\
@@ -147,6 +149,7 @@ $('#active-races').bind('pageshow', function(){
 
 					
 				};
+
 			};
 
 			
@@ -280,8 +283,9 @@ $('#profile-page').bind('pageshow', function(){
 						opponent_first_name: user.first_name,
 						opponent_last_name: user.last_name,
 						status: "created",
-
 					};
+					// console.log("new race");
+					// console.log(race);
 					createRace(race, function(object){
 						if (isNull(object)){
 							console.log("error - null");
@@ -335,32 +339,35 @@ function compare(el1, el2, index) {
 
 // format name length
 function formatName(firstName, lastName, page){
-	var length;
-	if (page === 'profile'){
-		length = maxProfileNameLength;
-	}
-	else if (page === 'race'){
-		length = maxRaceNameLength;
-	}
+	if (firstName != undefined && lastName != undefined){
+		var length;
+		if (page === 'profile'){
+			length = maxProfileNameLength;
+		}
+		else if (page === 'race'){
+			length = maxRaceNameLength;
+		}
 
-	var displayName;
-	if (firstName.length >= length-3){
-		displayName = firstName;
-	}
-	else{
-		if (page === 'race'){
-			displayName = firstName + " " + lastName.charAt(0) + ".";
+		var displayName;
+		if (firstName.length >= length-3){
+			displayName = firstName;
 		}
 		else{
-			if (firstName.length + lastName.length +1 >= length){
+			if (page === 'race'){
 				displayName = firstName + " " + lastName.charAt(0) + ".";
 			}
 			else{
-				displayName = firstName + " " + lastName;
+				if (firstName.length + lastName.length +1 >= length){
+					displayName = firstName + " " + lastName.charAt(0) + ".";
+				}
+				else{
+					displayName = firstName + " " + lastName;
+				}
 			}
 		}
+		return displayName;
 	}
-	return displayName;
+	return false;
 
 }
 
