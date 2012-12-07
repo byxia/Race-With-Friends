@@ -62,15 +62,15 @@ function getAllRaces (id, successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_ALL_RACES,{id:id}),true,successCallback,errorCallback);
 }
 
-function getSmallPicture (id, successCallback, errorCallback) {
+function getSmallPicture (id, name, successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_SMALL_PICTURE, {id : id}),true,successCallback, errorCallback);
 }
 
-function getLargePicture (id, successCallback, errorCallback) {
+function getLargePicture (id, name, successCallback, errorCallback) {
 	_sendAjaxRequest_(prepareURL(GET_LARGE_PICTURE, {id : id}),true,successCallback, errorCallback);
 }
 
-function getSquarePicture(id, successCallback, errorCallback){
+function getSquarePicture(id, name, successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),true,successCallback, errorCallback);
 }
 
