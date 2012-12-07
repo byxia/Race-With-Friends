@@ -563,7 +563,7 @@ function initCommandHandler(){
 
         getAllRacesChallenged(args.id,function(list){
             if(isNull(list)){
-                serverErr("No races found owned by : "+ args.id);
+                serverErr("No races found challenging: "+ args.id);
                 response.send(ERROR_OBJ);
                 return;
             }
@@ -571,6 +571,56 @@ function initCommandHandler(){
         },function(err){
             response.send(ERROR_OBJ);
         });            
+    }
+
+    cmdHandler.getAllRaces = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            serverErr("No id given to getChallengedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+        getAllRaces(function(list){
+            if(isNull(list)){
+                serverErr("Error occurred in getAllRaces. list is null");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            var userList = [];
+            for(var i=0;i<list.length;i++){
+                if(!isNull(list[i]) &&
+                        (list[i].owner_id === args.id || list[i].opponent_id=== args.id) ){
+                    userList.push(list[i]);
+                }
+            }
+            response.send(userList);
+        },function(){
+            response.send(ERROR_OBJ);
+        });
+
+        // getAllRacesOwnedBy(args.id,function(ownedList){
+        //     if(isNull(ownedList)){
+        //         serverErr("No races found owned by : "+ args.id);
+        //         response.send(ERROR_OBJ);
+        //         return;
+        //     }                
+        //     getAllRacesChallenged(args.id,function(challengedList){
+        //         if(isNull(challengedList)){
+        //             serverErr("No races found challenging : "+ args.id);
+        //             response.send(ERROR_OBJ);
+        //             return;
+        //         }                    
+        //         response.send(ownedList.concat(challengedList));
+        //     },function(){
+        //         response.send(ERROR_OBJ);
+        //     });
+        // },function(){   
+        //     response.send(ERROR_OBJ);
+        // });      
     }
 }
 
