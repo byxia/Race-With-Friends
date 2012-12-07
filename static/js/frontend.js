@@ -8,6 +8,7 @@ $('#active-races').bind('pageshow', function(){
 	$('#new-btn').bind('click', function(){
 		window.location.href="/newrace";
 	});
+	$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
 });
 
 
@@ -103,6 +104,24 @@ $('#profile-page').bind('pageshow', function(){
 						opponent_id: user.id,
 						status: "created"
 					};
+					createRace(race, function(object){
+						if (isNull(object)){
+							console.log("error - null");
+							window.location.href="/";
+							alert("ERROR - NULL");
+							return;
+						}
+						else if (object.status === 0){
+							console.log("error");
+							console.log(object.status);
+							window.location.href="/";
+							alert("ERROR - STATUS0");
+							return;
+						}
+						window.location.href="/";
+						alert("race created");
+					});
+
 				});
 
 			}, function(error){
