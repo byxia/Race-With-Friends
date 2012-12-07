@@ -100,17 +100,17 @@ function onStart(){
               message: "Foo()"
             };
 
-            graph.post(profile.id + "/feed", wallPost, function(err, res) {
-              // returns the post id
-              if(err){
-                log('err:');
-                log(err);
-              }
-              else{
-                log("success");
-                log(res);
-              }
-            });
+            // graph.post(profile.id + "/feed", wallPost, function(err, res) {
+            //   // returns the post id
+            //   if(err){
+            //     log('err:');
+            //     log(err);
+            //   }
+            //   else{
+            //     log("success");
+            //     log(res);
+            //   }
+            // });
 
 
             getUserById(profile.id, function(user){
@@ -640,7 +640,6 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    log(user);
                     res.first_name = user[0].first_name;
                     res.last_name = user[0].last_name;
                     response.send(res);
