@@ -151,6 +151,8 @@ function onStart(){
       var RACE_SCHEMA = new mongoose.Schema({
         owner_id        : String,
         opponent_id     : String,
+        owner_name      : {},
+        opponent_name   : {},
         status          : String,
         creation_date   : { type: Date, default: Date.now },
         finish_date     : Date, 
