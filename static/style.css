@@ -319,9 +319,10 @@ a + .ui-title{
 }
 
 .person .name{
-	width: 46px;
+	width: 60px;
 	overflow: hidden;
-	text-align: center;
+	text-align: left;
+	margin-left: 3px;
 }
 
 .race-list .info{

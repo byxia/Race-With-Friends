@@ -18,7 +18,7 @@
 
 <div data-role="page" id="new-race">
 	<div data-role="header">
-		<a href="active.html" data-transition="slide" data-direction="reverse" data-role="button" data-icon="arrow-l">
+		<a href="active.html" data-transition="slide" class="active-link" data-direction="reverse" data-role="button" data-icon="arrow-l" id="back-btn">
 			back
 		</a>
 		<h1>Race With Friends</h1>
@@ -45,52 +45,18 @@
 		<div data-role="navbar">
 			<ul>
 				<li>
-					<a href="active.html" data-transition="slide"  class="ui-btn-active ui-state-persist" data-icon="active-races">
+					<a href="active.html" data-transition="slide" class="active-link ui-btn-active ui-state-persist" data-icon="active-races">
 						Active Races
 					</a>
 				</li>
-				<li><a href="finished.html" data-transition="slide" class="verify-link" data-icon="finished-races">Past Races</a></li>
-				<li><a href="profile.html?id=myself" data-transition="slide" class="info-link" data-icon="profile">Profile</a></li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=myself" class="profile-link" data-transition="slide" data-icon="profile">Profile</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div><!-- /footer --><!-- /footer -->
 
+	<script type="text/javascript" src="js/frontend.js"></script>
 
-	<script type="text/javascript">
-
-		$('#new-race').bind('pageshow', function(){
-			// alert("hello");
-
-			getAllFriends(function  (list) {
-				//check for error
-				if (isNull(list)){
-					console.log("error - null");
-					return;
-				}
-				else if (list.status === 0){
-					console.log("error");
-					console.log(list.status);
-					return;
-				}
-
-				// alert("world");
-				list.sort(function(a,b) {
-					return compare(a, b, "name"); 
-				});
-
-				for (var i=0; i<list.length; i++){
-					$("<li><img class='avatar'><a href='profile.html?id="+list[i].id+"'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
-				}
-
-				$("#friend-list ul").listview("refresh");
-			}, log);
-		});
-
-		function compare(el1, el2, index) {
-		  return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
-		}
-
-	</script>
 </div>
 
 
