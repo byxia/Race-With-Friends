@@ -100,17 +100,17 @@ function onStart(){
               message: "Foo()"
             };
 
-            graph.post(profile.id + "/feed", wallPost, function(err, res) {
-              // returns the post id
-              if(err){
-                log('err:');
-                log(err);
-              }
-              else{
-                log("success");
-                log(res);
-              }
-            });
+            // graph.post(profile.id + "/feed", wallPost, function(err, res) {
+            //   // returns the post id
+            //   if(err){
+            //     log('err:');
+            //     log(err);
+            //   }
+            //   else{
+            //     log("success");
+            //     log(res);
+            //   }
+            // });
 
 
             getUserById(profile.id, function(user){
@@ -631,7 +631,7 @@ function initCommandHandler(){
                 response.send(ERROR_OBJ);
                 return;
             }
-            graph.setAccessToken(user.token);
+            graph.setAccessToken(user.token);   
             graph.get(args.id+"/"+"picture?type="+size,function(err,res){
                 if(err){
                     console.log(err);
@@ -640,14 +640,9 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    // res.first_name = user.first_name;
-                    // res.last_name  = user.last_name;
-                    response.send({
-                        first_name : user.first_name,
-                        last_name  : user.last_name,
-                        image      : res.image,
-                        location   : res.location
-                    });
+                    res.first_name = user[0].first_name;
+                    res.last_name = user[0].last_name;
+                    response.send(res);
                 }
             });
         },function(err){
