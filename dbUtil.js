@@ -1,9 +1,20 @@
+/*=====================================================
+  				  Race With Friends
+  			CMU 15-237 Fall 2012 Final Project
+  =====================================================*/
+/* Bingying Xia(bxia), Ruoyu Li(ruoyul), Zi Wang(ziw)  */
+
+// This file provides the api for server side js to easily use
+// mongoDB via mongoose middleware. It provides CRUD methods  
+// for any generic Model object used by this project.
+// This is then exposed to server for higher level db operations.
+
 var util   = require('./Util.js').util;
 var dbUtil = {
 
 	readFromDatabase : 
 	function(model,option,successCallback,errorCallback, modelName){
-	    if(isNull(model)){
+	    if(util.isNull(model)){
 	        util.dbError("Model: " +modelName + " is not defined or no database connection found. Can't read from db.");
 	        if(errorCallback)
 	            errorCallback("Model: " +modelName + " is not defined or no database connection found. Can't read from db.");
@@ -23,14 +34,14 @@ var dbUtil = {
 
 	createNewInstance : 
 	function(model,instance,successCallback,errorCallback, modelName){
-	    if(isNull(model)){
+	    if(util.isNull(model)){
 	        util.dbError("Model: " +modelName + " is not defined or no database connection found. Can't create new instance.");
 	        if(errorCallback){
 	            errorCallback("Model: " +modelName + " is not defined or no database connection found. Can't create new instance.");
 	        }
 	        return;
 	    }
-	    if(isNull(instance)){
+	    if(util.isNull(instance)){
 	        util.dbError("No instance provided when creating new " + modelName + " instance.") ;
 	        if(errorCallback){
 	            errorCallback("No instance provided when creating new " + modelName + " instance.");
@@ -52,18 +63,18 @@ var dbUtil = {
 
 	updateManyInstances :
 	function(model,query, newInstance, options, successCallback, errorCallback, modelName){
-	    if(isNull(model)){
+	    if(util.isNull(model)){
 	        util.dbError("Model: " +modelName + " is not defined or no database connection found. Can't update instance _updateInstances_().");
 	        if(errorCallback){
 	            errorCallback("Model: " +modelName + " is not defined or no database connection found. Can't update instance _updateInstances_().");
 	        }
 	        return;
 	    }
-	    if(isNull(query) || isEmptyObj(query)){
+	    if(util.isNull(query) || util.isEmptyObj(query)){
 	        util.dbWarning("No query given to _updatedInstance_. Proceeding and updating any matched instances in model " + modelName);
 	        query = {};
 	    }
-	    if(isNull(newInstance) || isEmptyObj(newInstance)){
+	    if(util.isNull(newInstance) || util.isEmptyObj(newInstance)){
 	        util.dbWarning("No updated instance given to _updateInstances_. Proceeding and making no changes in model " + modelName);
 	        newInstance = {};
 	    }
@@ -85,21 +96,21 @@ var dbUtil = {
 
 	updateOneInstance :
 	function(model, query, newInstance, options, successCallback, errorCallback, modelName){
-	    if(isNull(model)){
+	    if(util.isNull(model)){
 	        util.dbError("Model: " +modelName + " is not defined or no database connection found. Can't update instance _updateOneInstance_().");
 	        if(errorCallback){
 	            errorCallback(CLIENT_ERR_MSG);
 	        }
 	        return;
 	    }
-	    if(isNull(query) || isEmptyObj(query)){
+	    if(util.isNull(query) || util.isEmptyObj(query)){
 	        util.dbError("No query given to _updateOneInstance_. This method requires a primary key.");
 	        if(errorCallback){
 	            errorCallback("No query given to _updateOneInstance_. This method requires a primary key.");
 	        }
 	        return;
 	    }
-	    if(isNull(newInstance) || isEmptyObj(newInstance)){
+	    if(util.isNull(newInstance) || util.isEmptyObj(newInstance)){
 	        util.dbWarning("No updated instance given to _updateOneInstance_. Proceeding and making no changes in model " + modelName);   
 	        newInstance = {};
 	    }
@@ -120,14 +131,14 @@ var dbUtil = {
 
 	removeInstance :
 	function(model, options, successCallback, errorCallback, modelName){
-	    if(isNull(model)){
+	    if(util.isNull(model)){
 	        util.dbError("Model: " +modelName + " is not defined or no database connection found. Can't remove instance.");
 	        if(errorCallback){
 	            errorCallback("Model: " +modelName + " is not defined or no database connection found. Can't remove instance.");
 	        }
 	        return;
 	    }
-	    if(isNull(options)){
+	    if(util.isNull(options)){
 	        util.dbError("No options given when removing model: " + modelName+". This action will remove all stored documents and is forbidden."
 	            + " Use admin tool to remove all instances.");
 	        if(errorCallback){
@@ -149,26 +160,5 @@ var dbUtil = {
 	}
 
 };
-
-
-//=================
-//      Util
-//=================
-function isEmptyObj(obj){
-	return util.isEmptyObj(obj);
-}
-
-function validString(s){
-	return util.validString(s);
-}
-
-function isNull(obj){
-	return util.isNull(obj);
-}
-
-function log(obj){
-	return util.log(obj);
-}
-
 
 exports.util = dbUtil;
