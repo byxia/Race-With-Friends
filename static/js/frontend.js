@@ -28,6 +28,8 @@ $('#active-races').bind('pageshow', function(){
 				}
 			});
 
+			console.log(ownedRaces);
+
 			//TODO: FILTER RACES TO ONLY WAITING
 			for (var i=0; i<ownedRaces.length; i++){
 				var opponent = ownedRaces[i].opponent_id;
@@ -129,13 +131,13 @@ $('#profile-page').bind('pageshow', function(){
 					var race = {
 						owner_id: myself.id,
 						owner_name: {
-							first_name: myself.first_name;
-							last_name: myself.last_name;
+							first_name: myself.first_name,
+							last_name: myself.last_name
 						},
 						opponent_id: user.id,
 						opponent_name: {
-							first_name: user.first_name;
-							last_name: user.last_name;
+							first_name: user.first_name,
+							last_name: user.last_name
 						},
 						status: "created",
 
