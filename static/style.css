@@ -114,6 +114,10 @@
 	padding-top: -20px;
 }
 
+.faded{
+	color: #999;
+}
+
 /* HEADER */
 
 .ui-header .ui-title, .ui-footer .ui-title {
@@ -269,6 +273,12 @@ a + .ui-title{
 #new-btn .ui-icon, #new-btn .ui-btn-text{
 	margin-left: 15px;
 	font-size: 18px;
+}
+
+.race-list .faded{
+	font-size: 18px;
+	text-align: center;
+	padding: 10px;
 }
 
 /*a .avatar{

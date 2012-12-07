@@ -14,28 +14,133 @@ $('#active-races').bind('pageshow', function(){
 
 	//get owned races
 	getMyself(function(myself){
-		getOwnedRaces(myself.id, function(ownedRaces){
-			console.log(ownedRaces);
+		// console.log(myself);
+		getChallengedRaces(myself.id, function(challengedRaces){
+			// console.log(challengedRaces);
 
-			//sort array by recency
-			ownedRaces.sort(function(a,b){
-				// if (a.creation_date !== null && b.c)
-				if (a.creation_date < b.creation_date){
-					return 1;
-				}
-				else{
-					return -1;
-				}
-			});
+			$('#challenged-races').html('<li data-role="list-divider">Waiting for Your Run</li>');
 
-			console.log(ownedRaces);
+			if (challengedRaces.length === 0){
+				$('#challenged-races').append('\
+					<li>\
+						<div class="faded">no races yet</div>\
+					</li>');
+			}
+			else{
+				// sort races by recency
+				challengedRaces.sort(function(a,b){
+					// if (a.creation_date !== null && b.c)
+					if (a.creation_date < b.creation_date){
+						return 1;
+					}
+					else{
+						return -1;
+					}
+				});
 
-			//TODO: FILTER RACES TO ONLY WAITING
-			for (var i=0; i<ownedRaces.length; i++){
-				var opponent = ownedRaces[i].opponent_id;
+				//TODO: FILTER
+
+				for (var i=0; i<challengedRaces.length; i++){
+					var race = challengedRaces[i];
+					var ownerId = race.owner_id;
+					var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
+					$('#challenged-races').append('\
+						<li>\
+							<div class="ui-grid-c">\
+								<div class="ui-block-a">\
+									<div class="person">\
+										<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar"></a>\
+										<div class="name">'+owner+'</div>\
+									</div>\
+								</div>\
+								<div class="ui-block-b">\
+									<div class="info">\
+										2.3mi run<br/>\
+										4mi away\
+									</div>\
+								</div>\
+								<div class="ui-block-c">\
+									<div class="btn">\
+										<a href="details.html?race='+race._id+'" data-role="button" data-transition="slide">Details</a>\
+									</div>\
+								</div>\
+								<div class="ui-block-d">\
+									<div class="btn">\
+										<a href="race.html" data-role="button" data-theme="f" data-transition="slide">Race!</a>\
+									</div>\
+								</div>\
+							</div>\
+						</li>');
+				};
+
 			};
+
+			
+			$("#challenged-races").listview("refresh").trigger('create');
 		});
+
+		getOwnedRaces(myself.id, function(ownedRaces){
+			// console.log(ownedRaces);
+
+			$('#owned-races').html('<li data-role="list-divider">Waiting for Their Run</li>');
+
+			if (ownedRaces.length === 0){
+				$('#owned-races').append('\
+					<li>\
+						<div class="faded">no races yet</div>\
+					</li>');
+			}
+			else{
+
+				//sort array by recency
+				ownedRaces.sort(function(a,b){
+					// if (a.creation_date !== null && b.c)
+					if (a.creation_date < b.creation_date){
+						return 1;
+					}
+					else{
+						return -1;
+					}
+				});
+
+				// console.log(ownedRaces);
+
+				//TODO: FILTER RACES TO ONLY WAITING
+				for (var i=0; i<ownedRaces.length; i++){
+					var race = ownedRaces[i];
+					var opponentId = race.opponent_id;
+					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
+					$('#owned-races').append('<li><div class="ui-grid-c">\
+						<div class="ui-block-a">\
+							<div class="person">\
+								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar"></a>\
+								<div class="name">'+opponent+'</div>\
+							</div>\
+						</div>\
+						<div class="ui-block-b">\
+							<div class="info">\
+								2.3mi run<br/>\
+								4mi away\
+							</div>\
+						</div>\
+						<div class="ui-block-c">\
+							<div class="btn">\
+								<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+							</div>\
+						</div>\
+						<div class="ui-block-d">\
+							<div class="btn">\
+								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+							</div>\
+						</div>\
+					</div></li>');
+				};
+			};
+
+			$("#owned-races").listview("refresh").trigger('create');
 		
+		});
+
 	});
 
 });
@@ -43,8 +148,8 @@ $('#active-races').bind('pageshow', function(){
 
 // populate new race page with friend list
 $('#new-race').bind('pageshow', function(){
-	// alert("hello");
 
+	// get friend list
 	getAllFriends(function  (list) {
 		//check for error
 		if (isNull(list)){
@@ -57,13 +162,13 @@ $('#new-race').bind('pageshow', function(){
 			return;
 		}
 
-		// alert("world");
+		// sort alphabetically (by first then last name)
 		list.sort(function(a,b) {
 			return compare(a, b, "name"); 
 		});
 
 		for (var i=0; i<list.length; i++){
-			$("<li><img class='avatar'><a href='profile.html?id="+list[i].id+"'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
+			$("<li><img class='avatar'><a href='profile.html?id="+list[i].id+"&source=newRace'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
 		}
 
 		$("#friend-list ul").listview("refresh");
@@ -84,7 +189,7 @@ $('#profile-page').bind('pageshow', function(){
 			// show page after load
 			$.mobile.hidePageLoadingMsg();
 
-			var displayName = formatName(myself.first_name, myself.last_name);
+			var displayName = formatName(myself.first_name, myself.last_name, 'profile');
 
 			// show user name
 			$('#profile-name').html(displayName);
@@ -112,7 +217,7 @@ $('#profile-page').bind('pageshow', function(){
 				// hide loading spinner
 				$.mobile.hidePageLoadingMsg();
 
-				var displayName = formatName(user.first_name, user.last_name);
+				var displayName = formatName(user.first_name, user.last_name, 'profile');
 				
 				// display user data
 				$('#profile-name').html(displayName);
@@ -122,6 +227,11 @@ $('#profile-page').bind('pageshow', function(){
 				$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
 				$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
 
+				// change back button destination
+				if (getUrlVars().source === "active"){
+					$('#back-btn').attr("href", "active.html")
+				}
+
 				// show page
 				$('#profile-content').show();
 
@@ -130,15 +240,11 @@ $('#profile-page').bind('pageshow', function(){
 				$('#start-race-btn').bind('click', function(){
 					var race = {
 						owner_id: myself.id,
-						owner_name: {
-							first_name: myself.first_name,
-							last_name: myself.last_name
-						},
+						owner_first_name: myself.first_name,
+						owner_last_name: myself.last_name,
 						opponent_id: user.id,
-						opponent_name: {
-							first_name: user.first_name,
-							last_name: user.last_name
-						},
+						opponent_first_name: user.first_name,
+						opponent_last_name: user.last_name,
 						status: "created",
 
 					};
@@ -193,17 +299,32 @@ function compare(el1, el2, index) {
   return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
 }
 
-// format name for profile page
-function formatName(firstName, lastName){
+// format name length
+function formatName(firstName, lastName, page){
+	var length;
+	if (page === 'profile'){
+		length = maxProfileNameLength;
+	}
+	else if (page === 'race'){
+		length = maxRaceNameLength;
+	}
+
 	var displayName;
-	if (firstName.length >= maxProfileNameLength-3){
+	if (firstName.length >= length-3){
 		displayName = firstName;
 	}
-	else if (firstName.length + lastName.length +1 >= maxProfileNameLength){
-		displayName = firstName + " " + lastName.charAt(0) + ".";
-	}
 	else{
-		displayName = firstName + " " + lastName;
+		if (page === 'race'){
+			displayName = firstName + " " + lastName.charAt(0) + ".";
+		}
+		else{
+			if (firstName.length + lastName.length +1 >= length){
+				displayName = firstName + " " + lastName.charAt(0) + ".";
+			}
+			else{
+				displayName = firstName + " " + lastName;
+			}
+		}
 	}
 	return displayName;
 
