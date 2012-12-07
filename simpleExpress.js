@@ -1,7 +1,4 @@
-//html files that doesn't need FB login
-var entryPoint = [
-    "simpleClient.html"
-];
+
 
 var mongoose = require('mongoose');
 var querystring = require("querystring");
@@ -15,7 +12,9 @@ var util = require('util');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var dbUtil = require('./dbUtil.js').util;
+var util   = require('./Util.js').util;
 var FB = require('fb');
+var graph = require('fbgraph');
 
 var errorMsg = "Error occurred in processing the request.";
 var ERROR_OBJ = {error : errorMsg,
@@ -58,6 +57,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function onStart(){
+
     initCommandHandler();
     app.configure(function(){
         app.use(express.cookieParser());
@@ -95,16 +95,19 @@ function onStart(){
         function(accessToken, refreshToken, profile, done) {
 
             FB.setAccessToken(accessToken);
-
+            graph.setAccessToken(accessToken);
             // console.log("refreshToken ========================>");
             // console.log(refreshToken);
-            console.log("profile ==================================>");
-            console.log(profile);
+            // console.log("profile ==================================>");
+            // console.log(profile);
 
-            // FB.api('/me/friends', function(response) {
+            // FB.api('/611558072', function(response) {
             //     console.log(response);
             // });
-    
+
+ 
+
+
             getUserById(profile.id, function(user){
                 if(isNull(user) || isEmptyObj(user)){
                     console.log("No such user exists. Creating new User");
@@ -130,7 +133,70 @@ function onStart(){
         }
     ));
 
+    initRequestHandler();
+    app.listen(PORT);
 
+    process.on("uncaughtException", onUncaughtException);
+    console.log("Server started successfully");
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function callback () {
+      console.log("Database Connection Success");
+
+      var USER_SCHEMA = new mongoose.Schema({
+        id             : String,
+        token          : String,
+        first_name     : String,
+        last_name      : String,
+        last_login_date: Date,
+        record_dist    : Number,
+        record_race_id : String
+        //TODO add personal records & achievment
+        //TODO add profile pic
+      });
+
+      var RACE_SCHEMA = new mongoose.Schema({
+        owner_id        : String,
+        opponent_id     : String,
+        owner_name      : {
+            first_name  : String,
+            last_name   : String
+        },
+        opponent_name   : {
+            first_name  : String,
+            last_name   : String
+        },
+        status          : String,
+        creation_date   : { type: Date, default: Date.now },
+        finish_date     : Date, 
+        owner_route     : [],
+        opponent_route  : [],
+        owner_time      : String,
+        opponent_time   : String,
+        length          : Number,
+        winner_id       : String
+      });
+
+      var FRIEND_SCHEMA = new mongoose.Schema({
+        user_one_id : String,
+        user_two_id : String
+      });
+
+      USER = db.model(T_USER,   USER_SCHEMA);
+      RACE = db.model(T_RACE, RACE_SCHEMA);
+      FRIEND = db.model(T_FRIEND,FRIEND_SCHEMA);
+
+    var me = {
+        first_name : "Zi",
+        last_name : "Wang"
+      };
+    });
+}
+
+function initRequestHandler () {
+    if(!app){
+        util.serverErr("No app instance found. Can't init requestHandler");
+        return;
+    }
     app.get('/', function(req, res){
         if(!req.isAuthenticated()){
             res.redirect("/static/login.html");
@@ -173,81 +239,7 @@ function onStart(){
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
 
-    app.listen(PORT);
 
-    process.on("uncaughtException", onUncaughtException);
-    console.log("Server started successfully");
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function callback () {
-      console.log("Database Connection Success");
-
-      var USER_SCHEMA = new mongoose.Schema({
-        id             : String,
-        token          : String,
-        first_name     : String,
-        last_name      : String,
-        last_login_date: Date,
-        record_dist    : Number,
-        record_race_id : String
-        //TODO add personal records & achievment
-        //TODO add profile pic
-      });
-
-      var RACE_SCHEMA = new mongoose.Schema({
-        owner_id        : String,
-        opponent_id     : String,
-        status          : String,
-        time            : { type: Date, default: Date.now },
-        owner_route     : [],
-        opponent_route  : [],
-        owner_time      : String,
-        opponent_time   : String,
-        length          : Number,
-        winner_id       : String
-      });
-
-      var FRIEND_SCHEMA = new mongoose.Schema({
-        user_one_id : String,
-        user_two_id : String
-      });
-
-      USER = db.model(T_USER,   USER_SCHEMA);
-      RACE = db.model(T_RACE, RACE_SCHEMA);
-      FRIEND = db.model(T_FRIEND,FRIEND_SCHEMA);
-
-    var me = {
-        first_name : "Zi",
-        last_name : "Wang"
-      };
-      // USER.remove(null,function(err){});
-      // creatUser(me); 
-      // getAllUsers(log,log); 
-        //   USER.update(
-        // {},
-        // {
-        //     last_name : "new"
-        // }  ,
-        // {multi: true},
-        // function(err, numberAffected, raw){
-        //     console.log(err);
-        //     console.log(numberAffected);
-        //     console.log(raw);
-        // }
-
-        // );
-
-        // USER.findOneAndUpdate({}, { last_name: 'jason borne' }, null, function(err, newInstance){
-        //     console.log(err);
-
-        //     console.log(newInstance);
-
-        // });
-
-        // _updateManyInstances_(USER,{}, {email : "Zi@me.com"},{multi:true}, log);
-    });
-
-
-    // dbUtil.util.func("haha");
 }
 
 
@@ -302,6 +294,7 @@ function getUserById(id,successCallback, errorCallback){
     _readFromUSER_({id : id},successCallback, errorCallback);
 }
 
+
 function getUserByEmail(userEmail,successCallback, errorCallback){
     _readFromUSER_({email : userEmail},successCallback,errorCallback);
 }
@@ -322,6 +315,10 @@ function updateUserEmail(userId, newEmail, successCallback, errorCallback){
 //==========================
 //     RACE table CRUD
 //==========================
+function createRace(race,successCallback, errorCallback){
+    dbUtil.createNewInstance(RACE,race,successCallback,errorCallback,"Race Model");
+}
+
 function getAllRaces(successCallback, errorCallback){
     _readFromRACE_(null,successCallback, errorCallback);
 }
@@ -358,7 +355,7 @@ function serveStaticFile(request, response) {
 }
 
 function handleClientError(request, response){
-    serverErr("Client side error-> " +request.params.msg.toString()+"\n URL: " + request.url);
+    util.serverErr("Client side error-> " +request.params.msg.toString()+"\n URL: " + request.url);
     response.send({});
 }
 
@@ -382,20 +379,20 @@ function handleCommands(request, response){
     */
 
     if(isNull(requestQuery)){
-        serverErr("Invalid url: " + requestURL +". No query can be parsed.");
+        util.serverErr("Invalid url: " + requestURL +". No query can be parsed.");
         sendErrorObject(response);
         return;
     }
     var cmd = requestQuery.pathname.toString().substring(5);
     var args = querystring.parse(requestQuery.query);
     if(isNull(cmd)){
-        serverErr("Invalid ajax request: " + requestURL + ". No command found.");
+        util.serverErr("Invalid ajax request: " + requestURL + ". No command found.");
         sendErrorObject(response);
         return;
     }
     if(isNull(cmdHandler[cmd]) ||
         typeof(cmdHandler[cmd])!=="function"){
-        serverErr("Invalid command. Server can't handle command: "+ cmd);
+        util.serverErr("Invalid command. Server can't handle command: "+ cmd);
         sendErrorObject(response);
         return;
     }
@@ -413,12 +410,12 @@ function initCommandHandler(){
 
     cmdHandler.getUserById = function(args,request, response){
         if(isNull(args)){
-            serverErr("No args given to cmdHandler.getUserById");
+            util.serverErr("No args given to cmdHandler.getUserById");
             sendErrorObject(response);
             return;
         }
         if(!validString(args._id)){
-            serverErr("No _id given to cmdHandler.getUserById");
+            util.serverErr("No _id given to cmdHandler.getUserById");
             // sendErrorObject(response);
             response.send(ERROR_OBJ);
             return;
@@ -429,12 +426,12 @@ function initCommandHandler(){
 
     cmdHandler.getUserByEmail = function(args,request,  response){
         if(isNull(args)){
-            serverErr("No args given to cmdHandler.getUserByEmail");
+            util.serverErr("No args given to cmdHandler.getUserByEmail");
             sendErrorObject(response);
             return;
         }
         if(!validString(args.email)){
-            serverErr("No email given to cmdHandler.getUserByEmail");
+            util.serverErr("No email given to cmdHandler.getUserByEmail");
             sendErrorObject(response);
             return;
         }
@@ -444,13 +441,13 @@ function initCommandHandler(){
 
     cmdHandler.createUser = function(args,request,  response){
         if(isNull(args)){
-            serverErr("No args given to cmdHandler.createUser");
+            util.serverErr("No args given to cmdHandler.createUser");
             sendErrorObject(response);
             return;
         }
         if(!validString(args.first_name) || !validString(args.last_name)
             || !validString(email)){
-            serverErr("No names / email given to cmdHandler.createUser");
+            util.serverErr("No names / email given to cmdHandler.createUser");
             sendErrorObject(response);
             return;
         }
@@ -459,25 +456,206 @@ function initCommandHandler(){
     };
 
     cmdHandler.getAllFriends = function(args, request, response){
-        if(!request.isAuthenticated()){
+        if(!request.isAuthenticated() || 
+            !request.user){
             response.redirect('/');
             return;
         }
         // console.log(request.user);
         getUserById(request.user.id,function(data){
             if(isNull(data) || isEmptyObj(data)){
+                util.dbError("No user found with id: " + request.user.id);
                 response.send(ERROR_OBJ);
                 return;
             }
-            console.log(data);
+            // console.log(data);
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
-                response.send(list.data);
+                response.send(list? list.data : ERROR_OBJ);
             });
 
         });
     }
 
+    cmdHandler.getFBUserById = function (args, request, response) {
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.redirect('/');
+            return;
+        }
+        getUserById(request.user.id,function(data){
+            if(isNull(data) || isEmptyObj(data)){
+                util.dbError("No user found with id: " + request.user.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            // console.log(data);
+            FB.setAccessToken(data[0].token);
+            if(!validString(args.id)){
+                util.dbError("No id given to getFBUserById. " );
+                response.send(ERROR_OBJ);
+            }
+            FB.api('/'+args.id,function(data){
+                response.send(data);
+            });
+
+        });
+    }
+
+    cmdHandler.getMyself = function(args, request, response) {
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        getUserById(request.user.id, function(data){
+            if(isNull(data) || isEmptyObj(data)){
+                util.dbError("No user found with id: " + request.user.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(data[0]);
+
+        });
+    }
+
+    cmdHandler.createRace = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        createRace(args,function(data){
+            response.send(data);
+        },function(){
+            response.send(ERROR_OBJ);
+        });        
+    }
+
+    cmdHandler.getOwnedRaces = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            util.serverErr("No id given to getOwnedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+
+        getAllRacesOwnedBy(args.id,function(list){
+            if(isNull(list)){
+                util.serverErr("No races found owned by : "+ args.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(list);
+        },function(err){
+            response.send(ERROR_OBJ);
+        });        
+    }
+
+    cmdHandler.getChallengedRaces = function(args, request,response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            util.serverErr("No id given to getChallengedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+
+        getAllRacesChallenged(args.id,function(list){
+            if(isNull(list)){
+                util.serverErr("No races found challenging: "+ args.id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(list);
+        },function(err){
+            response.send(ERROR_OBJ);
+        });            
+    }
+
+    cmdHandler.getAllRaces = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            util.serverErr("No id given to getChallengedRaces");
+            response.send(ERROR_OBJ);
+            return;            
+        }
+        getAllRaces(function(list){
+            if(isNull(list)){
+                util.serverErr("Error occurred in getAllRaces. list is null");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            var userList = [];
+            for(var i=0;i<list.length;i++){
+                if(!isNull(list[i]) &&
+                        (list[i].owner_id === args.id || list[i].opponent_id=== args.id) ){
+                    userList.push(list[i]);
+                }
+            }
+            response.send(userList);
+        },function(){
+            response.send(ERROR_OBJ);
+        });    
+    }
+
+    cmdHandler.getSmallPicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"small");
+
+    };
+
+    cmdHandler.getSquarePicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"square");
+    }
+
+    cmdHandler.getLargePicture = function(args, request, response){
+        _getPictureHelp_(args,request,response,"large");
+    }
+
+    function _getPictureHelp_(args,request,response,size){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!validString(args.id)){
+            util.serverErr("No id given to getSmallPicture");
+            response.send(ERROR_OBJ);
+            return;            
+        }        
+        getUserById(request.user.id,function(user){
+            if(isNull(user)){
+                util.serverErr("No user found with id:" + id+". Can't get picture.");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            graph.setAccessToken(user.token);
+            graph.get(args.id+"/"+"picture?type="+size,function(err,res){
+                if(err){
+                    console.log(err);
+                    util.serverErr(err);
+                    response.send(ERROR_OBJ);
+                    return;
+                }
+                else{
+                    response.send(res);
+                }
+            });
+        },function(err){
+            response.send(ERROR_OBJ);
+        });
+    }
 }
 
 
@@ -487,7 +665,7 @@ function initCommandHandler(){
 
 function onUncaughtException(err) {
     var err = "uncaught exception: " + err;
-    serverErr(err);
+    util.serverErr(err);
 }
 
 function sendErrorObject(response){
@@ -497,34 +675,37 @@ function sendErrorObject(response){
     response.send(ERROR_OBJ);
 }
 
-function serverErr(msg){
-  console.log("\n");
-  console.log("------------Server Error Report Begins------------");
-  console.log("Message: " + msg);
-  console.log("Time   :"  + new Date());
-  console.log("============Server Error Report Ends==========");
-  console.log("\n");
-}
+// function util.serverErr(msg){
+//   console.log("\n");
+//   console.log("------------Server Error Report Begins------------");
+//   console.log("Message: ");
+//   console.log(msg);
+//   console.log("Time   :"  + new Date());
+//   console.log("============Server Error Report Ends==========");
+//   console.log("\n");
+// }
 
 
-function dbError(msg){
-  console.log("\n");
-  console.log("------------Database Error Report Begins------------");
-  console.log("Message: " + msg);
-  console.log("Time   :"  + new Date());
-  console.log("============Database Error Report Ends==========");
-  console.log("\n");
-}
+// function util.dbError(msg){
+//   console.log("\n");
+//   console.log("------------Database Error Report Begins------------");
+//   console.log("Message: ");
+//   console.log(msg);
+//   console.log("Time   :"  + new Date());
+//   console.log("============Database Error Report Ends==========");
+//   console.log("\n");
+// }
 
-function dbWarning(msg){
-  console.log("\n");    
-  console.log("******** Database Warning Begins*********");
-  console.log("Warning: " + msg);
-  console.log("Time   :"  + new Date());
-  console.log("******** Database Warning Ends*********");
-  console.log("\n");
+// function util.dbWarning(msg){
+//   console.log("\n");    
+//   console.log("******** Database Warning Begins*********");
+//   console.log("Warning: ");
+//   console.log(msg);
+//   console.log("Time   :"  + new Date());
+//   console.log("******** Database Warning Ends*********");
+//   console.log("\n");
 
-}
+// }
 
 //=================
 //      Util

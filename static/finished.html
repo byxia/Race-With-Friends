@@ -11,6 +11,7 @@
 
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="js/clientAjax.js"></script>
 
 </head> 
 <body> 
@@ -76,12 +77,12 @@
 		<div data-role="navbar">
 			<ul>
 				<li>
-					<a href="active.html" data-transition="slide" data-direction="reverse" data-icon="active-races">
+					<a href="active.html" data-transition="slide" class="active-link" data-direction="reverse" data-icon="active-races">
 						Active Races
 					</a>
 				</li>
-				<li><a href="finished.html" data-transition="slide" class="ui-btn-active ui-state-persist" data-icon="finished-races">Past Races</a></li>
-				<li><a href="profile.html" data-transition="slide" data-icon="profile">Profile</a></li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link ui-btn-active ui-state-persist" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=myself" class="profile-link" data-transition="slide" data-icon="profile">Profile</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div><!-- /footer --><!-- /footer -->
