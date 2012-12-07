@@ -3,7 +3,7 @@ var port  = ":8888";
 var url = "http://" + _URL_ + port;
 var DEFAULT_CLIENT_ERR = "An error occurred on the client side.";
 
-//a list of command
+//a list of api commands
 var GET_MYSELF = "getMyself";
 var GET_USER_BY_ID = "getUserById";
 var GET_USER_BY_EMAIL = "getUserByEmail";
@@ -14,6 +14,11 @@ var GET_FB_USER_BY_ID = "getFBUserById";
 var CREATE_RACE = "createRace";
 var GET_OWNED_RACES = "getOwnedRaces";
 var GET_CHALLENGED_RACES = "getChallengedRaces";
+var GET_ALL_RACES = "getAllRaces";
+var GET_SMALL_PICTURE = "getSmallPicture";
+var GET_SQUARE_PICTURE= "getSquarePicture";
+var GET_LARGE_PICTURE = "getLargePicture";
+
 
 //========================
 //       Ajax Request
@@ -56,6 +61,22 @@ function getOwnedRaces(id, successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_OWNED_RACES,{id : id}),true,successCallback,errorCallback);
 }
 
+function getAllRaces (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_ALL_RACES,{id:id}),true,successCallback,errorCallback);
+}
+
+function getSmallPicture (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_SMALL_PICTURE, {id : id}),true,successCallback, errorCallback);
+}
+
+function getLargePicture (id, successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_LARGE_PICTURE, {id : id}),true,successCallback, errorCallback);
+}
+
+function getSquarePicture(id, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),true,successCallback, errorCallback);
+}
+
 
 //======================
 //       Util
@@ -65,7 +86,7 @@ function prepareURL (cmd,obj) {
 		clientError("No command given to prepareURL()");
 		return;
 	}
-	if(isNull(obj)){
+	if(isNull(obj) || isEmptyObj(obj)){
 		return "/api/"+cmd;
 	}
 	var ajaxURL = "/api/"+cmd;
@@ -111,6 +132,13 @@ function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 	});
 }
 
+function isEmptyObj(obj){
+    if(isNull(obj)) return false;
+    for (var name in obj) {
+                return false;
+    }
+    return true;
+}
 
 function validString(s){
   return (!isNull(s)) && typeof(s)==="string" && s.trim().length >0 ;
