@@ -6,7 +6,7 @@ var maxRaceNameLength = 9;
 
 
 // active races page
-$('#active-races').live('pageinit', function(){
+$('#active-races').live('pageshow', function(){
 
 	$.mobile.showPageLoadingMsg();
 
@@ -25,7 +25,7 @@ $('#active-races').live('pageinit', function(){
 		getChallengedRaces(function(challengedRaces){
 			// console.log(challengedRaces);
 
-			console.log(challengedRaces);
+			// console.log(challengedRaces);
 
 			$('#challenged-races').html('<li data-role="list-divider">Waiting for Your Run</li>');
 
@@ -79,7 +79,7 @@ $('#active-races').live('pageinit', function(){
 								</div>\
 								<div class="ui-block-d">\
 									<div class="btn">\
-										<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+										<a href="race.html" data-role="button" data-theme="f">Race!</a>\
 									</div>\
 								</div>\
 							</div></li>');
@@ -129,7 +129,7 @@ $('#active-races').live('pageinit', function(){
 					// console.log(opponent);
 
 					getSquarePicture(opponentId,function(picture){
-						console.log(opponentId);
+						// console.log(opponentId);
 						if (validatePicture(picture) === true){
 							$('#owned-races').append('<li><div class="ui-grid-c">\
 								<div class="ui-block-a">\
@@ -206,9 +206,14 @@ $('#new-race').bind('pageshow', function(){
 			return compare(a, b, "name"); 
 		});
 
+		
 		for (var i=0; i<list.length; i++){
-			$("<li><img class='avatar'><a href='profile.html?id="+list[i].id+"&source=newRace'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
-		}
+			// getSquarePicture(list[i].id,function(picture){
+			// 	if (validatePicture === true){
+					$("<li><a href='race-recording.html?source=newRace'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
+				// }
+			// });
+		};
 
 		$("#friend-list ul").listview("refresh");
 	}, log);
