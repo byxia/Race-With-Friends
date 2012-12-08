@@ -116,7 +116,7 @@ var dbUtil = {
 	    }
 
 	    model.findOneAndUpdate(query,newInstance,options,function(err, obj){
-	        //obj could be old instance or the one just updated depending on options
+	        //this returned obj could be old instance or the one just updated depending on options
 	        if(err){
 	            util.dbError(err);
 	            if(errorCallback){

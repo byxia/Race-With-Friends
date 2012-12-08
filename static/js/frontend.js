@@ -221,7 +221,7 @@ $('#new-race').bind('pageshow', function(){
 			return compare(a, b, "name"); 
 		});
 
-
+		friends  = friends.slice(0,50);
 		$(friends).each(function(index,object){
 
 			var name = object.name;

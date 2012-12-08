@@ -223,6 +223,7 @@ function initRequestHandler () {
         res.redirect('/account');
     });
     //handle commands and errors
+    app.post('/api/:cmd',handlePostRequest);
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
     app.listen(PORT);
@@ -250,7 +251,7 @@ function _updateUserMulti_(query, newInstance,options, successCallback, errorCal
     dbUtil.updateManyInstances(USER, query, newInstance, options, successCallback, errorCallback, "User Moel");
 }
 
-function _updateRaceUnique_(){
+function _updateRaceUnique_(query,newInstance,options,successCallback,errorCallback){
     dbUtil.updateOneInstance(RACE,query,newInstance,options,successCallback,errorCallback,"Race Model");
 
 }
@@ -311,6 +312,9 @@ function getAllRacesChallenged(id, successCallback, errorCallback){
     _readFromRACE_({opponent_id : id}, successCallback, errorCallback);
 }
 
+
+
+
 //==========================
 //     Requeset Handler
 //==========================
@@ -321,7 +325,37 @@ function handleClientError(request, response){
 }
 
 /*
-*   Handle ajax request. Send back JSON object
+* Handle POST ajax request. Send back JSON object
+*/
+function handlePostRequest(request, response){
+    var requestURL = request.url;
+    var requestQuery = url.parse(requestURL);
+
+    if(util.isNull(requestQuery)){
+        util.serverErr("Invalid url: " + requestURL +". No query can be parsed in handlePostRequest.");
+        response.send(ERROR_OBJ);
+        return;
+    }
+    var cmd = requestQuery.pathname.toString().substring(5);  
+    if(util.isNull(cmd)){
+        util.serverErr("Invalid ajax request: " + requestURL + ". No command found in handlePostRequest.");
+        response.send(ERROR_OBJ);
+        return;
+    }
+    if(util.isNull(cmdHandler[cmd]) ||
+        typeof(cmdHandler[cmd])!=="function"){
+        util.serverErr("Invalid command. Server can't handle post request with command: "+ cmd);
+        response.send(ERROR_OBJ);
+        return;
+    }
+    if(util.isNull(request.body)){
+        request.body = {};
+    }
+    cmdHandler[cmd](request.body,request,response);
+}
+
+/*
+*   Handle GET ajax request. Send back JSON object
 */
 function handleCommands(request, response){
 
@@ -421,7 +455,6 @@ function initCommandHandler(){
                 response.send(ERROR_OBJ);
                 return;
             }
-            // console.log(data);
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
                 if(!list){
@@ -588,6 +621,21 @@ function initCommandHandler(){
 
     cmdHandler.getLargePicture = function(args, request, response){
         _getPictureHelp_(args,request,response,"large");
+    }
+
+    cmdHandler.updateRace = function(args, request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.send(ERROR_OBJ);
+            return;
+        }        
+        if(!util.validString(args._id)){
+            util.serverErr("No race id is passed to updateRace");
+            response.send(ERROR_OBJ);
+            return;
+        }
+
+
     }
 
     function _getPictureHelp_(args,request,response,size){
