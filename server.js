@@ -9,7 +9,6 @@
 // It handles http requests, talks to the database, and 
 // responds with static files or JSON objects, depending on the request.
 
-
 //require other node modules 
 var mongoose = require('mongoose');
 var querystring = require("querystring");
@@ -177,16 +176,23 @@ function initRequestHandler () {
         util.serverErr("No app instance found. Can't init requestHandler");
         return;
     }
+
     app.get('/', function(req, res){
         if(!req.isAuthenticated()){
             res.redirect("/static/login.html");
             return;
         }
-                    FB.api('/me/', function(response) {
-                console.log(response);
-            });
         res.redirect("/static/active.html");
     }); 
+
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
+
+    app.get('/newrace',function(req, res){
+            res.redirect('/static/new-race.html');
+    });
 
 
     app.get('/auth/facebook',
@@ -195,19 +201,13 @@ function initRequestHandler () {
             // The request will be redirected to Facebook for authentication, so this
             // function will not be called.
     });
+
     app.get('/auth/facebook/callback', 
         passport.authenticate('facebook', { successRedirect: '/', 
                                             failureRedirect: '/',
-                                            scope: ['read_friendlists', 'publish_actions','publish_stream'] }));    
-    app.get('/logout', function(req, res){
-        req.logout();
-        res.redirect('/account');
-    });
+                                            scope: ['read_friendlists', 'publish_actions','publish_stream'] }));  
 
-    app.get('/newrace',
-        function(req, res){
-            res.redirect('/static/new-race.html');
-    });
+    //handle commands and errors
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
     app.listen(PORT);
@@ -218,9 +218,6 @@ function initRequestHandler () {
 //=========================
 //      Database Util
 //=========================
-
-//--------Table-Specific Helper Methods-------
-
 function _readFromRACE_ (option, successCallback, errorCallback){
     // _readFromDatabase_(RACE,option,successCallback,errorCallback, "Race model");
     dbUtil.readFromDatabase(RACE,option,successCallback, errorCallback, "Race Model");
@@ -280,8 +277,6 @@ function removeUserById(id, successCallback,errorCallback){
 //     RACE table CRUD
 //==========================
 function createRace(race,successCallback, errorCallback){
-    console.log("creating race: ");
-    log(race);
     dbUtil.createNewInstance(RACE,race,successCallback,errorCallback,"Race Model");
 }
 
@@ -293,25 +288,17 @@ function getRaceById(id,successCallback, errorCallback){
     _readFromRACE_({_id : id}, successCallback, errorCallback); 
 }
 
-/*
-*   Get all races owned by user with the given id
-*/
 function getAllRacesOwnedBy(id, successCallback, errorCallback){
     _readFromRACE_({owner_id : id}, successCallback, errorCallback);
 }
 
-/*
-*   Get all races where the user with the given id is challenged
-*/
 function getAllRacesChallenged(id, successCallback, errorCallback){
     _readFromRACE_({opponent_id : id}, successCallback, errorCallback);
 }
 
-function serveStaticFile(request, response) {
-
-    response.sendfile(request.params.staticFilename);
-    console.log("Serve static file: " + request.params.staticFilename);
-}
+//==========================
+//     Requeset Handler
+//==========================
 
 function handleClientError(request, response){
     util.serverErr("Client side error-> " +request.params.msg.toString()+"\n URL: " + request.url);
@@ -325,18 +312,7 @@ function handleCommands(request, response){
 
     var requestURL = request.url;
     var requestQuery = url.parse(requestURL);
-    // console.log(requestQuery);
-   
-
-    /*  requsetQuery Object for 
-        url: /api/getUser?id=11&name=Zi
-    { search: '?id=11&name=Zi',
-       query: 'id=11&name=Zi',
-       pathname: '/api/getUser',
-       path: '/api/getUser?id=11&name=Zi',
-       href: '/api/getUser?id=11&name=Zi' }
-    */
-
+    
     if(util.isNull(requestQuery)){
         util.serverErr("Invalid url: " + requestURL +". No query can be parsed.");
         response.send(ERROR_OBJ);
@@ -360,6 +336,9 @@ function handleCommands(request, response){
     cmdHandler[cmd](args,request, response);
 }
 
+
+//Init command hanlder to handle different ajax request 
+//and send back JSON object
 function initCommandHandler(){
     cmdHandler.getAllUsers = function(args,request,  response){
         //no args needed
@@ -586,73 +565,6 @@ function initCommandHandler(){
     cmdHandler.getLargePicture = function(args, request, response){
         _getPictureHelp_(args,request,response,"large");
     }
-
-    // function _getAllRaces_help(args,request, response, option){
-    //     if(!request.isAuthenticated() || 
-    //         !request.user){
-    //         response.send(ERROR_OBJ);
-    //         return;
-    //     }
-    //     if(!util.validString(args.id)){
-    //         util.serverErr("No id given to getChallengedRaces");
-    //         response.send(ERROR_OBJ);
-    //         return;            
-    //     }
-    //     var allRacesList= [];
-    //     getUserById(request.user.id,function(me){
-    //         if(!me || !(me[0])){
-    //             util.serverErr("Can't get user (self) with id: " + request.user.id);
-    //             response.send(ERROR_OBJ);
-    //             return;
-    //         }
-    //         graph.setAccessToken(me[0].token);
-    //         graph.get(me[0].id+"/"+"picture?type=square",function(err,picture){
-    //             if(err){
-    //                 util.serverErr(err);
-    //                 response.send(ERROR_OBJ);
-    //                 return;
-    //             }
-    //             getAllRaces(function(list){
-    //                 if(util.isNull(list)){
-    //                     util.serverErr("Error occurred in getAllRaces. list is null");
-    //                     response.send(ERROR_OBJ);
-    //                     return;
-    //                 }
-    //                 for(var i=0; i<list.length;i++){
-    //                     if(
-    //                         (option === 'all'  && 
-    //                         (list[i].owner_id === args.id || list[i].opponent_id=== args.id))
-    //                         ||
-    //                         (option === 'owned' && list[i].owner_id === args.id)
-    //                         ||
-    //                         (option === 'challenged' && list[i].opponent_id === args.id)){
-    //                         allRacesList.push(list[i]);
-    //                     }
-    //                 }
-    //                 var processed = 0;
-    //                 for(var i=0; i<allRacesList.length;i++){
-    //                     var anotherId = (allRacesList[i].owner_id === me[0].id)? allRacesList[i].opponent_id 
-    //                                         : allRacesList[i].owner_id;
-    //                     graph.get(anotherId+"/"+"picture?type=square",function(err,picture){
-    //                         processed++;
-    //                     });
-    //                 }
-
-
-
-    //             },function(err){
-    //                 util.serverErr(err);
-    //                 response.send(ERROR_OBJ);
-    //                 return;
-    //             });   
-    //         });
-    //     });
-
-
-
-
-           
-    // };
 
     function _getPictureHelp_(args,request,response,size){
         if(!request.isAuthenticated() || 

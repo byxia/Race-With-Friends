@@ -1,3 +1,14 @@
+/*=====================================================
+                  Race With Friends
+            CMU 15-237 Fall 2012 Final Project
+  =====================================================*/
+/* Bingying Xia(bxia), Ruoyu Li(ruoyul), Zi Wang(ziw)  */
+
+
+// This file contains all helper methods that are needed to 
+// send out ajax request to our server. Each method is a wrapper for an api call 
+// and takes in callback functions for front-end DOM manipulation.
+
 var DEFAULT_CLIENT_ERR = "An error occurred on the client side.";
 
 //a list of api commands
@@ -78,6 +89,9 @@ function getSquarePicture(id,successCallback, errorCallback){
 //======================
 //       Util
 //======================
+
+//Convert an api command and its optional parameters into 
+//a valid query url. e.g. getUser?id=1&option=detailed
 function prepareURL (cmd,obj) {
 	if(!validString(cmd)){
 		clientError("No command given to prepareURL()");
@@ -96,6 +110,7 @@ function prepareURL (cmd,obj) {
 	return ajaxURL;
 }
 
+// Send the ajax request to ask the server for a JSON object
 function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 	if(isNull(onSuccess) || typeof(onSuccess)!=="function") {
 		onSuccess = function(obj){
