@@ -174,7 +174,7 @@ $('#active-races').live('pageshow', function(){
 				//TODO: FILTER RACES TO ONLY WAITING
 
 				$(ownedRaces).each(function(index, race){
-					console.log(race);
+					// console.log(race);
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
 					// console.log(race);
