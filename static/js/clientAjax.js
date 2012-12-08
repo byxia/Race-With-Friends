@@ -50,12 +50,12 @@ function createRace (race,successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(CREATE_RACE,race),true,successCallback,errorCallback);
 }
 
-function getChallengedRaces(id, successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_CHALLENGED_RACES,{id : id}),true,successCallback,errorCallback);
+function getChallengedRaces(successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_CHALLENGED_RACES),true,successCallback,errorCallback);
 }
 
-function getOwnedRaces(id, successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_OWNED_RACES,{id : id}),true,successCallback,errorCallback);
+function getOwnedRaces( successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_OWNED_RACES),true,successCallback,errorCallback);
 }
 
 function getAllRaces (id, successCallback, errorCallback) {

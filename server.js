@@ -5,7 +5,12 @@
 /* Bingying Xia(bxia), Ruoyu Li(ruoyul), Zi Wang(ziw)  */
 
 
+// This file is the server of this application. 
+// It handles http requests, talks to the database, and 
+// responds with static files or JSON objects, depending on the request.
 
+
+//require other node modules 
 var mongoose = require('mongoose');
 var querystring = require("querystring");
 var http = require("http");
@@ -22,19 +27,19 @@ var util   = require('./Util.js').util;
 var FB = require('fb');
 var graph = require('fbgraph');
 
+//server side constants
 var errorMsg = "Error occurred in processing the request.";
 var ERROR_OBJ = {error : errorMsg,status: 0};
 var SUCCESS_OBJ={status: 1};
 var PORT = 8888;
 var FB_APP_ID = "173419086133939";
 var FB_APP_SECRET = "2cb745277dce894015c75e2de5d49fcb";
-
 var cmdHandler = {};
 var db = mongoose.createConnection('mongodb://localhost/race');
 var app = express();
 
+//Database constatns
 /*====TABLE (Collection) NAMES =====*/
-/*prefix with T*/
 var T_USER = "User";
 var T_RACE = "Race";
 var T_FRIEND = "Friend";
@@ -50,11 +55,8 @@ var CLIENT_ERR_MSG = errorMsg;
 //      init/main
 //======================================
 
-function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next(); }
-    res.redirect('/login.html');
-}
-
+//This method is called when the server starts. 
+//It's the only entry point of the server.
 function onStart(){
 
     initCommandHandler();
@@ -92,26 +94,8 @@ function onStart(){
         // callbackURL: "http://zouni.heroku.com/auth/facebook/callback"
         },
         function(accessToken, refreshToken, profile, done) {
-
             FB.setAccessToken(accessToken);
             graph.setAccessToken(accessToken);
-
-            var wallPost = {
-              message: "Foo()"
-            };
-
-            // graph.post(profile.id + "/feed", wallPost, function(err, res) {
-            //   // returns the post id
-            //   if(err){
-            //     log('err:');
-            //     log(err);
-            //   }
-            //   else{
-            //     log("success");
-            //     log(res);
-            //   }
-            // });
-
 
             getUserById(profile.id, function(user){
                 if(util.isNull(user) || util.isEmptyObj(user)){
@@ -139,14 +123,19 @@ function onStart(){
     ));
 
     initRequestHandler();
-    app.listen(PORT);
-
     process.on("uncaughtException", onUncaughtException);
-    console.log("Server started successfully");
+    log("Server started successfully");
+
+    initDatabase();
+
+}
+
+function initDatabase(){
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function callback () {
-      console.log("Database Connection Success");
+      log("Database Connection Success");
 
+      //Schema for user collection
       var USER_SCHEMA = new mongoose.Schema({
         id             : String,
         token          : String,
@@ -159,6 +148,7 @@ function onStart(){
         //TODO add profile pic
       });
 
+      //Schema for race collection
       var RACE_SCHEMA = new mongoose.Schema({
         owner_id        : String,
         opponent_id     : String,
@@ -177,19 +167,9 @@ function onStart(){
         winner_id       : String
       });
 
-      var FRIEND_SCHEMA = new mongoose.Schema({
-        user_one_id : String,
-        user_two_id : String
-      });
-
       USER = db.model(T_USER,   USER_SCHEMA);
       RACE = db.model(T_RACE, RACE_SCHEMA);
-      FRIEND = db.model(T_FRIEND,FRIEND_SCHEMA);
 
-    var me = {
-        first_name : "Zi",
-        last_name : "Wang"
-      };
     });
 }
 
@@ -209,11 +189,6 @@ function initRequestHandler () {
         res.redirect("/static/active.html");
     }); 
 
-    app.get('/account', ensureAuthenticated, function(req, res){
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        console.log(req.user);
-        res.redirect('/success.html');
-    });
 
     app.get('/auth/facebook',
         passport.authenticate('facebook'),
@@ -236,7 +211,7 @@ function initRequestHandler () {
     });
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
-
+    app.listen(PORT);
 
 }
 
@@ -532,15 +507,15 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!util.validString(args.id)){
-            util.serverErr("No id given to getOwnedRaces");
+        if(!util.validString(request.user.id)){
+            util.serverErr("No id found in request to getOwnedRaces");
             response.send(ERROR_OBJ);
             return;            
         }
 
-        getAllRacesOwnedBy(args.id,function(list){
+        getAllRacesOwnedBy(request.user.id,function(list){
             if(util.isNull(list)){
-                util.serverErr("No races found owned by : "+ args.id);
+                util.serverErr("No races found owned by : "+ request.user.id);
                 response.send(ERROR_OBJ);
                 return;
             }
@@ -556,15 +531,15 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!util.validString(args.id)){
+        if(!util.validString(request.user.id)){
             util.serverErr("No id given to getChallengedRaces");
             response.send(ERROR_OBJ);
             return;            
         }
 
-        getAllRacesChallenged(args.id,function(list){
+        getAllRacesChallenged(request.user.id,function(list){
             if(util.isNull(list)){
-                util.serverErr("No races found challenging: "+ args.id);
+                util.serverErr("No races found challenging: "+ request.user.id);
                 response.send(ERROR_OBJ);
                 return;
             }
@@ -616,6 +591,73 @@ function initCommandHandler(){
     cmdHandler.getLargePicture = function(args, request, response){
         _getPictureHelp_(args,request,response,"large");
     }
+
+    // function _getAllRaces_help(args,request, response, option){
+    //     if(!request.isAuthenticated() || 
+    //         !request.user){
+    //         response.send(ERROR_OBJ);
+    //         return;
+    //     }
+    //     if(!util.validString(args.id)){
+    //         util.serverErr("No id given to getChallengedRaces");
+    //         response.send(ERROR_OBJ);
+    //         return;            
+    //     }
+    //     var allRacesList= [];
+    //     getUserById(request.user.id,function(me){
+    //         if(!me || !(me[0])){
+    //             util.serverErr("Can't get user (self) with id: " + request.user.id);
+    //             response.send(ERROR_OBJ);
+    //             return;
+    //         }
+    //         graph.setAccessToken(me[0].token);
+    //         graph.get(me[0].id+"/"+"picture?type=square",function(err,picture){
+    //             if(err){
+    //                 util.serverErr(err);
+    //                 response.send(ERROR_OBJ);
+    //                 return;
+    //             }
+    //             getAllRaces(function(list){
+    //                 if(util.isNull(list)){
+    //                     util.serverErr("Error occurred in getAllRaces. list is null");
+    //                     response.send(ERROR_OBJ);
+    //                     return;
+    //                 }
+    //                 for(var i=0; i<list.length;i++){
+    //                     if(
+    //                         (option === 'all'  && 
+    //                         (list[i].owner_id === args.id || list[i].opponent_id=== args.id))
+    //                         ||
+    //                         (option === 'owned' && list[i].owner_id === args.id)
+    //                         ||
+    //                         (option === 'challenged' && list[i].opponent_id === args.id)){
+    //                         allRacesList.push(list[i]);
+    //                     }
+    //                 }
+    //                 var processed = 0;
+    //                 for(var i=0; i<allRacesList.length;i++){
+    //                     var anotherId = (allRacesList[i].owner_id === me[0].id)? allRacesList[i].opponent_id 
+    //                                         : allRacesList[i].owner_id;
+    //                     graph.get(anotherId+"/"+"picture?type=square",function(err,picture){
+    //                         processed++;
+    //                     });
+    //                 }
+
+
+
+    //             },function(err){
+    //                 util.serverErr(err);
+    //                 response.send(ERROR_OBJ);
+    //                 return;
+    //             });   
+    //         });
+    //     });
+
+
+
+
+           
+    // };
 
     function _getPictureHelp_(args,request,response,size){
         if(!request.isAuthenticated() || 
