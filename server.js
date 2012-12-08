@@ -413,7 +413,16 @@ function initCommandHandler(){
             // console.log(data);
             FB.setAccessToken(data[0].token);
             FB.api('/me/friends',function(list){
-                response.send(list? list.data : ERROR_OBJ);
+                if(!list){
+                    serverErr('Error. List is null from FB.api(/me/friends)');
+                    response.send(ERROR_OBJ);
+                    return;
+                }
+                response.send(
+                {
+                    me : request.user,
+                    friends : list
+                });
             });
 
         });
