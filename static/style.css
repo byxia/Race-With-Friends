@@ -621,12 +621,11 @@ a + .ui-title{
 }
 
 #finished-list li .ui-btn-inner{
-	padding: 15px 10px;
-	padding-bottom: 30px;
+	padding: 15px 10px 5px 10px;
 }
 
 #finished-list .ui-icon{
-	margin-top: 17px;
+	margin-top: -7px;
 /*	margin-right: -10px;*/
 
 }
@@ -640,9 +639,9 @@ a + .ui-title{
 
 
 #finished-list .info{
-	float:left;
-	margin-left: 10px;
-	margin-top: 3px;
+	padding-left: 25px;
+	padding-top: 13px;
+/*	margin-top: 3px;*/
 }
 #finished-list .winner{
 	font-size: 18px;
@@ -679,8 +678,9 @@ a + .ui-title{
 #profile .avatar .img-wrapper{
 	width: 100px;
 	height: 100px;
-	border: 1px solid #ccc;
+	outline: 1px solid #ccc;
 	overflow: hidden;
+	margin-bottom: 4px;
 }
 
 #profile .avatar img.vertical{

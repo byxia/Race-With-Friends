@@ -30,6 +30,9 @@ geo.prototype.errCallBack = function(err) {
     alert("Error: " + code + ", " + err.message);
 }
 
+/**
+ * change the map's view depending on the device
+ */
 geo.prototype.detectBrowser = function() {
     var useragent = navigator.userAgent;
     var mapdiv = document.getElementById("map_canvas");
@@ -43,6 +46,9 @@ geo.prototype.detectBrowser = function() {
     }
 }
 
+/**
+ * initialize the map, the starter maker, the the route for later use
+ */
 geo.prototype.initialize = function() {
     // mobile specific style
     this.detectBrowser();
@@ -102,6 +108,9 @@ geo.prototype.initialize = function() {
     }, this.errCallBack, this.geoOptions);
 }
 
+/**
+ * Handle updating the user's runnning route every T = 1s interval
+ */
 geo.prototype.timer = function() {
     var that = this;
     that.intervalId = setInterval(function() {
@@ -134,6 +143,11 @@ geo.prototype.timer = function() {
     }, 1000);
 }
 
+/**
+ * Calculate distance between 2 (latitude, longitude) pairs 
+ * From http://www.movable-type.co.uk/scripts/latlong.html
+ * This function is not very accurate.
+ */
 geo.prototype.delta2Pts = function(a, b) {
     // Converts numeric degrees to radians
     if (typeof Number.prototype.toRad == 'undefined') {
@@ -161,4 +175,5 @@ geo.prototype.delta2Pts = function(a, b) {
     return R * c;
 }
 
+// new instance of geo and start running
 new geo();

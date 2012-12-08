@@ -205,8 +205,12 @@ function initRequestHandler () {
     app.get('/auth/facebook/callback', 
         passport.authenticate('facebook', { successRedirect: '/', 
                                             failureRedirect: '/',
-                                            scope: ['read_friendlists', 'publish_actions','publish_stream'] }));  
-
+                                            scope: ['user_photos',
+                                                    'publish_stream'] }));
+    app.get('/logout', function(req, res){
+        req.logout();
+        res.redirect('/account');
+    });
     //handle commands and errors
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
