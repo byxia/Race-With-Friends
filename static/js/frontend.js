@@ -229,6 +229,7 @@ $('#new-race').bind('pageshow', function(){
 
 			newLi.appendTo('#friend-list ul');
 			$(newLi.find('p')[0]).bind('click', function(){
+				$.mobile.showPageLoadingMsg();
 				// parse full name into first + last
 				var matches = name.split(' ');
 				var friendFirst = matches[0]; 
@@ -267,7 +268,7 @@ $('#new-race').bind('pageshow', function(){
 						alert("ERROR - STATUS0");
 						return;	
 					}
-					window.location.href="race-recording.html?source=new-race";
+					window.location.href="race-recording.html?raceId="+object._id+"&source=new-race";
 					// alert("race created");
 				});
 			});

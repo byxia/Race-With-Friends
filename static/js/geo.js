@@ -51,6 +51,9 @@ geo.prototype.detectBrowser = function() {
  * initialize the map, the starter maker, the the route for later use
  */
 geo.prototype.initialize = function() {
+
+    $.mobile.hidePageLoadingMsg();
+
     // mobile specific style
     this.detectBrowser();
     var that = this;
@@ -65,6 +68,11 @@ geo.prototype.initialize = function() {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+        $('#finish-run-btn').hide();
+        $('#stop-run-btn').hide();
+        $('#arrive-instruction').hide();
+
 
         $("#start-run-btn").click(function(){
             alert("hehe");
