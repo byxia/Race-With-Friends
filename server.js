@@ -42,12 +42,10 @@ var app = express();
 /*====TABLE (Collection) NAMES =====*/
 var T_USER = "User";
 var T_RACE = "Race";
-var T_FRIEND = "Friend";
 
 /*==== Models ====*/
 var USER;
 var RACE;
-var FRIEND;
 
 var CLIENT_ERR_MSG = errorMsg;  
 
@@ -143,9 +141,10 @@ function initDatabase(){
         last_name      : String,
         last_login_date: Date,
         record_dist    : Number,
-        record_race_id : String
-        //TODO add personal records & achievment
-        //TODO add profile pic
+        record_race_id : String,
+        won_races      : Number,
+        lost_races     : Number,
+        total_races    : Number
       });
 
       //Schema for race collection
@@ -229,10 +228,6 @@ function _readFromRACE_ (option, successCallback, errorCallback){
 
 function _readFromUSER_ (option, successCallback, errorCallback){
     dbUtil.readFromDatabase(USER,option,successCallback,errorCallback, "User Model");
-}
-
-function _readFromFRIEND_(option, successCallback, errorCallback){
-    dbUtil.readFromDatabase(FRIEND,option,successCallback,errorCallback,"Friend Model");
 }
 
 function _updateUserUnique_(query,newInstance, options, successCallback, errorCallback){
@@ -523,7 +518,7 @@ function initCommandHandler(){
         },function(err){
             response.send(ERROR_OBJ);
         });        
-    }
+    }   
 
     cmdHandler.getChallengedRaces = function(args, request,response){
         if(!request.isAuthenticated() || 
