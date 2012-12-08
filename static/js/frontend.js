@@ -265,7 +265,7 @@ $('#new-race').bind('pageshow', function(){
 						console.log(object.status);
 						window.location.href="/";
 						alert("ERROR - STATUS0");
-						return;
+						return;	
 					}
 					window.location.href="race-recording.html?source=new-race";
 					// alert("race created");
