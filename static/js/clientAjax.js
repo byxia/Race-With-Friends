@@ -26,7 +26,7 @@ var GET_ALL_RACES = "getAllRaces";
 var GET_SMALL_PICTURE = "getSmallPicture";
 var GET_SQUARE_PICTURE= "getSquarePicture";
 var GET_LARGE_PICTURE = "getLargePicture";
-var UPDATE_RACE = "updateRace";
+var UPDATE_RACE = "UPDATE_RACE";
 
 
 //========================

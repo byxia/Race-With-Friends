@@ -156,11 +156,21 @@ function initDatabase(){
         opponent_last_name:String,
         status          : String,
         creation_date   : { type: Date, default: Date.now },
-        finish_date     : Date, 
+
+        owner_start_date : Date,
+        opponent_start_date: Date,
+        owner_finish_date   : Date, 
+        opponent_finish_date : Date,
+
+        finish_date     : Date,
+
         owner_route     : [],
         opponent_route  : [],
         owner_time      : String,
         opponent_time   : String,
+        owner_distance  : Number,
+        opponent_distance: Number,
+
         length          : Number,
         winner_id       : String
       });
@@ -634,9 +644,56 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
+        getRaceById(args._id,function(race){
+            if(isNull(race) || race.length !== 1){
+                util.serverErr("No race found or more than one race found with id: " + args._id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            var thisRace = race[0];
+            var userId   = request.user.id;
+            if(userId !== thisRace.owner_id &&
+                userId !== thisRace.opponent_id){
+                util.serverErr("userId: " + userId +" is not in the race with id : " + args._id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            if(thisRace.status === "finished"){
+                util.serverErr("Race is already finished. Id: " + args._id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            var newRace = (userId === thisRace.owner_id)?
+                {
+                    owner_distance : args.distance,
+                    owner_time     : args.duration,
+                    owner_route    : args.route,
+                    owner_start_date : args.start_date,
+                    owner_finish_date: args.finish_date,
+                    status           : "waiting"
+                } :
+                {
+                    opponent_distance : args.distance,
+                    opponent_time     : args.duration,
+                    opponent_route    : args.route,
+                    opponent_start_date : args.start_date,
+                    opponent_finish_date: args.finish_date,
+                    status              : "finished"
+                };
 
+            _updateRaceUnique_({_id : args._id}, newRace, function(){
+                response.send(SUCCESS_OBJ);
+            }, function(err){
+                util.serverErr("Error when updating race");
+                response.send(ERROR_OBJ);
+            });
+
+        },function(err){
+            response.send(ERROR_OBJ);
+        });
 
     }
+
 
     function _getPictureHelp_(args,request,response,size){
         if(!request.isAuthenticated() || 
