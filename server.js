@@ -418,7 +418,8 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        var id = args._id === "me" ? request.user.id : args.id;
+        var id = args._id === "me" ? request.user.id : args._id;
+        console.log("getting user by id:" + id);
         getUserById(id, function(result){response.send(result);},
             function(){response.send(ERROR_OBJ)});
     };
