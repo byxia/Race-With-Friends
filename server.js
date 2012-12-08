@@ -183,6 +183,7 @@ function initRequestHandler () {
     //     return;
     // });
 
+    
     app.get('/', function(req, res){
         if(!req.isAuthenticated()){
             res.redirect("/static/login.html");
@@ -194,6 +195,9 @@ function initRequestHandler () {
     app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');
+    });
+    app.get('/back/:url',function(req,res){
+        res.redirect("/"+req.params.url);
     });
 
     app.get('/newrace',function(req, res){
