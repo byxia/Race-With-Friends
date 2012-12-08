@@ -6,7 +6,11 @@ var maxRaceNameLength = 9;
 
 
 // active races page
-$('#active-races').bind('pageshow', function(){
+$('#active-races').live('pageinit', function(){
+	// console.log("showing active page");
+	$('#challenged-races').html('');
+	$('#owned-races').html('');
+
 	$('#new-btn').bind('click', function(){
 		window.location.href="/newrace";
 	});
@@ -112,43 +116,51 @@ $('#active-races').bind('pageshow', function(){
 					var race = ownedRaces[i];
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
-					console.log(race);
-					console.log(opponent);
+					// console.log(race);
+					// console.log(opponent);
 
-					getSquarePicture(opponentId, opponent, function(picture){
-						// console.log(picture.first_name +"/"+picture.last_name);
-						console.log(picture);
-						$('#owned-races').append('<li><div class="ui-grid-c">\
-							<div class="ui-block-a">\
-								<div class="person">\
-									<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
-									<div class="name">'+opponent+'</div>\
-								</div>\
-							</div>\
-							<div class="ui-block-b">\
-								<div class="info">\
-									2.3mi run<br/>\
-									4mi away\
-								</div>\
-							</div>\
-							<div class="ui-block-c">\
-								<div class="btn">\
-									<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
-								</div>\
-							</div>\
-							<div class="ui-block-d">\
-								<div class="btn">\
-									<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
-								</div>\
-							</div>\
-						</div></li>');
 
-						$("#owned-races").listview("refresh").trigger('create');
+					$('#owned-races').append('<li userid="'+opponentId+'"><div class="ui-grid-c">\
+						<div class="ui-block-a">\
+							<div class="person">\
+								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" ></a>\
+								<div class="name">'+opponent+'</div>\
+							</div>\
+						</div>\
+						<div class="ui-block-b">\
+							<div class="info">\
+								2.3mi run<br/>\
+								4mi away\
+							</div>\
+						</div>\
+						<div class="ui-block-c">\
+							<div class="btn">\
+								<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+							</div>\
+						</div>\
+						<div class="ui-block-d">\
+							<div class="btn">\
+								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+							</div>\
+						</div>\
+					</div></li>');
 
-					});
+					$("#owned-races").listview("refresh").trigger('create');
+
 
 					
 				};
+
+				// console.log($('#owned-races').length);
+
+				// for (var i=1; i<$('#owned-races').length; i++){
+				// 	log(1);
+				// 	var li = $('#owned-races')[i];
+				// 	getSquarePicture($(li).attr('userid'),function(data){
+				// 		console.log("index " + i +" " + data.location);
+				// 		$($(li).find('.avatar')[0]).attr('src',data.location);
+				// 	});
+				// }
 
 			};
 
@@ -214,7 +226,7 @@ $('#profile-page').bind('pageshow', function(){
 			$('#start-race-btn').hide();
 			$('#back-btn').remove();
 
-			$('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
+			// $('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
 
 			getLargePicture(myself.id, function(picture){
 				var result = getPicture(picture);
@@ -309,18 +321,8 @@ $('#profile-page').bind('pageshow', function(){
 			}, function(error){
 				console.log(error);
 			});
-
 		}
-		
-
-	
-
 	});
-
-
-
-
-
 });
 
 
@@ -332,42 +334,40 @@ $('#profile-page').bind('pageshow', function(){
 // --------- HELPER METHODS ---------- //
 
 
-//compareto function for strings
+//compareto function for strings at index in a json object or array
 function compare(el1, el2, index) {
   return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
 }
 
 // format name length
 function formatName(firstName, lastName, page){
-	if (firstName != undefined && lastName != undefined){
-		var length;
-		if (page === 'profile'){
-			length = maxProfileNameLength;
-		}
-		else if (page === 'race'){
-			length = maxRaceNameLength;
-		}
+	// catch when name is empty
+	if (firstName == undefined && lastName == undefined){
+		return undefined;
+	}
 
-		var displayName;
-		if (firstName.length >= length-3){
-			displayName = firstName;
+	// console.log("format name");
+	var length;
+	if (page === 'profile'){
+		length = maxProfileNameLength;
+	}
+	else if (page === 'race'){
+		length = maxRaceNameLength;
+	}
+
+	var displayName;
+	if (firstName.length >= length-3){
+		displayName = firstName;			//first name only
+	}
+	else{
+		if (page === 'race' || firstName.length + lastName.length +1 >= length){
+			displayName = firstName + " " + lastName.charAt(0) + ".";		// first + last initial
 		}
 		else{
-			if (page === 'race'){
-				displayName = firstName + " " + lastName.charAt(0) + ".";
-			}
-			else{
-				if (firstName.length + lastName.length +1 >= length){
-					displayName = firstName + " " + lastName.charAt(0) + ".";
-				}
-				else{
-					displayName = firstName + " " + lastName;
-				}
-			}
+			displayName = firstName + " " + lastName;						// full name
 		}
-		return displayName;
 	}
-	return false;
+	return displayName;
 
 }
 
