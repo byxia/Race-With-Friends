@@ -574,12 +574,32 @@ a + .ui-title{
 
 /* running */
 
+#race-recording{
+	position: relative;
+}
+
 #map_canvas{
 	width: 100%;
-	height: 300px;
+	height: 290px;
 /*	min-height: 80%;
 */	background-color: #ccc;
 	position: relative;
+}
+
+@media all and (max-height: 550px) and (min-height: 510px){
+	#map_canvas{
+		height: 320px;
+	}
+}
+@media all and (max-height: 620px) and (min-height: 551px){
+	#map_canvas{
+		height: 360px;
+	}
+}
+@media all and (max-height: 680px) and (min-height: 621px){
+	#map_canvas{
+		height: 430px;
+	}
 }
 
 #racing-with{
@@ -587,13 +607,13 @@ a + .ui-title{
 	text-align: center;
 }
 
-#map_canvas #rec-icon{
+#rec-icon{
 	width: 74px;
 	height: 33px;
 	background: url('images/rec.png') no-repeat;
 	position: absolute;
-	top: 15px;
-	right: 15px;
+	top: 125px;
+	right: 5px;
 }
 
 #running-actions p{
@@ -610,6 +630,10 @@ a + .ui-title{
 #running-actions .ui-btn-text{
 	font-size: 26px !important;
 }
+
+/*#finish-run-btn, #stop-run-btn, #arrive-instruction, #start-run-btn{
+	display:none;
+}*/
 
 
 /* finished races */

@@ -48,46 +48,97 @@ $('#active-races').live('pageshow', function(){
 					}
 				});
 
-				//TODO: FILTER RACES TO ONLY WAITING
-				for (var i=0; i<challengedRaces.length; i++){
-					var race = challengedRaces[i];
+				$(challengedRaces).each(function(index, race){
+					console.log(race);
 					var ownerId = race.owner_id;
 					var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
 					// console.log(race);
 					// console.log(opponent);
 
-					getSquarePicture(ownerId,function(picture){
-						console.log(ownerId);
-						if (validatePicture(picture) === true){
-							$('#challenged-races').append('<li><div class="ui-grid-c">\
-								<div class="ui-block-a">\
-									<div class="person">\
-										<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
-										<div class="name">'+owner+'</div>\
-									</div>\
-								</div>\
-								<div class="ui-block-b">\
-									<div class="info">\
-										2.3mi run<br/>\
-										4mi away\
-									</div>\
-								</div>\
-								<div class="ui-block-c">\
-									<div class="btn">\
-										<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
-									</div>\
-								</div>\
-								<div class="ui-block-d">\
-									<div class="btn">\
-										<a href="race.html" data-role="button" data-theme="f">Race!</a>\
-									</div>\
-								</div>\
-							</div></li>');
+					$('#challenged-races').append('<li userId="'+ownerId+'"><div class="ui-grid-c">\
+						<div class="ui-block-a">\
+							<div class="person">\
+								<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar"></a>\
+								<div class="name">'+owner+'</div>\
+							</div>\
+						</div>\
+						<div class="ui-block-b">\
+							<div class="info">\
+								2.3mi run<br/>\
+								4mi away\
+							</div>\
+						</div>\
+						<div class="ui-block-c">\
+							<div class="btn">\
+								<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
+							</div>\
+						</div>\
+						<div class="ui-block-d">\
+							<div class="btn">\
+								<a href="race.html?race='+race._id+'&source=active" data-role="button" data-theme="f">Race!</a>\
+							</div>\
+						</div>\
+					</div></li>');
 
-							$("#challenged-races").listview("refresh").trigger('create');
+					$("#challenged-races").listview("refresh").trigger('create');
+				});
+
+				$('#challenged-races li').each(function(index, object){
+					if(index ===0) return;
+					
+					var ownerId = $(object).attr('userId');
+					getSquarePicture(ownerId,function(picture){
+						// console.log(opponentId);
+						if (validatePicture(picture) === true){
+							$($(object).find('img.avatar')[0]).attr('src', picture.location);
 						}
 					});
-				};
+				});
+
+				$.mobile.hidePageLoadingMsg();
+
+
+
+				//TODO: FILTER RACES TO ONLY WAITING
+				// for (var i=0; i<challengedRaces.length; i++){
+				// 	var race = challengedRaces[i];
+				// 	var ownerId = race.owner_id;
+				// 	var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
+				// 	// console.log(race);
+				// 	// console.log(opponent);
+
+				// 	getSquarePicture(ownerId,function(picture){
+				// 		console.log(ownerId);
+				// 		if (validatePicture(picture) === true){
+				// 			$('#challenged-races').append('<li><div class="ui-grid-c">\
+				// 				<div class="ui-block-a">\
+				// 					<div class="person">\
+				// 						<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
+				// 						<div class="name">'+owner+'</div>\
+				// 					</div>\
+				// 				</div>\
+				// 				<div class="ui-block-b">\
+				// 					<div class="info">\
+				// 						2.3mi run<br/>\
+				// 						4mi away\
+				// 					</div>\
+				// 				</div>\
+				// 				<div class="ui-block-c">\
+				// 					<div class="btn">\
+				// 						<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
+				// 					</div>\
+				// 				</div>\
+				// 				<div class="ui-block-d">\
+				// 					<div class="btn">\
+				// 						<a href="race.html" data-role="button" data-theme="f">Race!</a>\
+				// 					</div>\
+				// 				</div>\
+				// 			</div></li>');
+
+				// 			$("#challenged-races").listview("refresh").trigger('create');
+				// 		}
+				// 	});
+				// };
 
 			};
 
@@ -158,6 +209,8 @@ $('#active-races').live('pageshow', function(){
 				});
 
 				$('#owned-races li').each(function(index, object){
+					if(index ===0) return;
+
 					var opponentId = $(object).attr('userId');
 					getSquarePicture(opponentId,function(picture){
 						// console.log(opponentId);
@@ -276,7 +329,7 @@ $('#new-race').bind('pageshow', function(){
 		});
 
 		$("#friend-list ul li").each(function(index, object){
-
+			// if(index ===0) return;
 			// console.log($(object).attr('userId'));
 
 			getSquarePicture($(object).attr('userId'),function(picture){
