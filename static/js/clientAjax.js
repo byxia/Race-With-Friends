@@ -71,7 +71,7 @@ function getLargePicture (id,successCallback, errorCallback) {
 }
 
 function getSquarePicture(id,successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),true,successCallback, errorCallback);
+	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),false,successCallback, errorCallback);
 }
 
 

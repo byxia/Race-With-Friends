@@ -7,6 +7,9 @@ var maxRaceNameLength = 9;
 
 // active races page
 $('#active-races').live('pageinit', function(){
+
+	$.mobile.showPageLoadingMsg();
+
 	// console.log("showing active page");
 	$('#challenged-races').html('');
 	$('#owned-races').html('');
@@ -17,10 +20,12 @@ $('#active-races').live('pageinit', function(){
 	$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
 
 	//get owned races
-	getMyself(function(myself){
+	// getMyself(function(myself){
 		// console.log(myself);
-		getChallengedRaces(myself.id, function(challengedRaces){
+		getChallengedRaces(function(challengedRaces){
 			// console.log(challengedRaces);
+
+			console.log(challengedRaces);
 
 			$('#challenged-races').html('<li data-role="list-divider">Waiting for Your Run</li>');
 
@@ -43,18 +48,21 @@ $('#active-races').live('pageinit', function(){
 					}
 				});
 
-				//TODO: FILTER
-
+				//TODO: FILTER RACES TO ONLY WAITING
 				for (var i=0; i<challengedRaces.length; i++){
 					var race = challengedRaces[i];
 					var ownerId = race.owner_id;
 					var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
-					$('#challenged-races').append('\
-						<li>\
-							<div class="ui-grid-c">\
+					// console.log(race);
+					// console.log(opponent);
+
+					getSquarePicture(ownerId,function(picture){
+						console.log(ownerId);
+						if (validatePicture(picture) === true){
+							$('#challenged-races').append('<li><div class="ui-grid-c">\
 								<div class="ui-block-a">\
 									<div class="person">\
-										<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar"></a>\
+										<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
 										<div class="name">'+owner+'</div>\
 									</div>\
 								</div>\
@@ -66,25 +74,26 @@ $('#active-races').live('pageinit', function(){
 								</div>\
 								<div class="ui-block-c">\
 									<div class="btn">\
-										<a href="details.html?race='+race._id+'" data-role="button" data-transition="slide">Details</a>\
+										<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
 									</div>\
 								</div>\
 								<div class="ui-block-d">\
 									<div class="btn">\
-										<a href="race.html" data-role="button" data-theme="f" data-transition="slide">Race!</a>\
+										<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
 									</div>\
 								</div>\
-							</div>\
-						</li>');
+							</div></li>');
+
+							$("#challenged-races").listview("refresh").trigger('create');
+						}
+					});
 				};
 
 			};
 
-			
-			$("#challenged-races").listview("refresh").trigger('create');
 		});
 
-		getOwnedRaces(myself.id, function(ownedRaces){
+		getOwnedRaces(function(ownedRaces){
 			// console.log(ownedRaces);
 
 			$('#owned-races').html('<li data-role="list-divider">Waiting for Their Run</li>');
@@ -119,37 +128,40 @@ $('#active-races').live('pageinit', function(){
 					// console.log(race);
 					// console.log(opponent);
 
+					getSquarePicture(opponentId,function(picture){
+						console.log(opponentId);
+						if (validatePicture(picture) === true){
+							$('#owned-races').append('<li><div class="ui-grid-c">\
+								<div class="ui-block-a">\
+									<div class="person">\
+										<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
+										<div class="name">'+opponent+'</div>\
+									</div>\
+								</div>\
+								<div class="ui-block-b">\
+									<div class="info">\
+										2.3mi run<br/>\
+										4mi away\
+									</div>\
+								</div>\
+								<div class="ui-block-c">\
+									<div class="btn">\
+										<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+									</div>\
+								</div>\
+								<div class="ui-block-d">\
+									<div class="btn">\
+										<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+									</div>\
+								</div>\
+							</div></li>');
 
-					$('#owned-races').append('<li userid="'+opponentId+'"><div class="ui-grid-c">\
-						<div class="ui-block-a">\
-							<div class="person">\
-								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" ></a>\
-								<div class="name">'+opponent+'</div>\
-							</div>\
-						</div>\
-						<div class="ui-block-b">\
-							<div class="info">\
-								2.3mi run<br/>\
-								4mi away\
-							</div>\
-						</div>\
-						<div class="ui-block-c">\
-							<div class="btn">\
-								<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
-							</div>\
-						</div>\
-						<div class="ui-block-d">\
-							<div class="btn">\
-								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
-							</div>\
-						</div>\
-					</div></li>');
-
-					$("#owned-races").listview("refresh").trigger('create');
-
-
-					
+							$("#owned-races").listview("refresh").trigger('create');
+						}
+					});
 				};
+
+				$.mobile.hidePageLoadingMsg();
 
 				// console.log($('#owned-races').length);
 
@@ -168,7 +180,7 @@ $('#active-races').live('pageinit', function(){
 		
 		});
 
-	});
+	// });
 
 });
 
@@ -204,7 +216,25 @@ $('#new-race').bind('pageshow', function(){
 
 
 //populate profile page with given user's information & hook up race button
-$('#profile-page').bind('pageshow', function(){
+// $("#profile-page").die("pageinit");
+$('#profile-page').live('pagebeforeshow', function(){
+	// $("#profile-page").die("pagebeforeshow");
+
+	
+
+	// $('#profile-link-btn').bind('click', function(){
+	// 	 // profile.html?id=myself
+	// 	console.log('click');
+	// });
+
+	if ($._data($("#profile-page")[0], "events").pagebeforeshow.length>3){
+		$._data($("#profile-page")[0], "events").pagebeforeshow.slice(0,1);
+		return;
+	}
+
+	console.log($._data( $("#profile-page")[0], "events" ));
+
+	// console.log($('#profile-link-btn').data('events'))
 
 	console.log("profile page showing");
 
@@ -220,16 +250,19 @@ $('#profile-page').bind('pageshow', function(){
 
 			var displayName = formatName(myself.first_name, myself.last_name, 'profile');
 
+			// console.log(displayName);
+
 			// show user name
 			$('#profile-name').html(displayName);
+			// log($('#profile-name').html());
 			// hide race button and back button
-			$('#start-race-btn').hide();
+			$('#start-race-btn').remove();
 			$('#back-btn').remove();
 
 			// $('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
 
-			getLargePicture(myself.id, function(picture){
-				var result = getPicture(picture);
+			getLargePicture("me", function(picture){
+				var result = validatePicture(picture);
 				if (result === true){
 					$('#profile .avatar img').attr("src", picture.location);
 				}
@@ -264,6 +297,7 @@ $('#profile-page').bind('pageshow', function(){
 				// change current tab to active
 				$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
 				$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
+				$('.finished-link').attr('data-direction', 'forward');
 
 				// change back button destination
 				if (getUrlVars().source === "active"){
@@ -272,7 +306,7 @@ $('#profile-page').bind('pageshow', function(){
 
 				// set avatar image
 				getLargePicture(user.id, function(picture){
-					var result = getPicture(picture);
+					var result = validatePicture(picture);
 					if (result === true){
 						$('#profile .avatar img').attr("src", picture.location);
 
@@ -323,6 +357,8 @@ $('#profile-page').bind('pageshow', function(){
 			});
 		}
 	});
+
+	// $("#profile-page").die("pagebeforeshow");
 });
 
 
@@ -384,7 +420,7 @@ function getUrlVars() {
   return vars;
 }
 
-function getPicture(picture){
+function validatePicture(picture){
 	if (isNull(picture)){
 		return false;
 	}
@@ -403,6 +439,8 @@ function formatPicture(picture){
 	icon.src = picture.location;
 	width = icon.width;
 	height = icon.height;
+
+	console.log(width + " / " + height);
 
 	if (width>height){
 		$('#profile .avatar img').addClass("horizontal");
