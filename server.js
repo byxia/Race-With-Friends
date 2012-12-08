@@ -177,6 +177,12 @@ function initRequestHandler () {
         return;
     }
 
+    // app.post('/api/:cmd',function(req,res){
+    //     log(req.body.arr.length);
+    //     res.send(ERROR_OBJ);
+    //     return;
+    // });
+
     app.get('/', function(req, res){
         if(!req.isAuthenticated()){
             res.redirect("/static/login.html");

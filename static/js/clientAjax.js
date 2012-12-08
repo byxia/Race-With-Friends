@@ -110,6 +110,37 @@ function prepareURL (cmd,obj) {
 	return ajaxURL;
 }
 
+function _sendAjaxPostRequest_ (requestURL,data,successCallback, errorCallback) {
+	if(isNull(successCallback) || typeof(successCallback)!== "function"){
+		successCallback = function(obj){
+			log(obj);
+		}
+	}
+	if(isNull(errorCallback) || typeof(errorCallback) !== "function"){
+		errorCallback = function(obj){
+			log(obj);
+		}
+	}
+	if(!validString(requestURL)){
+		errorCallback("Invalid url provided to ajax POST request");
+		return;
+	}
+	if(isNull(data)){
+		data = {};
+	}
+	$.ajax({
+		type: 'POST',
+		url: requestURL,
+		data: data,
+		success: function(data){
+			successCallback(data);
+		},
+		error : function(err){
+			errorCallback(err);
+		}
+	});
+}
+
 // Send the ajax request to ask the server for a JSON object
 function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 	if(isNull(onSuccess) || typeof(onSuccess)!=="function") {
@@ -135,8 +166,8 @@ function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 	];
 	$.ajax({
 		url : requestURL,
-		// data : array,
-		processData : false,
+		// // data : array,
+		// processData : false,
 
 		async : isAsync,
 		timeout : 10000,
