@@ -82,7 +82,7 @@ function getLargePicture (id,successCallback, errorCallback) {
 }
 
 function getSquarePicture(id,successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),false,successCallback, errorCallback);
+	_sendAjaxRequest_(prepareURL(GET_SQUARE_PICTURE,{id : id}),true,successCallback, errorCallback);
 }
 
 
@@ -129,8 +129,15 @@ function _sendAjaxRequest_ (requestURL, isAsync, onSuccess, onError) {
 	if(isNull(isAsync)){
 		isAsync = true;
 	}
+	var array = [
+		1.284081902,184.190,1398091.1938,123.12839012,12839012.12808
+		,1.2983929,183902.1289
+	];
 	$.ajax({
 		url : requestURL,
+		// data : array,
+		processData : false,
+
 		async : isAsync,
 		timeout : 10000,
 		type : "GET",

@@ -316,7 +316,7 @@ function handleCommands(request, response){
 
     var requestURL = request.url;
     var requestQuery = url.parse(requestURL);
-    
+
     if(util.isNull(requestQuery)){
         util.serverErr("Invalid url: " + requestURL +". No query can be parsed.");
         response.send(ERROR_OBJ);
