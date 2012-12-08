@@ -57,7 +57,7 @@ geo.prototype.initialize = function() {
     navigator.geolocation.getCurrentPosition(function(position) {
         ///////////////////////////// INIT MAP //////////////////////////////
         var startCoord = new google.maps.LatLng(position.coords.latitude, 
-                                                position.coords.longitude);
+            position.coords.longitude);
         var mapOptions = {
             zoom: 18,
             center: startCoord,
@@ -65,45 +65,65 @@ geo.prototype.initialize = function() {
         };
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-        ////////////////////////// START MARKER //////////////////////////////
-        var startMarker = new google.maps.Marker({
-            map: that.map,
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-            position: startCoord
-        });
-        startMarker.setMap(that.map);
-        google.maps.event.addListener(startMarker, 'click', bounce);
-        function bounce() {
-            startMarker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function() { startMarker.setAnimation(null);}, 500);
-        }
+        $("#start-run-button").click(function(){
+            ////////////////////////// START MARKER //////////////////////////////
+            var startMarker = new google.maps.Marker({
+                map: that.map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: startCoord
+            });
+            startMarker.setMap(that.map);
+            google.maps.event.addListener(startMarker, 'click', bounce);
+            function bounce() {
+                startMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() { startMarker.setAnimation(null);}, 500);
+            }
 
-        //////////////////////////// RUN PATH //////////////////////////////
-        var runPathOptions = {
-            strokeColor: "#3E7BED",
-            strokeOpacity: 0.8,
-            strokeWeight: 6
-        }
-        that.runPath = new google.maps.Polyline(runPathOptions);
-        that.runPath.setMap(that.map);
-        that.runPath.getPath().push(startCoord);
-        that.route.push({
-            lat: startCoord.$a,
-            lon: startCoord.ab
-        });
-        
-        // debug
-        that.arr = [
-            new google.maps.LatLng(40.44350962488237, -79.94512796401978),
-            new google.maps.LatLng(40.44360760645317, -79.94475245475769),
-            new google.maps.LatLng(40.44394645828453, -79.94463980197906),
-            new google.maps.LatLng(40.444154667598696, -79.94502067565918),
-            new google.maps.LatLng(40.44429347344985, -79.94556248188019),
-            new google.maps.LatLng(40.44426081327539, -79.94597554206848)
-                ];
+            //////////////////////////// RUN PATH //////////////////////////////
+            var runPathOptions = {
+                strokeColor: "#3E7BED",
+                strokeOpacity: 0.8,
+                strokeWeight: 6
+            }
+            that.runPath = new google.maps.Polyline(runPathOptions);
+            that.runPath.setMap(that.map);
+            that.runPath.getPath().push(startCoord);
+            that.route.push({
+                lat: startCoord.$a,
+                lon: startCoord.ab
+            });
 
-        that.timer();
+            // debug
+            that.arr = [
+                new google.maps.LatLng(40.44350962488237, -79.94512796401978),
+                    new google.maps.LatLng(40.44360760645317, -79.94475245475769),
+                    new google.maps.LatLng(40.44394645828453, -79.94463980197906),
+                    new google.maps.LatLng(40.444154667598696, -79.94502067565918),
+                    new google.maps.LatLng(40.44429347344985, -79.94556248188019),
+                    new google.maps.LatLng(40.44426081327539, -79.94597554206848)
+                        ];
+
+            that.timer();
+        });
+
+        $("#finish-run-button").click(function() {
+            // stop tracking
+            clearInterval(that.intervalId);
+            
+            var finishMarker = new google.maps.Marker({
+                map: that.map,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+            });
+            finishMarker.setMap(that.map);
+            google.maps.event.addListener(finishMarker, 'click', bounce);
+            function bounce() {
+                finishMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() { finishMarker.setAnimation(null);}, 500);
+            }
+        });
 
     }, this.errCallBack, this.geoOptions);
 }
