@@ -22,10 +22,10 @@ var flash = require("connect-flash");
 var util = require('util');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
-var dbUtil = require('./dbUtil.js').util;
-var util   = require('./Util.js').util;
 var FB = require('fb');
 var graph = require('fbgraph');
+var dbUtil = require('./dbUtil.js').util;
+var util   = require('./Util.js').util;
 
 //server side constants
 var errorMsg = "Error occurred in processing the request.";
