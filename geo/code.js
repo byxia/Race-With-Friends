@@ -104,7 +104,7 @@ geo.prototype.initialize = function() {
 
 geo.prototype.timer = function() {
     var that = this;
-    setInterval(function() {
+    that.intervalId = setInterval(function() {
         navigator.geolocation.getCurrentPosition(function(position) {
             that.time ++;
             var path = that.runPath.getPath();
