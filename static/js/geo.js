@@ -66,7 +66,10 @@ geo.prototype.initialize = function() {
         };
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
-        $("#start-run-button").click(function(){
+        $("#start-run-btn").click(function(){
+            alert("hehe");
+            $("#start-run-btn").hide();
+            $("#finish-run-btn").show();
             ////////////////////////// START MARKER //////////////////////////////
             var startMarker = new google.maps.Marker({
                 map: that.map,
@@ -108,7 +111,7 @@ geo.prototype.initialize = function() {
             that.timer();
         });
 
-        $("#finish-run-button").click(function() {
+        $("#finish-run-btn").click(function() {
             // stop tracking
             clearInterval(that.intervalId);
             
@@ -192,7 +195,7 @@ geo.prototype.delta2Pts = function(a, b) {
         Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 
-    console.log(R * c);
+    // console.log(R * c);
     return R * c;
 }
 
