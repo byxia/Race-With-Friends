@@ -3,7 +3,6 @@
     "version": "0.0.1",
     "dependencies": {
         "connect-flash": "0.1.x",
-        "ejs": "0.8.x",
         "express": "3.0.x",
         "fb": "0.0.x",
         "fbgraph": "0.2.x",
