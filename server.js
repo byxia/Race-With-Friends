@@ -197,6 +197,7 @@ function initRequestHandler () {
         res.redirect('/');
     });
     app.get('/back/:url',function(req,res){
+        console.log("redirect back to " + req.params.url);
         res.redirect("/static/"+req.params.url);
     });
 

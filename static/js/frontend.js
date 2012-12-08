@@ -74,7 +74,7 @@ $('#active-races').live('pageshow', function(){
 								</div>\
 								<div class="ui-block-c">\
 									<div class="btn">\
-										<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
+										<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
 									</div>\
 								</div>\
 								<div class="ui-block-d">\
@@ -121,45 +121,51 @@ $('#active-races').live('pageshow', function(){
 				// console.log(ownedRaces);
 
 				//TODO: FILTER RACES TO ONLY WAITING
-				for (var i=0; i<ownedRaces.length; i++){
-					var race = ownedRaces[i];
+
+				$(ownedRaces).each(function(index, race){
+					console.log(race);
 					var opponentId = race.opponent_id;
 					var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
 					// console.log(race);
 					// console.log(opponent);
 
+					$('#owned-races').append('<li userId="'+opponentId+'"><div class="ui-grid-c">\
+						<div class="ui-block-a">\
+							<div class="person">\
+								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar"></a>\
+								<div class="name">'+opponent+'</div>\
+							</div>\
+						</div>\
+						<div class="ui-block-b">\
+							<div class="info">\
+								2.3mi run<br/>\
+								4mi away\
+							</div>\
+						</div>\
+						<div class="ui-block-c">\
+							<div class="btn">\
+								<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
+							</div>\
+						</div>\
+						<div class="ui-block-d">\
+							<div class="btn">\
+								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+							</div>\
+						</div>\
+					</div></li>');
+
+					$("#owned-races").listview("refresh").trigger('create');
+				});
+
+				$('#owned-races li').each(function(index, object){
+					var opponentId = $(object).attr('userId');
 					getSquarePicture(opponentId,function(picture){
 						// console.log(opponentId);
 						if (validatePicture(picture) === true){
-							$('#owned-races').append('<li><div class="ui-grid-c">\
-								<div class="ui-block-a">\
-									<div class="person">\
-										<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
-										<div class="name">'+opponent+'</div>\
-									</div>\
-								</div>\
-								<div class="ui-block-b">\
-									<div class="info">\
-										2.3mi run<br/>\
-										4mi away\
-									</div>\
-								</div>\
-								<div class="ui-block-c">\
-									<div class="btn">\
-										<a href="details.html?race='+race._id+'" data-role="button">Details</a>\
-									</div>\
-								</div>\
-								<div class="ui-block-d">\
-									<div class="btn">\
-										<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
-									</div>\
-								</div>\
-							</div></li>');
-
-							$("#owned-races").listview("refresh").trigger('create');
+							$($(object).find('img.avatar')[0]).attr('src', picture.location);
 						}
 					});
-				};
+				});
 
 				$.mobile.hidePageLoadingMsg();
 
@@ -180,6 +186,8 @@ $('#active-races').live('pageshow', function(){
 		
 		});
 
+		$.mobile.hidePageLoadingMsg();
+
 	// });
 
 });
@@ -187,6 +195,8 @@ $('#active-races').live('pageshow', function(){
 
 // populate new race page with friend list
 $('#new-race').bind('pageshow', function(){
+
+	$.mobile.showPageLoadingMsg();
 
 	// get friend list
 	getAllFriends(function  (list) {
@@ -201,28 +211,90 @@ $('#new-race').bind('pageshow', function(){
 			return;
 		}
 
+		me = list.me;
+		friends = list.friends.data;
+
+
+		// console.log(list);
 		// sort alphabetically (by first then last name)
-		list.sort(function(a,b) {
+		friends.sort(function(a,b) {
 			return compare(a, b, "name"); 
 		});
 
-		
-		for (var i=0; i<list.length; i++){
-			// getSquarePicture(list[i].id,function(picture){
-			// 	if (validatePicture === true){
-					$("<li><a href='race-recording.html?source=newRace'><p>"+list[i].name+"</p></a></li>").appendTo('#friend-list ul').trigger("create");
-				// }
-			// });
-		};
 
-		$("#friend-list ul").listview("refresh");
+		$(friends).each(function(index,object){
+
+			var name = object.name;
+			var newLi = $("<li userId='"+object.id+"'><a href='profile.html?id="+object.id+"&source=new-race'><img class='avatar'></a><p>"+name+"</p></li>");
+
+			newLi.appendTo('#friend-list ul');
+			$(newLi.find('p')[0]).bind('click', function(){
+				// parse full name into first + last
+				var matches = name.split(' ');
+				var friendFirst = matches[0]; 
+				var friendLast = matches[1]; 
+
+				// console.log(object.id);
+
+				if (friendLast === undefined){
+					friendLast = "";
+				}
+
+				var race = {
+					owner_id: me.id,
+					owner_first_name: me.name.givenName,
+					owner_last_name: me.name.familyName,
+					opponent_id: object.id,
+					opponent_first_name: friendFirst,
+					opponent_last_name: friendLast,
+					status: "created",
+				};
+
+				// console.log(race);
+				// console.log("new race");
+				// console.log(race);
+				createRace(race, function(object){
+					if (isNull(object)){
+						console.log("error - null");
+						window.location.href="/";
+						alert("ERROR - NULL");
+						return;
+					}
+					else if (object.status === 0){
+						console.log("error");
+						console.log(object.status);
+						window.location.href="/";
+						alert("ERROR - STATUS0");
+						return;
+					}
+					window.location.href="/";
+					alert("race created");
+				});
+			});
+			$("#friend-list ul").listview("refresh").trigger("create");
+		});
+
+		$("#friend-list ul li").each(function(index, object){
+
+			// console.log($(object).attr('userId'));
+
+			getSquarePicture($(object).attr('userId'),function(picture){
+				if (validatePicture(picture) === true){
+					$($(object).find('img.avatar')[0]).attr('src', picture.location);
+				}
+			});
+					
+		});
+
+		$.mobile.hidePageLoadingMsg();
+		
 	}, log);
 });
 
 
 //populate profile page with given user's information & hook up race button
 // $("#profile-page").die("pageinit");
-$('#profile-page').live('pagebeforeshow', function(){
+$('#profile-page').live('pageshow', function(){
 	// $("#profile-page").die("pagebeforeshow");
 
 	
@@ -305,17 +377,21 @@ $('#profile-page').live('pagebeforeshow', function(){
 				$('.finished-link').attr('data-direction', 'forward');
 
 				// change back button destination
-				if (getUrlVars().source === "active"){
-					$('#back-btn').attr("href", "active.html");
-				}
+				// if (getUrlVars().source === "active"){
+				// 	console.log("from active");
+				// 	$('#back-btn').attr("onclick", "window.location.href='/back/active.html';");
+				// 	console.log($('#back-btn').attr("onclick"));
+				// }
 
 				// set avatar image
 				getLargePicture(user.id, function(picture){
 					var result = validatePicture(picture);
 					if (result === true){
 						$('#profile .avatar img').attr("src", picture.location);
-
-						formatPicture(picture);
+						$('#profile .avatar img').load(function(){
+							// console.log($(this).width() + "/" + $(this).height());
+							formatPicture(picture);
+						});
 					}
 					
 				});
@@ -324,38 +400,38 @@ $('#profile-page').live('pagebeforeshow', function(){
 				$('#profile-content').show();
 
 
-				// bind create new race event
-				$('#start-race-btn').bind('click', function(){
-					var race = {
-						owner_id: myself.id,
-						owner_first_name: myself.first_name,
-						owner_last_name: myself.last_name,
-						opponent_id: user.id,
-						opponent_first_name: user.first_name,
-						opponent_last_name: user.last_name,
-						status: "created",
-					};
-					// console.log("new race");
-					// console.log(race);
-					createRace(race, function(object){
-						if (isNull(object)){
-							console.log("error - null");
-							window.location.href="/";
-							alert("ERROR - NULL");
-							return;
-						}
-						else if (object.status === 0){
-							console.log("error");
-							console.log(object.status);
-							window.location.href="/";
-							alert("ERROR - STATUS0");
-							return;
-						}
-						window.location.href="/";
-						alert("race created");
-					});
+				// // bind create new race event
+				// $('#start-race-btn').bind('click', function(){
+				// 	var race = {
+				// 		owner_id: myself.id,
+				// 		owner_first_name: myself.first_name,
+				// 		owner_last_name: myself.last_name,
+				// 		opponent_id: user.id,
+				// 		opponent_first_name: user.first_name,
+				// 		opponent_last_name: user.last_name,
+				// 		status: "created",
+				// 	};
+				// 	// console.log("new race");
+				// 	// console.log(race);
+				// 	createRace(race, function(object){
+				// 		if (isNull(object)){
+				// 			console.log("error - null");
+				// 			window.location.href="/";
+				// 			alert("ERROR - NULL");
+				// 			return;
+				// 		}
+				// 		else if (object.status === 0){
+				// 			console.log("error");
+				// 			console.log(object.status);
+				// 			window.location.href="/";
+				// 			alert("ERROR - STATUS0");
+				// 			return;
+				// 		}
+				// 		window.location.href="/";
+				// 		alert("race created");
+				// 	});
 
-				});
+				// });
 
 			}, function(error){
 				console.log(error);
@@ -438,6 +514,21 @@ function validatePicture(picture){
 	return true;
 }
 
+function goBack(){
+	var params = getUrlVars();
+	var url = "/back/";
+	console.log("prepare url : " );
+	console.log(params);
+	if(!params.source){
+		url += "active.html";
+	}
+	else{
+		url += params.source +".html";
+	}
+	console.log("done url : " + url);
+	window.location.href = url;
+} 
+
 // change avatar class based on width/height ratio
 function formatPicture(picture){
 	var icon = new Image();
@@ -445,7 +536,7 @@ function formatPicture(picture){
 	width = icon.width;
 	height = icon.height;
 
-	console.log(width + " / " + height);
+	// console.log(width + " / " + height);
 
 	if (width>height){
 		$('#profile .avatar img').addClass("horizontal");

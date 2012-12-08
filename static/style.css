@@ -497,20 +497,20 @@ a + .ui-title{
 
 #friend-list li{
 	overflow: hidden;
-	padding-bottom: 5px;
+/*	padding-bottom: 5px;*/
 }
-#friend-list .avatar, #friend-list img{
+#friend-list a, #friend-list img{
 	float: left;
 }
-#friend-list .avatar, #friend-list p{
+#friend-list .avatar{
 /*	float: left;*/
-	margin-top: 16px;
+	margin-top: 12px;
+}
+#friend-list p{
+	padding-top: 30px;
+	padding-bottom: 10px;
 	font-size: 18px;
 	font-weight: bold;
-}
-#friend-list .avatar{
-	margin-top: 10px;
-	margin-left: 10px;
 }
 /*#friend-list a{
 	margin-top: 15px;
@@ -518,7 +518,7 @@ a + .ui-title{
 }*/
 
 #friend-list .ui-icon{
-	margin-top: -5px;
+	margin-top: 0px;
 }
 
 /* accept race */
