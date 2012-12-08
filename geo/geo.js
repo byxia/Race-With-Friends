@@ -13,6 +13,7 @@ geo.prototype.setup = function() {
 
     this.distance = 0;
     this.time = 0;
+    this.route = [];
     this.geoOptions = {
         enableHighAccuracy: true,
         maximumAge: 250,
@@ -29,6 +30,9 @@ geo.prototype.errCallBack = function(err) {
     alert("Error: " + code + ", " + err.message);
 }
 
+/**
+ * change the map's view depending on the device
+ */
 geo.prototype.detectBrowser = function() {
     var useragent = navigator.userAgent;
     var mapdiv = document.getElementById("map_canvas");
@@ -42,6 +46,9 @@ geo.prototype.detectBrowser = function() {
     }
 }
 
+/**
+ * initialize the map, the starter maker, the the route for later use
+ */
 geo.prototype.initialize = function() {
     // mobile specific style
     this.detectBrowser();
@@ -81,6 +88,10 @@ geo.prototype.initialize = function() {
         that.runPath = new google.maps.Polyline(runPathOptions);
         that.runPath.setMap(that.map);
         that.runPath.getPath().push(startCoord);
+        that.route.push({
+            lat: startCoord.$a,
+            lon: startCoord.ab
+        });
         
         // debug
         that.arr = [
@@ -97,24 +108,72 @@ geo.prototype.initialize = function() {
     }, this.errCallBack, this.geoOptions);
 }
 
+/**
+ * Handle updating the user's runnning route every T = 1s interval
+ */
 geo.prototype.timer = function() {
     var that = this;
-    setInterval(function() {
+    that.intervalId = setInterval(function() {
         navigator.geolocation.getCurrentPosition(function(position) {
-            this.time ++;
+            that.time ++;
             var path = that.runPath.getPath();
             // TODO real
-            // console.log(path.b[path.b.length-1]);
-            // path.push(new google.maps.LatLng(position.coords.latitude, 
+            // var pt = new google.maps.LatLng(position.coords.latitude, 
             //                                  position.coords.longitude));
+            // that.map.setCenter(pt);
+            // path.push(pt);
+            // that.route.push({
+            //     lat: pt.$a,
+            //     lon: pt.ab
+            // });
+            
             // TODO dummy
             if (that.arr.length !== 0) { 
-                console.log(that.arr);
-                path.push(that.arr.pop()); 
+                var pt = that.arr.pop();
+                that.map.setCenter(pt);
+                path.push(pt); 
+                that.route.push({
+                    lat: pt.$a,
+                    lon: pt.ab
+                });
+                that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
             }
-
+            
         }, that.errCallBack, that.geoOptions);
     }, 1000);
 }
 
+/**
+ * Calculate distance between 2 (latitude, longitude) pairs 
+ * From http://www.movable-type.co.uk/scripts/latlong.html
+ * This function is not very accurate.
+ */
+geo.prototype.delta2Pts = function(a, b) {
+    // Converts numeric degrees to radians
+    if (typeof Number.prototype.toRad == 'undefined') {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        }
+    }
+    // me 
+    var lat1 = a.lat;
+    var lat2 = b.lat;
+    var lon1 = a.lon;
+    var lon2 = b.lon;
+    // theirs
+    var R = 6371000; // km
+    var dLat = (lat2-lat1).toRad();
+    var dLon = (lon2-lon1).toRad();
+    var lat1 = lat1.toRad();
+    var lat2 = lat2.toRad();
+    
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+
+    console.log(R * c);
+    return R * c;
+}
+
+// new instance of geo and start running
 new geo();

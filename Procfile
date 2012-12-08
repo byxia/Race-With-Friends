@@ -1,1 +1,1 @@
-web: node zouni.js
+web: node server.js
