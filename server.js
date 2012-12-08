@@ -658,6 +658,7 @@ function initCommandHandler(){
             graph.setAccessToken(user[0].token);   
             graph.get(args.id+"/"+"picture?type="+size,function(err,res){
                 if(err){
+                    console.log("graph get picture error");
                     console.log(err);
                     util.serverErr(err);
                     response.send(ERROR_OBJ);
