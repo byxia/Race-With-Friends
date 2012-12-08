@@ -574,10 +574,26 @@ a + .ui-title{
 
 /* running */
 
-#running-map{
+#map_canvas{
 	width: 100%;
 	height: 300px;
-	background-color: #ccc;
+/*	min-height: 80%;
+*/	background-color: #ccc;
+	position: relative;
+}
+
+#racing-with{
+	padding: 7px;
+	text-align: center;
+}
+
+#map_canvas #rec-icon{
+	width: 74px;
+	height: 33px;
+	background: url('images/rec.png') no-repeat;
+	position: absolute;
+	top: 15px;
+	right: 15px;
 }
 
 #running-actions p{

@@ -267,8 +267,8 @@ $('#new-race').bind('pageshow', function(){
 						alert("ERROR - STATUS0");
 						return;
 					}
-					window.location.href="/";
-					alert("race created");
+					window.location.href="race-recording.html?source=new-race";
+					// alert("race created");
 				});
 			});
 			$("#friend-list ul").listview("refresh").trigger("create");

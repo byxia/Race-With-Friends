@@ -12,6 +12,9 @@
 	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 	<script type="text/javascript" src="js/clientAjax.js"></script>
+	<script src="js/geo.js"></script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjPAxk0JAu_vpzQz-_RjNqV3yWJ74hKKY&sensor=true"></script>
 
 </head> 
 <body> 
@@ -24,14 +27,17 @@
 		<h1>Race With Friends</h1>
 	</div>
 
-	<div id="running-map">
-		
+	<div id="racing-with" class="bar dark">Racing with Luke Skywalker</div>
+
+	<div id="map_canvas">
+		<div id="rec-icon"></div>
 	</div>
 		
 	<div id="running-actions">
-		<p>Please arrive at starting position</p>
-<!-- 		<a data-role="button" data-theme="f">Start</a> -->
-<!-- 		<a data-role="button" data-theme="g">Stop</a> -->
+<!-- 		<p id="arrive=instruction">Please arrive at starting position</p> -->
+		<a data-role="button" data-theme="f" id="start-run-btn">Start</a>
+<!-- 		<a data-role="button" data-theme="b" id="finish-run-btn">Finish</a> -->
+<!-- 		<a data-role="button" data-theme="g" id="stop-run-btn">Stop</a> -->
 	</div>
 
 </div>
