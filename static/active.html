@@ -19,10 +19,10 @@
 <div data-role="page" id="active-races">
 	<div data-role="header"><h1>Race With Friends</h1></div>
 	<div data-role="content">
-		<ul data-role="listview" data-dividertheme="f" class="race-list">
+		<ul data-role="listview" data-dividertheme="f" class="race-list" id="challenged-races">
 			<li data-role="list-divider">Waiting for Your Run</li>
 
-			<li>
+<!-- 			<li>
 				<div class="ui-grid-c">
 					<div class="ui-block-a">
 						<div class="person">
@@ -47,9 +47,9 @@
 						</div>
 					</div>
 				</div>
-			</li>
+			</li> -->
 
-			<li>
+<!-- 			<li>
 				<div class="ui-grid-c">
 					<div class="ui-block-a">
 						<div class="person">
@@ -74,12 +74,12 @@
 						</div>
 					</div>
 				</div>
-			</li>
+			</li> -->
 
 		</ul>
-		<ul data-role="listview" data-dividertheme="g" class="race-list">
+		<ul data-role="listview" data-dividertheme="g" class="race-list" id="owned-races">
 			<li data-role="list-divider">Waiting for Their Run</li>
-			<li>
+			<!-- <li>
 				<div class="ui-grid-c">
 					<div class="ui-block-a">
 						<div class="person">
@@ -104,7 +104,7 @@
 						</div>
 					</div>
 				</div>
-			</li>
+			</li> -->
 		</ul>
 
 		<div data-role="popup" id="confirm" data-overlay-theme="a" data-theme="d" class="ui-corner-all">
@@ -112,7 +112,7 @@
 				<h1>Call off the race?</h1>
 			</div>
 			<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-				<h4>Are you sure you want to cancel your race with Luke?</h4>
+				<h4>Are you sure you want to cancel this race?</h4>
 				<div class="btns">
 					<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">Yes</a>    
 					<a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>  

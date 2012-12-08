@@ -1,3 +1,9 @@
+/*=====================================================
+                  Race With Friends
+            CMU 15-237 Fall 2012 Final Project
+  =====================================================*/
+/* Bingying Xia(bxia), Ruoyu Li(ruoyul), Zi Wang(ziw)  */
+
 
 
 var mongoose = require('mongoose');
@@ -17,8 +23,7 @@ var FB = require('fb');
 var graph = require('fbgraph');
 
 var errorMsg = "Error occurred in processing the request.";
-var ERROR_OBJ = {error : errorMsg,
-                 status: 0};
+var ERROR_OBJ = {error : errorMsg,status: 0};
 var SUCCESS_OBJ={status: 1};
 var PORT = 8888;
 var FB_APP_ID = "173419086133939";
@@ -45,12 +50,6 @@ var CLIENT_ERR_MSG = errorMsg;
 //      init/main
 //======================================
 
-
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
     res.redirect('/login.html');
@@ -96,20 +95,26 @@ function onStart(){
 
             FB.setAccessToken(accessToken);
             graph.setAccessToken(accessToken);
-            // console.log("refreshToken ========================>");
-            // console.log(refreshToken);
-            // console.log("profile ==================================>");
-            // console.log(profile);
 
-            // FB.api('/611558072', function(response) {
-            //     console.log(response);
+            var wallPost = {
+              message: "Foo()"
+            };
+
+            // graph.post(profile.id + "/feed", wallPost, function(err, res) {
+            //   // returns the post id
+            //   if(err){
+            //     log('err:');
+            //     log(err);
+            //   }
+            //   else{
+            //     log("success");
+            //     log(res);
+            //   }
             // });
-
- 
 
 
             getUserById(profile.id, function(user){
-                if(isNull(user) || isEmptyObj(user)){
+                if(util.isNull(user) || util.isEmptyObj(user)){
                     console.log("No such user exists. Creating new User");
                     creatUser({
                         id : profile.id,
@@ -159,8 +164,8 @@ function onStart(){
         opponent_id     : String,
         owner_first_name: String,
         owner_last_name : String,
-        opponent_first_name : String,
-        opponent_last_name  : String,
+        opponent_first_name:String,
+        opponent_last_name:String,
         status          : String,
         creation_date   : { type: Date, default: Date.now },
         finish_date     : Date, 
@@ -219,7 +224,7 @@ function initRequestHandler () {
     app.get('/auth/facebook/callback', 
         passport.authenticate('facebook', { successRedirect: '/', 
                                             failureRedirect: '/',
-                                            scope: ['read_friendlists', 'publish_actions'] }));    
+                                            scope: ['read_friendlists', 'publish_actions','publish_stream'] }));    
     app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/account');
@@ -228,10 +233,7 @@ function initRequestHandler () {
     app.get('/newrace',
         function(req, res){
             res.redirect('/static/new-race.html');
-        });
-
-    // app.get("/static/:staticFilename", serveStaticFile);
-    // app.get("/:staticFilename", serveStaticFile);
+    });
     app.get("/api/:cmd", handleCommands);
     app.get("/err/:msg", handleClientError);
 
@@ -304,14 +306,12 @@ function removeUserById(id, successCallback,errorCallback){
   
 }
 
-function updateUserEmail(userId, newEmail, successCallback, errorCallback){
-
-}
-
 //==========================
 //     RACE table CRUD
 //==========================
 function createRace(race,successCallback, errorCallback){
+    console.log("creating race: ");
+    log(race);
     dbUtil.createNewInstance(RACE,race,successCallback,errorCallback,"Race Model");
 }
 
@@ -323,7 +323,6 @@ function getRaceById(id,successCallback, errorCallback){
     _readFromRACE_({_id : id}, successCallback, errorCallback); 
 }
 
-
 /*
 *   Get all races owned by user with the given id
 */
@@ -331,18 +330,12 @@ function getAllRacesOwnedBy(id, successCallback, errorCallback){
     _readFromRACE_({owner_id : id}, successCallback, errorCallback);
 }
 
-
 /*
 *   Get all races where the user with the given id is challenged
 */
 function getAllRacesChallenged(id, successCallback, errorCallback){
     _readFromRACE_({opponent_id : id}, successCallback, errorCallback);
 }
-
-
-
-
-
 
 function serveStaticFile(request, response) {
 
@@ -374,22 +367,22 @@ function handleCommands(request, response){
        href: '/api/getUser?id=11&name=Zi' }
     */
 
-    if(isNull(requestQuery)){
+    if(util.isNull(requestQuery)){
         util.serverErr("Invalid url: " + requestURL +". No query can be parsed.");
-        sendErrorObject(response);
+        response.send(ERROR_OBJ);
         return;
     }
     var cmd = requestQuery.pathname.toString().substring(5);
     var args = querystring.parse(requestQuery.query);
-    if(isNull(cmd)){
+    if(util.isNull(cmd)){
         util.serverErr("Invalid ajax request: " + requestURL + ". No command found.");
-        sendErrorObject(response);
+        response.send(ERROR_OBJ);
         return;
     }
-    if(isNull(cmdHandler[cmd]) ||
+    if(util.isNull(cmdHandler[cmd]) ||
         typeof(cmdHandler[cmd])!=="function"){
         util.serverErr("Invalid command. Server can't handle command: "+ cmd);
-        sendErrorObject(response);
+        response.send(ERROR_OBJ);
         return;
     }
 
@@ -401,54 +394,54 @@ function initCommandHandler(){
     cmdHandler.getAllUsers = function(args,request,  response){
         //no args needed
         getAllUsers(function(results){response.send(results);},
-             function(){sendErrorObject(response)});
+             function(){response.send(ERROR_OBJ)});
     };
 
     cmdHandler.getUserById = function(args,request, response){
-        if(isNull(args)){
+        if(util.isNull(args)){
             util.serverErr("No args given to cmdHandler.getUserById");
-            sendErrorObject(response);
+            response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args._id)){
+        if(!util.validString(args._id)){
             util.serverErr("No _id given to cmdHandler.getUserById");
-            // sendErrorObject(response);
+            // response.send(ERROR_OBJ);
             response.send(ERROR_OBJ);
             return;
         }
         getUserById(args._id, function(result){response.send(result);},
-            function(){sendErrorObject(response)});
+            function(){response.send(ERROR_OBJ)});
     };
 
     cmdHandler.getUserByEmail = function(args,request,  response){
-        if(isNull(args)){
+        if(util.isNull(args)){
             util.serverErr("No args given to cmdHandler.getUserByEmail");
-            sendErrorObject(response);
+            response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.email)){
+        if(!util.validString(args.email)){
             util.serverErr("No email given to cmdHandler.getUserByEmail");
-            sendErrorObject(response);
+            response.send(ERROR_OBJ);
             return;
         }
         getUserByEmail(args.email, function(result){response.send(result);},
-            function(){sendErrorObject(response)});        
+            function(){response.send(ERROR_OBJ)});        
     };
 
     cmdHandler.createUser = function(args,request,  response){
-        if(isNull(args)){
+        if(util.isNull(args)){
             util.serverErr("No args given to cmdHandler.createUser");
-            sendErrorObject(response);
+            response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.first_name) || !validString(args.last_name)
-            || !validString(email)){
+        if(!util.validString(args.first_name) || !util.validString(args.last_name)
+            || !util.validString(email)){
             util.serverErr("No names / email given to cmdHandler.createUser");
-            sendErrorObject(response);
+            response.send(ERROR_OBJ);
             return;
         }
         createUser(args,function(){response.send(SUCCESS_OBJ)},
-            function(){sendErrorObject(response)});
+            function(){response.send(ERROR_OBJ)});
     };
 
     cmdHandler.getAllFriends = function(args, request, response){
@@ -459,7 +452,7 @@ function initCommandHandler(){
         }
         // console.log(request.user);
         getUserById(request.user.id,function(data){
-            if(isNull(data) || isEmptyObj(data)){
+            if(util.isNull(data) || util.isEmptyObj(data)){
                 util.dbError("No user found with id: " + request.user.id);
                 response.send(ERROR_OBJ);
                 return;
@@ -480,18 +473,23 @@ function initCommandHandler(){
             return;
         }
         getUserById(request.user.id,function(data){
-            if(isNull(data) || isEmptyObj(data)){
+            if(util.isNull(data) || util.isEmptyObj(data)){
                 util.dbError("No user found with id: " + request.user.id);
                 response.send(ERROR_OBJ);
                 return;
             }
             // console.log(data);
             FB.setAccessToken(data[0].token);
-            if(!validString(args.id)){
+            if(!util.validString(args.id)){
                 util.dbError("No id given to getFBUserById. " );
                 response.send(ERROR_OBJ);
             }
             FB.api('/'+args.id,function(data){
+                if(isNull(data) || data.error){
+                    serverErr('Error occurred in FB.api ' + '/'+args.id +", "+ data.error);
+                    response.send(ERROR_OBJ);
+                    return;
+                }
                 response.send(data);
             });
 
@@ -505,7 +503,7 @@ function initCommandHandler(){
             return;
         }
         getUserById(request.user.id, function(data){
-            if(isNull(data) || isEmptyObj(data)){
+            if(util.isNull(data) || util.isEmptyObj(data)){
                 util.dbError("No user found with id: " + request.user.id);
                 response.send(ERROR_OBJ);
                 return;
@@ -534,14 +532,14 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.id)){
+        if(!util.validString(args.id)){
             util.serverErr("No id given to getOwnedRaces");
             response.send(ERROR_OBJ);
             return;            
         }
 
         getAllRacesOwnedBy(args.id,function(list){
-            if(isNull(list)){
+            if(util.isNull(list)){
                 util.serverErr("No races found owned by : "+ args.id);
                 response.send(ERROR_OBJ);
                 return;
@@ -558,14 +556,14 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.id)){
+        if(!util.validString(args.id)){
             util.serverErr("No id given to getChallengedRaces");
             response.send(ERROR_OBJ);
             return;            
         }
 
         getAllRacesChallenged(args.id,function(list){
-            if(isNull(list)){
+            if(util.isNull(list)){
                 util.serverErr("No races found challenging: "+ args.id);
                 response.send(ERROR_OBJ);
                 return;
@@ -582,20 +580,20 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.id)){
+        if(!util.validString(args.id)){
             util.serverErr("No id given to getChallengedRaces");
             response.send(ERROR_OBJ);
             return;            
         }
         getAllRaces(function(list){
-            if(isNull(list)){
+            if(util.isNull(list)){
                 util.serverErr("Error occurred in getAllRaces. list is null");
                 response.send(ERROR_OBJ);
                 return;
             }
             var userList = [];
             for(var i=0;i<list.length;i++){
-                if(!isNull(list[i]) &&
+                if(!util.isNull(list[i]) &&
                         (list[i].owner_id === args.id || list[i].opponent_id=== args.id) ){
                     userList.push(list[i]);
                 }
@@ -625,18 +623,18 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        if(!validString(args.id)){
+        if(!util.validString(args.id)){
             util.serverErr("No id given to getSmallPicture");
             response.send(ERROR_OBJ);
             return;            
         }        
         getUserById(request.user.id,function(user){
-            if(isNull(user)){
+            if(util.isNull(user)){
                 util.serverErr("No user found with id:" + id+". Can't get picture.");
                 response.send(ERROR_OBJ);
                 return;
             }
-            graph.setAccessToken(user.token);
+            graph.setAccessToken(user[0].token);   
             graph.get(args.id+"/"+"picture?type="+size,function(err,res){
                 if(err){
                     console.log(err);
@@ -645,7 +643,18 @@ function initCommandHandler(){
                     return;
                 }
                 else{
-                    response.send(res);
+                    FB.setAccessToken(user[0].token);
+                    FB.api("/"+args.id,function(data){
+                          if(!data || data.error) {
+                            serverErr("Error occurred in FB.api " + "/"+args.id +", "+ data.error);
+                            response.send(ERROR_OBJ);
+                            return;
+                          }
+                          res.first_name = data.first_name;
+                          res.last_name = data.last_name;
+                          res.id = args.id;
+                          response.send(res);
+                    });
                 }
             });
         },function(err){
@@ -664,69 +673,18 @@ function onUncaughtException(err) {
     util.serverErr(err);
 }
 
-function sendErrorObject(response){
-    if(isNull(response)){
-        return;
-    }
-    response.send(ERROR_OBJ);
+function isNull(obj){
+      return obj == undefined || obj == null
+              || obj === undefined || obj === null;
 }
-
-// function util.serverErr(msg){
-//   console.log("\n");
-//   console.log("------------Server Error Report Begins------------");
-//   console.log("Message: ");
-//   console.log(msg);
-//   console.log("Time   :"  + new Date());
-//   console.log("============Server Error Report Ends==========");
-//   console.log("\n");
-// }
-
-
-// function util.dbError(msg){
-//   console.log("\n");
-//   console.log("------------Database Error Report Begins------------");
-//   console.log("Message: ");
-//   console.log(msg);
-//   console.log("Time   :"  + new Date());
-//   console.log("============Database Error Report Ends==========");
-//   console.log("\n");
-// }
-
-// function util.dbWarning(msg){
-//   console.log("\n");    
-//   console.log("******** Database Warning Begins*********");
-//   console.log("Warning: ");
-//   console.log(msg);
-//   console.log("Time   :"  + new Date());
-//   console.log("******** Database Warning Ends*********");
-//   console.log("\n");
-
-// }
 
 //=================
 //      Util
 //=================
-function isEmptyObj(obj){
-    if(isNull(obj)) return false;
-    for (var name in obj) {
-                return false;
-    }
-    return true;
-}
-
-function validString(s){
-  return (!isNull(s)) && typeof(s)==="string" && s.trim().length >0 ;
-}
-
-function isNull(obj){
-  return obj == undefined || obj == null
-          || obj === undefined || obj === null;
-}
-
 function log(obj){
   console.log(obj);
 }
 
-
+//Start the server
 onStart();
 

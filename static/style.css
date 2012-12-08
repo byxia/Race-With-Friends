@@ -114,6 +114,10 @@
 	padding-top: -20px;
 }
 
+.faded{
+	color: #999;
+}
+
 /* HEADER */
 
 .ui-header .ui-title, .ui-footer .ui-title {
@@ -269,6 +273,12 @@ a + .ui-title{
 #new-btn .ui-icon, #new-btn .ui-btn-text{
 	margin-left: 15px;
 	font-size: 18px;
+}
+
+.race-list .faded{
+	font-size: 18px;
+	text-align: center;
+	padding: 10px;
 }
 
 /*a .avatar{
@@ -666,9 +676,18 @@ a + .ui-title{
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
 }
 
-#profile .avatar img{
+#profile .avatar .img-wrapper{
 	width: 100px;
 	height: 100px;
+	border: 1px solid #ccc;
+	overflow: hidden;
+}
+
+#profile .avatar img.vertical{
+	max-width: 100px;
+}
+#profile .avatar img.horizontal{
+	max-height: 100px;
 }
 
 #profile .avatar .name{
