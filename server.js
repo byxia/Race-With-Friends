@@ -230,7 +230,7 @@ function initRequestHandler () {
                                                     'publish_stream'] }));
     app.get('/logout', function(req, res){
         req.logout();
-        res.redirect('/account');
+        res.redirect('/');
     });
     //handle commands and errors
     app.post('/api/:cmd',handlePostRequest);
@@ -288,10 +288,6 @@ function getUserById(id,successCallback, errorCallback){
 
 function getUserByEmail(userEmail,successCallback, errorCallback){
     _readFromUSER_({email : userEmail},successCallback,errorCallback);
-}
-
-function creatUser(user, successCallback, errorCallback){
-    dbUtil.createNewInstance(USER,user,successCallback,errorCallback,"User model");
 }
 
 function removeUserById(id, successCallback,errorCallback){
@@ -406,6 +402,11 @@ function initCommandHandler(){
     };
 
     cmdHandler.getUserById = function(args,request, response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.redirect('/');
+            return;
+        }        
         if(util.isNull(args)){
             util.serverErr("No args given to cmdHandler.getUserById");
             response.send(ERROR_OBJ);
@@ -417,7 +418,8 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
-        getUserById(args._id, function(result){response.send(result);},
+        var id = args._id === "me" ? request.user.id : args.id;
+        getUserById(id, function(result){response.send(result);},
             function(){response.send(ERROR_OBJ)});
     };
 
@@ -437,6 +439,11 @@ function initCommandHandler(){
     };
 
     cmdHandler.createUser = function(args,request,  response){
+        if(!request.isAuthenticated() || 
+            !request.user){
+            response.redirect('/');
+            return;
+        }
         if(util.isNull(args)){
             util.serverErr("No args given to cmdHandler.createUser");
             response.send(ERROR_OBJ);
@@ -644,6 +651,7 @@ function initCommandHandler(){
             response.send(ERROR_OBJ);
             return;
         }
+
         getRaceById(args._id,function(race){
             if(isNull(race) || race.length !== 1){
                 util.serverErr("No race found or more than one race found with id: " + args._id);
@@ -694,6 +702,9 @@ function initCommandHandler(){
 
     }
 
+    function _updatePersonalRecord_(args, race){
+
+    }
 
     function _getPictureHelp_(args,request,response,size){
         if(!request.isAuthenticated() || 
