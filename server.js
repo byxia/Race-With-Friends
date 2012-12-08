@@ -197,7 +197,7 @@ function initRequestHandler () {
         res.redirect('/');
     });
     app.get('/back/:url',function(req,res){
-        res.redirect("/"+req.params.url);
+        res.redirect("/static/"+req.params.url);
     });
 
     app.get('/newrace',function(req, res){
