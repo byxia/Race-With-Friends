@@ -507,7 +507,6 @@ function initCommandHandler() {
             response.redirect('/');
             return;
         }
-        // console.log(request.user);
         getUserById(request.user.id, function(data) {
             if(util.isNull(data) || util.isEmptyObj(data)) {
                 util.dbError("No user found with id: " + request.user.id);
@@ -521,14 +520,25 @@ function initCommandHandler() {
                     response.send(ERROR_OBJ);
                     return;
                 }
-                response.send({
-                    me: request.user,
-                    friends: list
+                getAllUsers(function(results){
+                    var overlap = [];
+                    for(var i=0;i<results.length;i++){
+                        for(var j=0; j<list.data.length;j++){
+                            if(results[i].id === list.data[j].id){
+                                overlap.push(results[i]);
+                            }
+                        }
+                    }
+                    response.send({
+                        me : request.user,
+                        data : overlap
+                    });
                 });
             });
 
         });
     }
+
 
     cmdHandler.getFBUserById = function(args, request, response) {
         if(!request.isAuthenticated() || !request.user) {
