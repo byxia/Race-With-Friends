@@ -28,6 +28,7 @@ var GET_SQUARE_PICTURE= "getSquarePicture";
 var GET_LARGE_PICTURE = "getLargePicture";
 var UPDATE_RACE = "updateRace";
 var GET_PLAYING_FRIENDS = "getPlayingFriends";
+var GET_RACE_BY_ID = "getRaceById";
 
 //========================
 //       Ajax Request
@@ -92,6 +93,10 @@ function updateRace(raceData, successCallback, errorCallback){
 
 function getPlayingFriends(successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_PLAYING_FRIENDS),true,successCallback,errorCallback);
+}
+
+function getRaceById (id, successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_RACE_BY_ID,{_id : id}),true,successCallback, errorCallback);
 }
 
 

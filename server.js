@@ -643,13 +643,35 @@ function initCommandHandler() {
         });
     }
 
+    cmdHandler.getRaceById = function(args, request, response){
+        if(!request.isAuthenticated() || !request.user) {
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!util.validString(args._id)) {
+            util.serverErr("No id given to get race by id");
+            response.send(ERROR_OBJ);
+            return;
+        }        
+        getRaceById(args._id,function(result){
+            if(!result || !result[0]){
+                serverErr("No race found with id: " + args._id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            response.send(result[0]);
+        },function(err){
+            response.send(ERROR_OBJ);
+        });
+    }
+
     cmdHandler.getAllRaces = function(args, request, response) {
         if(!request.isAuthenticated() || !request.user) {
             response.send(ERROR_OBJ);
             return;
         }
         if(!util.validString(args.id)) {
-            util.serverErr("No id given to getChallengedRaces");
+            util.serverErr("No id given to get all races");
             response.send(ERROR_OBJ);
             return;
         }
@@ -729,9 +751,7 @@ function initCommandHandler() {
                 status: "finished"
             };
 
-            _updateRaceUnique_({
-                _id: args._id
-            }, newRace, function() {
+            _updateRaceUnique_({_id: args._id}, newRace, function() {
                 response.send(SUCCESS_OBJ);
             }, function(err) {
                 util.serverErr("Error when updating race");
@@ -744,8 +764,25 @@ function initCommandHandler() {
 
     }
 
-    function _updatePersonalRecord_(args, race) {
+    function _updatePersonalRecord_(userId, args) {
+        getUserById(userId,function(data){
+            if(!data || !data[0]){
+                serverErr("No user found with id: "+userId+", can't update personal record");
+                return;
+            }
+            var user =data[0];
+            var newUsesr = {};
+            if(args.distance && 
+                (!user.total_dist || (user.total_dist && args.distance > user.total_dist) )){
+                newUsesr.total_dist = args.distance;
+            }
+            if(args.duration && 
+                (!user.total_time || (user.total_time && args.duration > user.total_time) )){
+                newUsesr.total_time = args.duration;
+            }
+            // if()
 
+        });
     }
 
     function _getPictureHelp_(args, request, response, size) {
