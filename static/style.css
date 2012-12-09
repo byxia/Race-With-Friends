@@ -601,6 +601,11 @@ a + .ui-title{
 		height: 430px;
 	}
 }
+@media all and (min-height: 681px){
+	#map_canvas{
+		height: 510px;
+	}
+}
 
 #racing-with{
 	padding: 7px;
