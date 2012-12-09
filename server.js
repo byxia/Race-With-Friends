@@ -181,7 +181,8 @@ function initDatabase() {
             opponent_finish_date: Date,
 
             finish_date: Date,
-
+            owner_pace : Number,
+            opponent_pace : Number,
             owner_route: [],
             opponent_route: [],
             owner_time: String,
@@ -742,6 +743,7 @@ function initCommandHandler() {
                 owner_distance: args.distance,
                 owner_time: args.duration,
                 owner_route: args.route,
+                owner_pace : args.pace,
                 owner_start_date: args.start_date,
                 owner_finish_date: args.finish_date,
                 status: "waiting"
@@ -749,12 +751,16 @@ function initCommandHandler() {
                 opponent_distance: args.distance,
                 opponent_time: args.duration,
                 opponent_route: args.route,
+                opponent_pace : args.pace,
                 opponent_start_date: args.start_date,
                 opponent_finish_date: args.finish_date,
-                status: "finished"
+                winner_id : args.winner_id,
+                status: "finished",
+
             };
 
             _updateRaceUnique_({_id: args._id}, newRace, function() {
+                _updatePersonalRecord_(userId,args);
                 response.send(SUCCESS_OBJ);
             }, function(err) {
                 util.serverErr("Error when updating race");
@@ -774,17 +780,34 @@ function initCommandHandler() {
                 return;
             }
             var user =data[0];
-            var newUsesr = {};
+            var newUser = {};
+
+            if(args.winner_id && args.winner_id === userId){
+                newUser.won_races = user.won_races ? user.won_races +1 : 1;
+            }
+            newUser.total_races = user.total_races ? user.total_races+1 : 1;
+            newUser.total_dist = user.total_dist ? user.total_dist + args.distance : args.distance;
+            newUser.total_time = user.total_time ? user.total_time + args.duration : args.duration;
+
             if(args.distance && 
-                (!user.total_dist || (user.total_dist && args.distance > user.total_dist) )){
-                newUsesr.total_dist = args.distance;
+                (!user.record_dist || (user.record_dist && args.distance > user.record_dist) )){
+                newUser.record_dist = args.distance;
+
             }
             if(args.duration && 
-                (!user.total_time || (user.total_time && args.duration > user.total_time) )){
-                newUsesr.total_time = args.duration;
-            }
-            newUsesr.total_races = user.total_races ? user.total_races+1 : 1;
-
+                (!user.record_time || (user.record_time && args.duration > user.record_time) )){
+                newUser.record_time = args.duration;
+            } 
+            if(args.pace &&
+                (!user.record_pace || (user.record_pace && args.pace > user.record_pace)  )){
+                newUser.record_pace = args.pace;
+            }           
+            _updateUserUnique_({id : userId},newUser, null, function(){
+                log("Successfully updated user record");
+            },function(err){
+                util.serverErr("Error in _updatePersonalRecord_ in _updateUserUnique_;");
+                util.serverErr(err);
+            });
 
         });
     }
