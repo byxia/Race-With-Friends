@@ -88,7 +88,7 @@ function getSquarePicture(id,successCallback, errorCallback){
 }
 
 function updateRace(raceData, successCallback, errorCallback){
-	_sendAjaxPostRequest_(UPDATE_RACE,raceData, successCallback,errorCallback);
+	_sendAjaxPostRequest_(prepareURL(UPDATE_RACE),raceData, successCallback,errorCallback);
 }
 
 function getPlayingFriends(successCallback, errorCallback){
