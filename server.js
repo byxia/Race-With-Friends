@@ -223,11 +223,19 @@ function initRequestHandler() {
         res.redirect('/');
     });
     app.get('/back/:url', function(req, res) {
+        if(!req.isAuthenticated()) {
+            res.redirect("/static/login.html");
+            return;
+        }
         console.log("redirect back to " + req.params.url);
         res.redirect("/static/" + req.params.url);
     });
 
     app.get('/newrace', function(req, res) {
+        if(!req.isAuthenticated()) {
+            res.redirect("/static/login.html");
+            return;
+        }
         res.redirect('/static/new-race.html');
     });
 
