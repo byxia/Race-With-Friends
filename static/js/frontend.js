@@ -49,11 +49,16 @@ $('#active-races').live('pageshow', function(){
 				});
 
 				$(challengedRaces).each(function(index, race){
+
 					console.log(race);
 					var ownerId = race.owner_id;
 					var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
 					// console.log(race);
 					// console.log(opponent);
+
+					var dist = metersToMiles(race.owner_dist || 0);
+					var daysAgo = daysAway(new Date(race.creation_date), new Date());
+					
 
 					$('#challenged-races').append('<li userId="'+ownerId+'"><div class="ui-grid-c">\
 						<div class="ui-block-a">\
@@ -64,8 +69,8 @@ $('#active-races').live('pageshow', function(){
 						</div>\
 						<div class="ui-block-b">\
 							<div class="info">\
-								2.3mi run<br/>\
-								4mi away\
+								'+dist+'mi run<br/>\
+								'+formatDaysAgo(daysAgo)+'\
 							</div>\
 						</div>\
 						<div class="ui-block-c">\
@@ -137,6 +142,9 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
+					var dist = metersToMiles(race.owner_dist || 0);
+					var daysAgo = daysAway(new Date(race.creation_date), new Date());
+
 					$('#owned-races').append('<li userId="'+opponentId+'"><div class="ui-grid-c">\
 						<div class="ui-block-a">\
 							<div class="person">\
@@ -146,8 +154,8 @@ $('#active-races').live('pageshow', function(){
 						</div>\
 						<div class="ui-block-b">\
 							<div class="info">\
-								2.3mi run<br/>\
-								4mi away\
+								'+dist+'mi run<br/>\
+								'+formatDaysAgo(daysAgo)+'\
 							</div>\
 						</div>\
 						<div class="ui-block-c">\
@@ -441,8 +449,24 @@ $('#details-page').live('pageshow', function(){
 			}
 		});
 
+		//change stats
+		$('.dist-button .distance').html(metersToMiles(race.owner_dist || 0)+"mi");
+
+		var ownerTime = formatTime(race.owner_time || 0);
+		$('.detail-stats .owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
+		var ownerPace = formatTime(meterPaceToMiles(race.owner_pace || 0));
+		$('.detail-stats .owner .number.pace').html(ownerPace.m + "'" + ownerTime.s+'"');
+
+		var oppTime = formatTime(race.opponent_time || 0);
+		$('.detail-stats .owner .number.time').html(oppTime.h + ":" + oppTime.m + ":" + oppTime.s);
+		var oppPace = formatTime(meterPaceToMiles(race.opponent_pace || 0));
+		$('.detail-stats .owner .number.pace').html(oppPace.m + "'" + oppTime.s+'"');
+
+
 		// change display for race startd by me
 		if(me.id === race.owner_id){
+			$('.detail-info .owner .name').html("You");
+
 			$('.detail-stats .owner .small.time').html('your time');
 			$('.detail-stats .owner .small.pace').html('your pace');
 			$('.detail-stats .opponent .small.time').html('their time');
@@ -451,6 +475,9 @@ $('#details-page').live('pageshow', function(){
 
 			$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
 			$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g');
+		}
+		else{
+			$('.detail-info .opponent .name').html("You");
 		}
 		//change display based on status
 		if(race.status==='waiting' || race.status ==='created'){
@@ -472,8 +499,9 @@ $('#details-page').live('pageshow', function(){
 			else{	// user lost
 				$('.detail-info .status').html('You lost.').removeClass('waiting').addClass('lost');
 			}
-			
 		}
+
+
 	});
 
 });
@@ -606,4 +634,38 @@ function formatTime(numSeconds){
 // converts meters to miles with 1 decimal space, returns a string
 function metersToMiles(meters){
 	return (Math.round(meters * 0.00062137119 * 10 )/10).toFixed(1);
+}
+
+// convert pace (second per meter) to second per mile
+function meterPaceToMiles(spm){
+	return parseInt(spm/0.00062137119);
+}
+
+function daysAway( date1, date2 ) {
+	 //Get 1 day in milliseconds
+	 var one_day=1000*60*60*24;
+
+
+
+	 // Convert both dates to milliseconds
+	 var date1_ms = date1.getTime();
+	 var date2_ms = date2.getTime();
+
+	 // Calculate the difference in milliseconds
+	 var difference_ms = date2_ms - date1_ms;
+	   
+	 // Convert back to days and return
+	 return Math.round(difference_ms/one_day); 
+}
+
+function formatDaysAgo(daysAgo){
+	if (daysAgo === 0){
+		return "today";
+	}
+	else if (daysAgo === 1){
+		return "yesterday";
+	}
+	else{
+		return daysAgo + " days ago";
+	}
 }
