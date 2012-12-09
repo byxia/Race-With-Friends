@@ -145,7 +145,7 @@ $('#active-races').live('pageshow', function(){
 					var dist = metersToMiles(race.owner_dist || 0);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 
-					$('#owned-races').append('<li userId="'+opponentId+'"><div class="ui-grid-c">\
+					var newLi = $('<li userId="'+opponentId+'" raceId="'+race._id+'"><div class="ui-grid-c">\
 						<div class="ui-block-a">\
 							<div class="person">\
 								<a href="profile.html?id='+opponentId+'&source=active"><img class="avatar"></a>\
@@ -165,10 +165,28 @@ $('#active-races').live('pageshow', function(){
 						</div>\
 						<div class="ui-block-d">\
 							<div class="btn">\
-								<a href="#confirm" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
+								<a id="cancel-btn" data-role="button" data-theme="g" data-rel="popup" data-position-to="window" data-transition="pop">Cancel</a>\
 							</div>\
 						</div>\
-					</div></li>');
+					</div></li>').appendTo('#owned-races');
+
+
+					newLi.find('#cancel-btn').bind('click', function(){
+						$.mobile.showPageLoadingMsg();
+						removeRaceById(race._id, function(data){
+							if (data.status === 1){
+								$.mobile.changePage("/static/active.html", { reloadPage : true });
+								showToast('race deleted');
+							}
+							else{
+								console.log('delete error');
+								$.mobile.changePage("/static/active.html", { reloadPage : true });
+
+							}
+							$.mobile.hidePageLoadingMsg();
+							
+						});
+					})
 
 					$("#owned-races").listview("refresh").trigger('create');
 				});
@@ -177,6 +195,7 @@ $('#active-races').live('pageshow', function(){
 					if(index ===0) return;
 
 					var opponentId = $(object).attr('userId');
+					console.log(opponentId);
 					getSquarePicture(opponentId,function(picture){
 						// console.log(opponentId);
 						if (validatePicture(picture) === true){
@@ -479,7 +498,21 @@ $('#details-page').live('pageshow', function(){
 			$('.detail-stats .opponent.waiting').html('<p>waiting for<br/>their data</p>');
 
 			$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
-			$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g');
+			$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g').bind('click', function(){
+				$.mobile.showPageLoadingMsg();
+				removeRaceById(race._id, function(data){
+					if (data.status === 1){
+						$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
+						showToast('race deleted');
+					}
+					else{
+						console.log('delete error');
+						$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
+
+					}
+					$.mobile.hidePageLoadingMsg();
+				});
+			});
 		}
 		else{
 			$('.detail-info .opponent .name').html("You");
@@ -510,6 +543,26 @@ $('#details-page').live('pageshow', function(){
 
 	});
 
+});
+
+
+$('#race-recording').live('pageshow', function(){
+	// get and display other person's name
+	var name;
+	if (getUrlVars().source === 'new-race'){
+		name = getUrlVars().opp_first + " " + getUrlVars().opp_last;
+	}
+	else if (getUrlVars().source === 'active'){
+		name = getUrlVars().owner_first + " " + getUrlVars().owner_last;
+	}
+	$('#racing-with').html('Racing with ' + name);
+
+	// $('#back-btn').bind('click', function(){
+	// 	$('#confirm').popup('open');
+	// 	$('#confirm-delete-btn').bind('click', function(){
+	// 		$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
+	// 	});
+	// });
 });
 
 
@@ -674,4 +727,14 @@ function formatDaysAgo(daysAgo){
 	else{
 		return daysAgo + " days ago";
 	}
+}
+
+
+function showToast(message){
+	$("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all toast'>"+message+"</div>").css({ "top": $(window).scrollTop() + 250 })
+	  .appendTo( $.mobile.pageContainer )
+	  .delay( 1000 )
+	  .fadeOut( 400, function(){
+	    $(this).remove();
+	  });
 }

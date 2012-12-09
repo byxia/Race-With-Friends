@@ -23,13 +23,13 @@
 
 <div data-role="page" id="race-recording">
 	<div data-role="header">
-		<a href="race.html" data-role="button" data-icon="arrow-l">
+		<a id="back-btn" href="active.html" data-role="button" data-icon="arrow-l">
 			back
 		</a>
 		<h1>Race With Friends</h1>
 	</div>
 
-	<div id="racing-with" class="bar dark">Racing with Luke Skywalker</div>
+	<div id="racing-with" class="bar dark"></div>
 
 	<div id="map_canvas">
 	</div>
@@ -40,6 +40,19 @@
 		<a data-role="button" data-theme="f" id="start-run-btn">Start</a>
 		<a data-role="button" data-theme="b" id="finish-run-btn">Finish</a>
 		<a data-role="button" data-theme="g" id="stop-run-btn">Stop</a>
+	</div>
+
+	<div data-role="popup" id="confirm" data-overlay-theme="a" data-theme="d" class="ui-corner-all">
+		<div data-role="header" data-theme="a" class="ui-corner-top popup-link">
+			<h1>Call off the race?</h1>
+		</div>
+		<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+			<h4>Are you sure you want to cancel this race?</h4>
+			<div class="btns">
+				<a id="confirm-delete-btn" data-role="button" data-inline="true" data-rel="back" data-theme="c">Yes</a>    
+				<a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>  
+			</div>
+		</div>
 	</div>
 
 </div>

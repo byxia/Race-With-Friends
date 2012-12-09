@@ -118,6 +118,18 @@
 	color: #999;
 }
 
+.toast{
+	padding: 10px 20px;
+	width: 100px;
+	margin: auto;
+	display: block;
+	opacity: 0.8;
+	position: absolute;
+	left: 50%;
+	margin-left: -70px;
+	text-align: center;
+}
+
 /* HEADER */
 
 .ui-header .ui-title, .ui-footer .ui-title {

@@ -49,7 +49,7 @@
 						<span class="distance"></span>
 					</div>
 					<div class="action-btn">
-						<a href="race.html" data-role="button" data-theme="f">Race!</a>
+						<a href="#confirm" data-role="button" data-theme="f">Race!</a>
 					</div>
 				</div>
 			</div>
@@ -108,6 +108,22 @@
 			</div>
 		</div>
 	</div>
+
+
+	<div data-role="popup" id="confirm" data-overlay-theme="a" data-theme="d" class="ui-corner-all">
+		<div data-role="header" data-theme="a" class="ui-corner-top popup-link">
+			<h1>Call off the race?</h1>
+		</div>
+		<div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+			<h4>Are you sure you want to cancel this race?</h4>
+			<div class="btns">
+				<a id="confirm-delete-btn" data-role="button" data-inline="true" data-rel="back" data-theme="c">Yes</a>    
+				<a href="#" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">No</a>  
+			</div>
+		</div>
+	</div>
+
+
 	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
 		<div data-role="navbar">
 			<ul>
