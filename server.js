@@ -732,7 +732,7 @@ function initCommandHandler() {
                 response.send(ERROR_OBJ);
                 return;
             }
-            if(thisRace.status === "finished") {
+            if(!thisRace.status || thisRace.status === "finished") {
                 util.serverErr("Race is already finished. Id: " + args._id);
                 response.send(ERROR_OBJ);
                 return;
