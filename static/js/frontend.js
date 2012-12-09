@@ -97,49 +97,6 @@ $('#active-races').live('pageshow', function(){
 
 				$.mobile.hidePageLoadingMsg();
 
-
-
-				//TODO: FILTER RACES TO ONLY WAITING
-				// for (var i=0; i<challengedRaces.length; i++){
-				// 	var race = challengedRaces[i];
-				// 	var ownerId = race.owner_id;
-				// 	var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
-				// 	// console.log(race);
-				// 	// console.log(opponent);
-
-				// 	getSquarePicture(ownerId,function(picture){
-				// 		console.log(ownerId);
-				// 		if (validatePicture(picture) === true){
-				// 			$('#challenged-races').append('<li><div class="ui-grid-c">\
-				// 				<div class="ui-block-a">\
-				// 					<div class="person">\
-				// 						<a href="profile.html?id='+ownerId+'&source=active"><img class="avatar" src="'+picture.location+'"></a>\
-				// 						<div class="name">'+owner+'</div>\
-				// 					</div>\
-				// 				</div>\
-				// 				<div class="ui-block-b">\
-				// 					<div class="info">\
-				// 						2.3mi run<br/>\
-				// 						4mi away\
-				// 					</div>\
-				// 				</div>\
-				// 				<div class="ui-block-c">\
-				// 					<div class="btn">\
-				// 						<a href="details.html?race='+race._id+'&source=active" data-role="button">Details</a>\
-				// 					</div>\
-				// 				</div>\
-				// 				<div class="ui-block-d">\
-				// 					<div class="btn">\
-				// 						<a href="race.html" data-role="button" data-theme="f">Race!</a>\
-				// 					</div>\
-				// 				</div>\
-				// 			</div></li>');
-
-				// 			$("#challenged-races").listview("refresh").trigger('create');
-				// 		}
-				// 	});
-				// };
-
 			};
 
 		});
@@ -351,8 +308,6 @@ $('#new-race').bind('pageshow', function(){
 $('#profile-page').live('pageshow', function(){
 	// $("#profile-page").die("pagebeforeshow");
 
-	
-
 	// $('#profile-link-btn').bind('click', function(){
 	// 	 // profile.html?id=myself
 	// 	console.log('click');
@@ -369,128 +324,88 @@ $('#profile-page').live('pageshow', function(){
 
 	console.log("profile page showing");
 
-	getMyself(function(myself){
-		// hide page and show loading screen
-		$('#profile-content').hide();
-		$.mobile.showPageLoadingMsg();
+	// hide page and show loading screen
+	$('#profile-content').hide();
+	$.mobile.showPageLoadingMsg();
 
-		// console.log(getUrlVars().id);
-		if (getUrlVars().id === "myself"){
-			// show page after load
-			$.mobile.hidePageLoadingMsg();
+	getUserById(getUrlVars().id, function(object){
+		var user = object[0];
+		console.log(object);
 
-			var displayName = formatName(myself.first_name, myself.last_name, 'profile');
+		if (isNull(user)){
+			console.log("error - null");
+			return;
+		}
+		else if (user.status === 0){
+			console.log("error");
+			console.log(user.status);
+			return;
+		}
 
-			// console.log(displayName);
+		// hide loading spinner
+		$.mobile.hidePageLoadingMsg();
 
-			// show user name
-			$('#profile-name').html(displayName);
-			// log($('#profile-name').html());
-			// hide race button and back button
-			$('#start-race-btn').remove();
+		var displayName = formatName(user.first_name, user.last_name, 'profile');
+		
+		// display user data
+		$('#profile-name').html(displayName);
+		// $('#start-race-btn').find('.ui-btn-text').text("Race with "+user.first_name+"!");
+
+
+		// display total stats
+		var totalRaces = user.total_races || 0;
+		var wonRaces = user.won_races || 0;
+		var totalDist = user.total_dist || 0;
+		var totalTime = user.total_time || 0;
+		var totalTimeFormatted = formatTime(totalTime);
+		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
+		$('.number.dist').html(metersToMiles(totalDist) + "mi");
+		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
+
+		var source = getUrlVars().source;
+		// change current tab to active if coming from active
+		if (source==='new-race' || source==='active' || source==='details-active'){
+			$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+			$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
+			$('.finished-link').attr('data-direction', 'forward');
+		}
+		else if (source === 'details-finished' || source === 'finished'){
+			$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+			$('.finished-link').addClass('ui-btn-active').addClass('ui-state-persist');
+			$('.finished-link').attr('data-direction', 'forward');
+		}
+		//coming from tab (viewing self profile)
+		else{
 			$('#back-btn').remove();
+		}
 
-			// $('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
+		// change back button destination
+		// if (getUrlVars().source === "active"){
+		// 	console.log("from active");
+		// 	$('#back-btn').attr("onclick", "window.location.href='/back/active.html';");
+		// 	console.log($('#back-btn').attr("onclick"));
+		// }
 
-			getLargePicture("me", function(picture){
-				var result = validatePicture(picture);
-				if (result === true){
-					$('#profile .avatar img').attr("src", picture.location);
-				}
+		// set avatar image
+		
 
+		// show page
+		$('#profile-content').show();
+
+	}, function(error){
+		console.log(error);
+	});
+
+	getLargePicture(getUrlVars().id, function(picture){
+		var result = validatePicture(picture);
+		if (result === true){
+			$('#profile .avatar img').attr("src", picture.location);
+			$('#profile .avatar img').load(function(){
+				// console.log($(this).width() + "/" + $(this).height());
 				formatPicture(picture);
 			});
-
-			$('#profile-content').show();
 		}
 		
-		else{
-			getFBUserById(getUrlVars().id, function(user){
-				if (isNull(user)){
-					console.log("error - null");
-					return;
-				}
-				else if (user.status === 0){
-					console.log("error");
-					console.log(user.status);
-					return;
-				}
-
-				// hide loading spinner
-				$.mobile.hidePageLoadingMsg();
-
-				var displayName = formatName(user.first_name, user.last_name, 'profile');
-				
-				// display user data
-				$('#profile-name').html(displayName);
-				$('#start-race-btn').find('.ui-btn-text').text("Race with "+user.first_name+"!");
-
-				// change current tab to active
-				$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
-				$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
-				$('.finished-link').attr('data-direction', 'forward');
-
-				// change back button destination
-				// if (getUrlVars().source === "active"){
-				// 	console.log("from active");
-				// 	$('#back-btn').attr("onclick", "window.location.href='/back/active.html';");
-				// 	console.log($('#back-btn').attr("onclick"));
-				// }
-
-				// set avatar image
-				getLargePicture(user.id, function(picture){
-					var result = validatePicture(picture);
-					if (result === true){
-						$('#profile .avatar img').attr("src", picture.location);
-						$('#profile .avatar img').load(function(){
-							// console.log($(this).width() + "/" + $(this).height());
-							formatPicture(picture);
-						});
-					}
-					
-				});
-
-				// show page
-				$('#profile-content').show();
-
-
-				// // bind create new race event
-				// $('#start-race-btn').bind('click', function(){
-				// 	var race = {
-				// 		owner_id: myself.id,
-				// 		owner_first_name: myself.first_name,
-				// 		owner_last_name: myself.last_name,
-				// 		opponent_id: user.id,
-				// 		opponent_first_name: user.first_name,
-				// 		opponent_last_name: user.last_name,
-				// 		status: "created",
-				// 	};
-				// 	// console.log("new race");
-				// 	// console.log(race);
-				// 	createRace(race, function(object){
-				// 		if (isNull(object)){
-				// 			console.log("error - null");
-				// 			window.location.href="/";
-				// 			alert("ERROR - NULL");
-				// 			return;
-				// 		}
-				// 		else if (object.status === 0){
-				// 			console.log("error");
-				// 			console.log(object.status);
-				// 			window.location.href="/";
-				// 			alert("ERROR - STATUS0");
-				// 			return;
-				// 		}
-				// 		window.location.href="/";
-				// 		alert("race created");
-				// 	});
-
-				// });
-
-			}, function(error){
-				console.log(error);
-			});
-		}
 	});
 
 	// $("#profile-page").die("pagebeforeshow");
@@ -598,4 +513,30 @@ function formatPicture(picture){
 	else{
 		$('#profile .avatar img').addClass("vertical");
 	}
+}
+
+// change time from # seconds to HH:MM:SS
+function formatTime(numSeconds){
+	var hour = parseInt(numSeconds/3600);
+	var min = parseInt((numSeconds-hour*3600)/60);
+	var sec = numSeconds%60;
+	if(hour<10){
+		hour = "0"+hour;
+	}
+	if(min<10){
+		min = "0"+min;
+	}
+	if(sec<10){
+		sec = "0"+sec;
+	}
+	return {
+		h: hour,
+		m: min,
+		s: sec
+	}
+}
+
+// converts meters to miles with 1 decimal space, returns a string
+function metersToMiles(meters){
+	return (Math.round(meters * 0.00062137119 * 10 )/10).toFixed(1);
 }
