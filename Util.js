@@ -16,8 +16,7 @@ var util = {
 	    for (var name in obj) {
 	                return false;
 	    }
-    	return true;
-	},
+    	return true;},
 
 	//check for not-null, non-empty string
 	validString : function (s){
