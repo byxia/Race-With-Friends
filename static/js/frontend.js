@@ -222,7 +222,9 @@ $('#new-race').bind('pageshow', function(){
 		}
 
 		me = list.me;
-		friends = list.friends.data;
+		friends = list.data;
+
+		console.log(friends);
 
 
 		// console.log(list);
@@ -234,7 +236,7 @@ $('#new-race').bind('pageshow', function(){
 		friends  = friends.slice(0,50);
 		$(friends).each(function(index,object){
 
-			var name = object.name;
+			var name = object.first_name + " " + object.last_name;
 			var newLi = $("<li userId='"+object.id+"'><a href='profile.html?id="+object.id+"&source=new-race'><img class='avatar'></a><p>"+name+"</p></li>");
 
 			newLi.appendTo('#friend-list ul');
@@ -307,11 +309,6 @@ $('#new-race').bind('pageshow', function(){
 // $("#profile-page").die("pageinit");
 $('#profile-page').live('pageshow', function(){
 	// $("#profile-page").die("pagebeforeshow");
-
-	// $('#profile-link-btn').bind('click', function(){
-	// 	 // profile.html?id=myself
-	// 	console.log('click');
-	// });
 
 	if ($._data($("#profile-page")[0], "events").pagebeforeshow.length>3){
 		$._data($("#profile-page")[0], "events").pagebeforeshow.slice(0,1);
@@ -412,6 +409,15 @@ $('#profile-page').live('pageshow', function(){
 });
 
 
+$('#details-page').live('pageshow', function(){
+	raceId = getUrlVars().race;
+	getRaceById(raceId, function(race){
+		console.log(race);
+	});
+});
+
+
+
 
 
 
@@ -419,13 +425,12 @@ $('#profile-page').live('pageshow', function(){
 
 // --------- HELPER METHODS ---------- //
 
-
 //compareto function for strings at index in a json object or array
 function compare(el1, el2, index) {
   return el1[index] == el2[index] ? 0 : (el1[index] < el2[index] ? -1 : 1);
 }
 
-// format name length
+// format display name based on length and page to display
 function formatName(firstName, lastName, page){
 	// catch when name is empty
 	if (firstName == undefined && lastName == undefined){
