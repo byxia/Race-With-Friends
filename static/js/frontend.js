@@ -402,18 +402,80 @@ $('#profile-page').live('pageshow', function(){
 				formatPicture(picture);
 			});
 		}
-		
 	});
 
 	// $("#profile-page").die("pagebeforeshow");
 });
 
 
+
+
+// race details page
 $('#details-page').live('pageshow', function(){
+	console.log("details");
 	raceId = getUrlVars().race;
-	getRaceById(raceId, function(race){
-		console.log(race);
+	getRaceById(raceId, function(object){
+		// console.log(race);
+		race = object.race;
+		me = object.me;
+		console.log(me);
+
+		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
+		opponentName = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
+		$('.detail-info .owner .name').html(ownerName);
+		$('.detail-info .opponent .name').html(opponentName);
+
+		// console.log(race.owner_id);
+		getSquarePicture(race.owner_id,function(picture){
+			// console.log(picture);
+			if (validatePicture(picture) === true){
+				$('.detail-info .owner img').attr('src', picture.location);
+				$('.detail-stats .owner img').attr('src', picture.location);
+			}
+		});
+		getSquarePicture(race.opponent_id,function(picture){
+			// console.log(picture);
+			if (validatePicture(picture) === true){
+				$('.detail-info .opponent img').attr('src', picture.location);
+				$('.detail-stats .opponent img').attr('src', picture.location);
+			}
+		});
+
+		// change display for race startd by me
+		if(me.id === race.owner_id){
+			$('.detail-stats .owner .small.time').html('your time');
+			$('.detail-stats .owner .small.pace').html('your pace');
+			$('.detail-stats .opponent .small.time').html('their time');
+			$('.detail-stats .opponent .small.pace').html('their pace');
+			$('.detail-stats .opponent.waiting').html('<p>waiting for<br/>their data</p>');
+
+			$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
+			$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g');
+		}
+		//change display based on status
+		if(race.status==='waiting' || race.status ==='created'){
+			$('.opponent.waiting').show();
+			$('.opponent.finished').remove();
+			if(me.id === race.owner_id){	// if user is owner and waiting
+				$('.detail-info .status').html('Waiting for their run');
+			}
+		}
+		else{	// finished
+			$('.opponent.waiting').remove();
+			$('.opponent.finished').show();
+
+			$('.detail-info .action-btn').remove();
+
+			if (race.winner_id === me.id){	// finished and user won
+				$('.detail-info .status').html('You won!').removeClass('waiting').addClass('won');
+			}	
+			else{	// user lost
+				$('.detail-info .status').html('You lost.').removeClass('waiting').addClass('lost');
+			}
+			
+		}
 	});
+
 });
 
 
