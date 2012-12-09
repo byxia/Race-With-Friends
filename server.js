@@ -148,12 +148,10 @@ function initDatabase() {
             last_name: String,
             last_login_date: Date,
             record_dist: Number,
-            record_time: Number,
             record_pace: Number,
             record_race_id: String,
 
             won_races: Number,
-            lost_races: Number,
             total_races: Number,
 
             total_dist: Number,
@@ -794,12 +792,8 @@ function initCommandHandler() {
                 newUser.record_dist = args.distance;
 
             }
-            if(args.duration && 
-                (!user.record_time || (user.record_time && args.duration > user.record_time) )){
-                newUser.record_time = args.duration;
-            } 
             if(args.pace &&
-                (!user.record_pace || (user.record_pace && args.pace > user.record_pace)  )){
+                (!user.record_pace || (user.record_pace && args.pace < user.record_pace)  )){
                 newUser.record_pace = args.pace;
             }           
             _updateUserUnique_({id : userId},newUser, null, function(){
