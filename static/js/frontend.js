@@ -485,6 +485,7 @@ $('#details-page').live('pageshow', function(){
 			$('.detail-info .opponent .name').html("You");
 		}
 		//change display based on status
+		console.log("status: " + race.status);
 		if(race.status==='waiting' || race.status ==='created'){
 			$('.opponent.waiting').show();
 			$('.opponent.finished').remove();

@@ -222,7 +222,8 @@ geo.prototype.finishButton = function() {
         // send to server
         var raceJson = {
             // _id: that._id,
-            route: that.route,
+
+            // route: that.route,
             distance: that.distance,
             start_date: that.start_date,
             finish_date: new Date(),
@@ -236,6 +237,18 @@ geo.prototype.finishButton = function() {
             opponent_last_name: vars.opp_last
         };
 
+        if(vars.source === 'new-race'){
+            raceJson.owner_route = JSON.stringify({
+                    route: that.route
+            });
+            raceJson.status = "waiting";
+        }
+        else if(vars.source === 'active'){
+            raceJson.opponent_route = JSON.stringify({
+                    route: that.route
+            });
+            raceJson.status = "finished";
+        }
                 //         var race = {
                 //     owner_id: me.id,
                 //     owner_first_name: me.name.givenName,
@@ -251,6 +264,9 @@ geo.prototype.finishButton = function() {
             createRace(raceJson, function(object){
                 log("success craete race");
                 log(object);
+                log(JSON.parse(object.owner_route).route);
+                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+
             },function(err){
                 log("err create race");
                 log(err);
@@ -259,6 +275,7 @@ geo.prototype.finishButton = function() {
         else if(vars.source === 'active'){
             updateRace(raceJson, function(object){
                 log(object);
+                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=finished"); 
             },function(err){
                 log("err update race");
                 log(err);

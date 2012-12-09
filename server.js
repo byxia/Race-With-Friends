@@ -181,8 +181,8 @@ function initDatabase() {
             finish_date: Date,
             owner_pace : Number,
             opponent_pace : Number,
-            owner_route: [],
-            opponent_route: [],
+            owner_route: String,
+            opponent_route: String,
             owner_time: String,
             opponent_time: String,
             owner_distance: Number,
@@ -230,6 +230,11 @@ function initRequestHandler() {
     app.get('/newrace', function(req, res) {
         res.redirect('/static/new-race.html');
     });
+
+    // app.get('/details',function(req,res){
+    //     console.log(args);
+    //     res.redirect('/static/details.html'+req.params.args);
+    // });
 
 
     app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res) {
@@ -348,6 +353,10 @@ function getAllRacesChallenged(id, successCallback, errorCallback) {
     _readFromRACE_({
         opponent_id: id
     }, successCallback, errorCallback);
+}
+
+function removeRaceById(id,successCallback,errorCallback){
+    dbUtil.removeInstance(RACE,{_id : id},successCallback,errorCallback, "Race Model");
 }
 
 
@@ -665,6 +674,40 @@ function initCommandHandler() {
         },function(err){
             response.send(ERROR_OBJ);
         });
+    }
+
+    cmdHandler.removeRaceById = function(args,request, response){
+        if(!request.isAuthenticated() || !request.user) {
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!util.validString(args._id)) {
+            util.serverErr("No id given to removeRaceById");
+            response.send(ERROR_OBJ);
+            return;
+        }
+        getRaceById(args._id,function(data){
+            if(!data || !data[0]){
+                util.serverErr("No race found with id: " + args._id +", can't remove");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            if(data[0].owner_id !== request.user.id){
+                util.serverErr("Can't remove others' race. user id: " +
+                    request.user.id + ", race owner: " + data[0].owner_id);
+                response.send(ERROR_OBJ);
+                return;
+            }
+            removeRaceById(data[0]._id,function(){
+                response.send(SUCCESS_OBJ);
+            },function(err){
+                util.serverErr("Error in getRaceById");
+                response.send(ERROR_OBJ);
+            });
+        },function(err){
+            response.send(ERROR_OBJ);
+        }); 
+
     }
 
     cmdHandler.getAllRaces = function(args, request, response) {
