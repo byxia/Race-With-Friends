@@ -659,8 +659,10 @@ function initCommandHandler() {
                 response.send(ERROR_OBJ);
                 return;
             }
-            result[0].me = request.user;
-            response.send(result[0]);
+            response.send({
+                me : request.user,
+                race : result[0]
+            });
         },function(err){
             response.send(ERROR_OBJ);
         });
@@ -781,7 +783,8 @@ function initCommandHandler() {
                 (!user.total_time || (user.total_time && args.duration > user.total_time) )){
                 newUsesr.total_time = args.duration;
             }
-            // newUsesr.total_races = 
+            newUsesr.total_races = user.total_races ? user.total_races+1 : 1;
+
 
         });
     }
