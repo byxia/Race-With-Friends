@@ -274,23 +274,28 @@ $('#new-race').bind('pageshow', function(){
 				// console.log(race);
 				// console.log("new race");
 				// console.log(race);
-				createRace(race, function(object){
-					if (isNull(object)){
-						console.log("error - null");
-						window.location.href="/";
-						alert("ERROR - NULL");
-						return;
-					}
-					else if (object.status === 0){
-						console.log("error");
-						console.log(object.status);
-						window.location.href="/";
-						alert("ERROR - STATUS0");
-						return;	
-					}
-					window.location.href="race-recording.html?raceId="+object._id+"&source=new-race";
-					// alert("race created");
-				});
+				// createRace(race, function(object){
+				// 	if (isNull(object)){
+				// 		console.log("error - null");
+				// 		window.location.href="/";
+				// 		alert("ERROR - NULL");
+				// 		return;
+				// 	}
+				// 	else if (object.status === 0){
+				// 		console.log("error");
+				// 		console.log(object.status);
+				// 		window.location.href="/";
+				// 		alert("ERROR - STATUS0");
+				// 		return;	
+				// 	}
+				// 	window.location.href="race-recording.html?raceId="+object._id+"&source=new-race";
+				// 	// alert("race created");
+				// });
+				
+				window.location.href="race-recording.html?owner_id="+me.id+"&opponent_id="+object.id+
+				"&owner_first="+me.name.givenName+"&owner_last="+me.name.familyName+
+				"&opp_first="+friendFirst+"&opp_last="+friendLast+"&source=new-race";
+
 			});
 			$("#friend-list ul").listview("refresh").trigger("create");
 		});

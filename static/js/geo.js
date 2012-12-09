@@ -217,19 +217,67 @@ geo.prototype.finishButton = function() {
             }
         }, that.errCallBack, that.geoOptions);
 
+        vars = getUrlVars();
+
         // send to server
         var raceJson = {
-            _id: that._id,
+            // _id: that._id,
             route: that.route,
             distance: that.distance,
             start_date: that.start_date,
             finish_date: new Date(),
             duration: that.duration,
-            pace: that.duration/that.distance
+            pace: that.duration/that.distance,
+            owner_id: vars.owner_id,
+            owner_first_name: vars.owner_first,
+            owner_last_name: vars.owner_last,
+            opponent_id: vars.opponent_id,
+            opponent_first_name: vars.opp_first,
+            opponent_last_name: vars.opp_last
         };
+
+                //         var race = {
+                //     owner_id: me.id,
+                //     owner_first_name: me.name.givenName,
+                //     owner_last_name: me.name.familyName,
+                //     opponent_id: object.id,
+                //     opponent_first_name: friendFirst,
+                //     opponent_last_name: friendLast,
+                //     status: "waiting",
+                // };
         console.log(raceJson);
 
-        updateRace(raceJson, that.ajaxSuccess, that.ajaxFailure);
+        if(vars.source === 'new-race'){
+            createRace(raceJson, function(object){
+                log("success craete race");
+                log(object);
+            },function(err){
+                log("err create race");
+                log(err);
+            });
+        }
+        else if(vars.source === 'active'){
+            updateRace(raceJson, function(object){
+                log(object);
+            },function(err){
+                log("err update race");
+                log(err);
+            });
+        }
+
+        // race = {
+
+        // };
+
+        // createRace(race,function(newRace){
+        //     if(newRace){
+
+        //     }
+        // });
+        // updateRace(raceJson, that.ajaxSuccess, that.ajaxFailure);
+
+        // redirect to race details after finish
+
     });
 }
 
@@ -252,31 +300,31 @@ geo.prototype.timer = function() {
             that.duration ++;
             var path = that.runPath.getPath();
             // TODO real
-            // var pt = new google.maps.LatLng(position.coords.latitude, 
-            //                                  position.coords.longitude));
-            // that.map.setCenter(pt);
-            // path.push(pt);
-            // that.mapBounds.extend(pt);
-            // that.map.fitBounds(that.mapBounds);
-            // that.route.push({
-            //     lat: pt.$a,
-            //     lon: pt.ab
-            // });
-            // that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
+            var pt = new google.maps.LatLng(position.coords.latitude, 
+                                             position.coords.longitude);
+            that.map.setCenter(pt);
+            path.push(pt);
+            that.mapBounds.extend(pt);
+            that.map.fitBounds(that.mapBounds);
+            that.route.push({
+                lat: pt.$a,
+                lon: pt.ab
+            });
+            that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
             
             // TODO dummy
-            if (that.arr.length !== 0) { 
-                var pt = that.arr.pop();
-                that.map.setCenter(pt);
-                path.push(pt); 
-                that.mapBounds.extend(pt);
-                that.map.fitBounds(that.mapBounds);
-                that.route.push({
-                    lat: pt.$a,
-                    lon: pt.ab
-                });
-                that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
-            }
+            // if (that.arr.length !== 0) { 
+            //     var pt = that.arr.pop();
+            //     that.map.setCenter(pt);
+            //     path.push(pt); 
+            //     that.mapBounds.extend(pt);
+            //     that.map.fitBounds(that.mapBounds);
+            //     that.route.push({
+            //         lat: pt.$a,
+            //         lon: pt.ab
+            //     });
+            //     that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
+            // }
         }, that.errCallBack, that.geoOptions);
     }, 1000);
 }
