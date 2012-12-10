@@ -258,13 +258,14 @@ geo.prototype.finishButton = function() {
             });
             raceJson.opponent_distance = that.distance;
             raceJson.status = "finished";
-            updateRace(raceJson, function(object){
-                log(object);
-                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=finished"); 
-            },function(err){
-                log("err update race");
-                log(err);
-            });
+            log(raceJson);
+            // updateRace(raceJson, function(object){
+            //     log(object);
+            //     $.mobile.changePage("/static/details.html?race=" + object._id+"&source=finished"); 
+            // },function(err){
+            //     log("err update race");
+            //     log(err);
+            // });
         }
                 //         var race = {
                 //     owner_id: me.id,

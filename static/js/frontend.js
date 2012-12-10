@@ -580,8 +580,12 @@ $('#race-page').live('pageshow', function(){
 			}
 		});
 	});
-	$('#same-route-btn').attr('href', 'race-recording.html?race='+raceId+'&source=active&mode=same');
-	$('#diff-route-btn').attr('href', 'race-recording.html?race='+raceId+'&source=active&mode=diff');
+	$('#same-route-btn').bind('click', function(){
+		window.location.href='race-recording.html?race='+raceId+'&source=active&mode=same'
+	});
+	$('#diff-route-btn').bind('click', function(){
+		window.location.href='race-recording.html?race='+raceId+'&source=active&mode=diff'
+	});
 });
 
 
@@ -591,7 +595,10 @@ $('#race-recording').live('pageshow', function(){
 	var name;
 	var vars = getUrlVars();
 	var raceId = vars.race;
-
+	new geo({
+		startButtonId : "start-run-btn",
+		finishButtonId: "finish-run-btn"
+	});
 	$('#finish-run-btn').hide();
 	$('#distance-instruction').hide();
 	$('#arrive-instruction').hide();
@@ -603,10 +610,10 @@ $('#race-recording').live('pageshow', function(){
 		name = vars.opp_first + " " + vars.opp_last;
 		$("#start-run-btn").show();
 		$('#racing-with').html(name);
-		new geo({
-			startButtonId : "start-run-btn",
-			finishButtonId: "finish-run-btn"
-		});
+		// new geo({
+		// 	startButtonId : "start-run-btn",
+		// 	finishButtonId: "finish-run-btn"
+		// });
 	}
 	else if (vars.source === 'active'){	
 		getRaceById(raceId, function(object){
@@ -616,19 +623,17 @@ $('#race-recording').live('pageshow', function(){
 			$('#racing-with').html(name);
 			$('body').data('race', race);
 			console.log($('body').data('race'));
+			if (vars.mode === 'same'){
+				$('#arrive-instruction').show();
+			}
+			else if (vars.mode === 'diff'){
+				$("#start-run-btn").show();
+
+			}
 		});
-		if (vars.mode === 'same'){
-			$('#arrive-instruction').show();
-		}
-		else if (vars.mode === 'diff'){
-			$("#start-run-btn").show();
-			new geo({
-				startButtonId : "start-run-btn",
-				finishButtonId: "finish-run-btn"
-			});
-		}
+
 	}
-	
+					
 
 	// $('#back-btn').bind('click', function(){
 	// 	$('#confirm').popup('open');
