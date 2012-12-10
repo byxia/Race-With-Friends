@@ -56,7 +56,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_dist || 0, 1);
+					var dist = metersToMiles(race.owner_distance || 0, 1);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 					
 
@@ -142,7 +142,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_dist || 0, 1);
+					var dist = metersToMiles(race.owner_distance || 0, 1);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 
 					var newLi = $('<li userId="'+opponentId+'" raceId="'+race._id+'"><div class="ui-grid-c">\
@@ -195,7 +195,7 @@ $('#active-races').live('pageshow', function(){
 					if(index ===0) return;
 
 					var opponentId = $(object).attr('userId');
-					console.log(opponentId);
+					// console.log(opponentId);
 					getSquarePicture(opponentId,function(picture){
 						// console.log(opponentId);
 						if (validatePicture(picture) === true){
@@ -474,7 +474,7 @@ $('#details-page').live('pageshow', function(){
 		});
 
 		//change stats
-		$('.dist-button .distance').html(metersToMiles(race.owner_dist || 0, 1)+"mi");
+		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, 1)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
 		$('.detail-stats .owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
@@ -517,8 +517,10 @@ $('#details-page').live('pageshow', function(){
 			}
 			
 		}
-		else{
+		else{		// races stared by other person
 			$('.detail-info .opponent .name').html("You");
+			//link race button
+			$('.action-btn a').attr('href', 'race.html?race='+raceId+'&source=active');
 		}
 		//change display based on status
 		// console.log("status: " + race.status);
@@ -557,16 +559,67 @@ $('#details-page').live('pageshow', function(){
 });
 
 
+// accept race page
+$('#race-page').live('pageshow', function(){
+	raceId = getUrlVars().race;
+	getRaceById(raceId, function(object){
+		race = object.race;
+		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
+		$('.owner .name').html(ownerName);
+		$('.race-distance').html(metersToMiles(race.owner_distance, 1));
+		// console.log(race);
+		getSquarePicture(race.owner_id,function(picture){
+			if (validatePicture(picture) === true){
+				$('.owner .avatar').attr('src', picture.location);
+			}
+		});
+		getSquarePicture(race.opponent_id,function(picture){
+			// console.log(picture);
+			if (validatePicture(picture) === true){
+				$('.opponent .avatar').attr('src', picture.location);
+			}
+		});
+	});
+	$('#same-route-btn').attr('href', 'race-recording.html?race='+raceId+'&source=active&mode=same');
+	$('#diff-route-btn').attr('href', 'race-recording.html?race='+raceId+'&source=active&mode=diff');
+});
+
+
+// recording race
 $('#race-recording').live('pageshow', function(){
 	// get and display other person's name
 	var name;
-	if (getUrlVars().source === 'new-race'){
-		name = getUrlVars().opp_first + " " + getUrlVars().opp_last;
+	var vars = getUrlVars();
+	var raceId = vars.race;
+
+	$('#finish-run-btn').hide();
+	$('#distance-instruction').hide();
+	$('#arrive-instruction').hide();
+	$('#rec-icon').hide();
+	$("#start-run-btn").hide();
+
+	if (vars.source === 'new-race'){
+		name = vars.opp_first + " " + vars.opp_last;
+		$("#start-run-btn").show();
+		$('#racing-with').html(name);
 	}
-	else if (getUrlVars().source === 'active'){
-		name = getUrlVars().owner_first + " " + getUrlVars().owner_last;
+	else if (vars.source === 'active'){
+		getRaceById(raceId, function(object){
+			race = object.race;
+			console.log(race.owner_first_name);
+			name = race.owner_first_name + " " + race.owner_last_name;
+			$('#racing-with').html(name);
+			$('body').data('race', race);
+			console.log($('body').data('race'));
+		});
+		if (vars.mode === 'same'){
+			$('#arrive-instruction').show();
+		}
+		else if (vars.mode === 'diff'){
+			$("#start-run-btn").show();
+		}
 	}
-	$('#racing-with').html('Racing with ' + name);
+	
 
 	// $('#back-btn').bind('click', function(){
 	// 	$('#confirm').popup('open');

@@ -100,11 +100,6 @@ geo.prototype.showMap = function() {
 geo.prototype.startButton = function() {
     var that = this;
 
-    $('#finish-run-btn').hide();
-    $('#distance-instruction').hide();
-    $('#arrive-instruction').hide();
-    $('#rec-icon').hide();
-
     $("#start-run-btn").click(function(){
         $("#start-run-btn").hide();
         $("#finish-run-btn").show();
@@ -241,12 +236,14 @@ geo.prototype.finishButton = function() {
             raceJson.owner_route = JSON.stringify({
                     route: that.route
             });
+            raceJson.owner_distance = that.distance;
             raceJson.status = "waiting";
         }
         else if(vars.source === 'active'){
             raceJson.opponent_route = JSON.stringify({
                     route: that.route
             });
+            raceJson.opponent_distance = that.distance;
             raceJson.status = "finished";
         }
                 //         var race = {

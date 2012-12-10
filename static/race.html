@@ -16,7 +16,7 @@
 </head> 
 <body> 
 
-<div data-role="page">
+<div data-role="page" id="race-page">
 	<div data-role="header">
 		<a href="active.html" data-role="button" data-icon="arrow-l">
 			back
@@ -28,19 +28,19 @@
 		<div class="ui-grid-a">
 			<div class="ui-block-a">
 				<div class="vs">
-					<div class="person">
+					<div class="person owner">
 						<a href="profile.html"><img class="avatar"></a>
-						<div class="name">Luke S.</div>
+						<div class="name"></div>
 					</div>
 					<div class="vs-text">VS</div>
-					<div class="person">
+					<div class="person opponent">
 						<a href="profile.html"><img class="avatar"></a>
 						<div class="name">You</div>
 					</div>
 				</div>
 			</div>
 			<div class="ui-block-b info">
-				<p>0.7mi run / 2mi away</p>
+				<p><span class="race-distance"></span>mi run</p>
 				<div class="label">Please choose a route</div>
 			</div>
 		</div><!-- /grid-a -->
@@ -48,13 +48,13 @@
 
 		<div class="ui-grid-a accept-btns">
 			<div class="ui-block-a">
-				<a href="race-recording.html" class="same" data-role="button">
+				<a class="same" data-role="button" id="same-route-btn">
 					<div class="icon"></div>
 					same route
 				</a>
 			</div>
 			<div class="ui-block-b">
-				<a href="race-recording.html" class="diff" data-role="button">
+				<a class="diff" data-role="button" id="diff-route-btn">
 					<div class="icon"></div>
 					different route<br/>
 					<span class="small">(same distance)</span>
