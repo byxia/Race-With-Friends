@@ -608,7 +608,7 @@ $('#race-recording').live('pageshow', function(){
 			finishButtonId: "finish-run-btn"
 		});
 	}
-	else if (vars.source === 'active'){
+	else if (vars.source === 'active'){	
 		getRaceById(raceId, function(object){
 			race = object.race;
 			console.log(race.owner_first_name);
@@ -622,6 +622,10 @@ $('#race-recording').live('pageshow', function(){
 		}
 		else if (vars.mode === 'diff'){
 			$("#start-run-btn").show();
+			new geo({
+				startButtonId : "start-run-btn",
+				finishButtonId: "finish-run-btn"
+			});
 		}
 	}
 	
