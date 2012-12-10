@@ -56,7 +56,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_dist || 0);
+					var dist = metersToMiles(race.owner_dist || 0, 1);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 					
 
@@ -142,7 +142,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_dist || 0);
+					var dist = metersToMiles(race.owner_dist || 0, 1);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 
 					var newLi = $('<li userId="'+opponentId+'" raceId="'+race._id+'"><div class="ui-grid-c">\
@@ -388,7 +388,7 @@ $('#profile-page').live('pageshow', function(){
 		var totalTime = user.total_time || 0;
 		var totalTimeFormatted = formatTime(totalTime);
 		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
-		$('.number.dist').html(metersToMiles(totalDist) + "mi");
+		$('.number.dist').html(metersToMiles(totalDist, 1) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
 
 		var source = getUrlVars().source;
@@ -474,7 +474,7 @@ $('#details-page').live('pageshow', function(){
 		});
 
 		//change stats
-		$('.dist-button .distance').html(metersToMiles(race.owner_dist || 0)+"mi");
+		$('.dist-button .distance').html(metersToMiles(race.owner_dist || 0, 1)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
 		$('.detail-stats .owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
@@ -497,28 +497,31 @@ $('#details-page').live('pageshow', function(){
 			$('.detail-stats .opponent .small.pace').html('their pace');
 			$('.detail-stats .opponent.waiting').html('<p>waiting for<br/>their data</p>');
 
-			$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
-			$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g').bind('click', function(){
-				$.mobile.showPageLoadingMsg();
-				removeRaceById(race._id, function(data){
-					if (data.status === 1){
-						$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
-						showToast('race deleted');
-					}
-					else{
-						console.log('delete error');
-						$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
-
-					}
-					$.mobile.hidePageLoadingMsg();
+			// change race button to cancel if race isn't finished and user is owner
+			if (race.status !== 'finished'){
+				$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
+				$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g').bind('click', function(){
+					$.mobile.showPageLoadingMsg();
+					removeRaceById(race._id, function(data){
+						if (data.status === 1){
+							$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
+							showToast('race deleted');
+						}
+						else{
+							console.log('delete error');
+							$.mobile.changePage("/static/active.html", { transition: "slide", changeHash: true, reverse: true });
+						}
+						$.mobile.hidePageLoadingMsg();
+					});
 				});
-			});
+			}
+			
 		}
 		else{
 			$('.detail-info .opponent .name').html("You");
 		}
 		//change display based on status
-		console.log("status: " + race.status);
+		// console.log("status: " + race.status);
 		if(race.status==='waiting' || race.status ==='created'){
 			$('.opponent.waiting').show();
 			$('.opponent.finished').remove();
@@ -530,8 +533,16 @@ $('#details-page').live('pageshow', function(){
 			$('.opponent.waiting').remove();
 			$('.opponent.finished').show();
 
+			// change button to share
+			// $('.detail-info .action-btn a .ui-btn-text').html('Share');
+			// $('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-b').bind('click', function(){
+			// 	$('#fbShare'.popup('open'));
+			// });
+	
+			// delete action button
 			$('.detail-info .action-btn').remove();
 
+			// change status label
 			if (race.winner_id === me.id){	// finished and user won
 				$('.detail-info .status').html('You won!').removeClass('waiting').addClass('won');
 			}	
@@ -690,9 +701,9 @@ function formatTime(numSeconds){
 	}
 }
 
-// converts meters to miles with 1 decimal space, returns a string
-function metersToMiles(meters){
-	return (Math.round(meters * 0.00062137119 * 10 )/10).toFixed(1);
+// converts meters to miles with specified number of decimal places, returns a string
+function metersToMiles(meters, decimal){
+	return (Math.round(meters * 0.00062137119 * 10 )/10).toFixed(decimal);
 }
 
 // convert pace (second per meter) to second per mile
@@ -701,20 +712,18 @@ function meterPaceToMiles(spm){
 }
 
 function daysAway( date1, date2 ) {
-	 //Get 1 day in milliseconds
-	 var one_day=1000*60*60*24;
+	//Get 1 day in milliseconds
+	var one_day=1000*60*60*24;
 
+	// Convert both dates to milliseconds
+	var date1_ms = date1.getTime();
+	var date2_ms = date2.getTime();
 
+	// Calculate the difference in milliseconds
+	var difference_ms = date2_ms - date1_ms;
 
-	 // Convert both dates to milliseconds
-	 var date1_ms = date1.getTime();
-	 var date2_ms = date2.getTime();
-
-	 // Calculate the difference in milliseconds
-	 var difference_ms = date2_ms - date1_ms;
-	   
-	 // Convert back to days and return
-	 return Math.round(difference_ms/one_day); 
+	// Convert back to days and return
+	return Math.round(difference_ms/one_day); 
 }
 
 function formatDaysAgo(daysAgo){
@@ -736,5 +745,5 @@ function showToast(message){
 	  .delay( 1000 )
 	  .fadeOut( 400, function(){
 	    $(this).remove();
-	  });
+	});
 }

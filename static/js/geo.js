@@ -101,7 +101,7 @@ geo.prototype.startButton = function() {
     var that = this;
 
     $('#finish-run-btn').hide();
-    $('#stop-run-btn').hide();
+    $('#distance-instruction').hide();
     $('#arrive-instruction').hide();
     $('#rec-icon').hide();
 
