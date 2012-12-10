@@ -99,7 +99,6 @@ function onStart() {
     }, function(accessToken, refreshToken, profile, done) {
         FB.setAccessToken(accessToken);
         graph.setAccessToken(accessToken);
-
         getUserById(profile.id, function(user) {
             if(util.isNull(user) || util.isEmptyObj(user)) {
                 console.log("No such user exists. Creating new User");
@@ -757,6 +756,40 @@ function initCommandHandler() {
 
     cmdHandler.getLargePicture = function(args, request, response) {
         _getPictureHelp_(args, request, response, "large");
+    }
+
+    cmdHandler.postToFacebook = function(args, request,response){
+        if(!request.isAuthenticated() || !request.user) {
+            response.send(ERROR_OBJ);
+            return;
+        }
+        getUserById(request.user.id,function(data){
+            if(!data || !data[0]){
+                util.serverErr("No user found with id: " + request.user.id+", can't post to fb");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            FB.setAccessToken(data[0].token);
+            FB.api('me/feed','post',{message : args.content? args.content : ""},function(res){
+                if(!res || res.error){
+                    util.serverErr(res || res.error);
+                    util.serverErr("Error when posting to fb");
+                    response.send(ERROR_OBJ);
+                    return;
+                }
+                response.send(SUCCESS_OBJ);
+            });
+
+        });      
+                // var body = 'Post using Facebook-SDK from node.js module';
+        // FB.api('me/feed', 'post', { message: body}, function (res) {
+        //   if(!res || res.error) {
+        //     console.log(!res ? 'error occurred' : res.error);
+        //     return;
+        //   }
+        //   console.log('Post Id: ' + res.id);
+        // });
+
     }
 
     cmdHandler.updateRace = function(args, request, response) {
