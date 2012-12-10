@@ -1,8 +1,8 @@
-var geo = function() {
-    this.setup();
+var geo = function(option) {
+    this.setup(option);
 }
 
-geo.prototype.setup = function() {
+geo.prototype.setup = function(option) {
     var nop = function() {};
     if (!navigator.geolocation) {
         navigator.geolocation = {};
@@ -12,6 +12,8 @@ geo.prototype.setup = function() {
     }
 
     // send these to server in a json
+    this.startButtonId = option.startButtonId;
+    this.finishButtonId = option.finishButtonId;
     this._id = getUrlVars().raceId;
     this.route = [];
     this.distance = 0;
@@ -100,7 +102,7 @@ geo.prototype.showMap = function() {
 geo.prototype.startButton = function() {
     var that = this;
 
-    $("#start-run-btn").click(function(){
+    $("#"+this.startButtonId).click(function(){
         $("#start-run-btn").hide();
         $("#finish-run-btn").show();
         $('#rec-icon').show();
@@ -176,11 +178,11 @@ geo.prototype.preTimer = function() {
                 position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
             });
             that.centerMarker.setMap(that.map);
-
-            that.map.setCenter(
-                new google.maps.LatLng(position.coords.latitude, 
-                    position.coords.longitude)
-            );
+            if(that.map)
+                that.map.setCenter(
+                    new google.maps.LatLng(position.coords.latitude, 
+                        position.coords.longitude)
+                );
         }, that.errCallBack, that.geoOptions);
     }, 500);
 }
@@ -190,7 +192,7 @@ geo.prototype.preTimer = function() {
  */
 geo.prototype.finishButton = function() {
     var that = this;
-    $("#finish-run-btn").click(function() {
+    $("#"+this.finishButtonId).click(function() {
         $('#rec-icon').hide();
         // stop tracking
         clearInterval(that.timerId);
@@ -295,13 +297,6 @@ geo.prototype.finishButton = function() {
     });
 }
 
-geo.prototype.ajaxSuccess = function() {
-    console.log("ajax success");
-}
-
-geo.prototype.ajaxFailure = function() {
-    console.log("ajax failure");
-}
 
 /**
  * Handle updating the user's runnning route every T = 1s interval
@@ -372,4 +367,4 @@ geo.prototype.toRad = function(number) {
 }
 
 // HERE WE GO
-new geo();
+// new geo();

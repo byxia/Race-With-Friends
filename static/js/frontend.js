@@ -595,13 +595,18 @@ $('#race-recording').live('pageshow', function(){
 	$('#finish-run-btn').hide();
 	$('#distance-instruction').hide();
 	$('#arrive-instruction').hide();
-	$('#rec-icon').hide();
 	$("#start-run-btn").hide();
+
+	$('#rec-icon').hide();
 
 	if (vars.source === 'new-race'){
 		name = vars.opp_first + " " + vars.opp_last;
 		$("#start-run-btn").show();
 		$('#racing-with').html(name);
+		new geo({
+			startButtonId : "start-run-btn",
+			finishButtonId: "finish-run-btn"
+		});
 	}
 	else if (vars.source === 'active'){
 		getRaceById(raceId, function(object){
