@@ -204,6 +204,8 @@ geo.prototype.preTimer = function() {
 geo.prototype.finishButton = function() {
     var that = this;
     $("#"+this.finishButtonId).click(function() {
+            console.log("clearing: " + that.timerId);
+
         $('#rec-icon').hide();
         // stop tracking
         clearInterval(that.timerId);
@@ -274,7 +276,7 @@ geo.prototype.finishButton = function() {
                 log("success craete race");
                 log(object);
                 log(JSON.parse(object.owner_route).route);
-                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+                // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
 
             },function(err){
                 log("err create race");
@@ -295,7 +297,7 @@ geo.prototype.finishButton = function() {
             log(raceJson);
             updateRace(raceJson, function(object){
                 log("from server. backend json");
-                $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
+                // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
             },function(err){
                 log("err update race");
                 log(err);
@@ -398,6 +400,7 @@ geo.prototype.timer = function() {
             // }
         }, that.errCallBack, that.geoOptions);
     }, 3500);
+    console.log(that.timerId + " timer id");
 }
 
 /**
