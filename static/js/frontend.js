@@ -267,6 +267,9 @@ $('#finished-races').live('pageshow', function(){
 					winningTime = Math.min(race.owner_time, race.opponent_time);
 				}
 				winningTime = formatTime(winningTime);
+				if (winningTime.h === '00'){
+
+				}
 				winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
 
 				var status;
@@ -536,15 +539,15 @@ $('#details-page').live('pageshow', function(){
 	raceId = getUrlVars().race;
 	getRaceById(raceId, function(object){
 
-		if (race.mode === "diff"){
-			$('.map.diff').show();
-			$('.map.same').hide();
-		}
-
 		// console.log(race);
 		race = object.race;
 		me = object.me;
 		console.log(me);
+
+		if (race.mode === "diff"){
+			$('.map.diff').show();
+			$('.map.same').hide();
+		}
 
 		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
 		opponentName = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
