@@ -18,6 +18,8 @@ $('#active-races').live('pageshow', function(){
 		window.location.href="/newrace";
 	});
 	$('.profile-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+	$('.finished-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+	$('.active-link').addClass('ui-btn-active').addClass('ui-state-persist');
 
 	//get owned races
 	// getMyself(function(myself){
@@ -250,6 +252,9 @@ $('#finished-races').live('pageinit', function(){
 			}
 		}
 
+		if (numRaces === 1){
+			$('#race-num').html('<span class="count"></span> finished race')
+		}
 		$('#race-num .count').html(numRaces);
 		$('#win-num .count').html(numWins);
 
@@ -307,12 +312,12 @@ $('#finished-races').live('pageinit', function(){
 						<div class="vs">\
 							<div class="person">\
 								<a href="profile.html?id='+ownerId+'&source=finished"><img class="avatar owner"></a>\
-								<div class="name">'+owner+'</div>\
+								<div class="name owner">'+owner+'</div>\
 							</div>\
 							<div class="vs-text">VS</div>\
 							<div class="person">\
 								<a href="profile.html?id='+opponentId+'&source=finished"><img class="avatar opponent"></a>\
-								<div class="name">'+opponent+'</div>\
+								<div class="name opponent">'+opponent+'</div>\
 							</div>\
 						</div>\
 						<a href="details.html?race='+race._id+'&source=finished" class="info">\
@@ -324,6 +329,13 @@ $('#finished-races').live('pageinit', function(){
 						</a>\
 					</li>').appendTo('#finished-list');
 
+				if (ownerId === me.id){
+					newLi.find('.name.owner').html('You');
+				}
+				else{
+					newLi.find('.name.opponent').html('You');
+				}
+
 				if (race.winner_id === ownerId){
 					newLi.find('.avatar.owner').addClass('won').after('<div class="crown"></div>');
 				}
@@ -334,6 +346,23 @@ $('#finished-races').live('pageinit', function(){
 
 			});
 			$("#finished-list").listview("refresh").trigger('create');
+
+			$('#finished-list li').each(function(index, object){
+				var ownerId = $(object).attr('ownerId');
+				getSquarePicture(ownerId,function(picture){
+					// console.log(opponentId);
+					if (validatePicture(picture) === true){
+						$($(object).find('.avatar.owner')[0]).attr('src', picture.location);
+					}
+				});
+				var opponentId = $(object).attr('oppId');
+				getSquarePicture(opponentId,function(picture){
+					// console.log(opponentId);
+					if (validatePicture(picture) === true){
+						$($(object).find('.avatar.opponent')[0]).attr('src', picture.location);
+					}
+				});
+			});
 		}
 	});
 });
@@ -556,6 +585,16 @@ $('#profile-page').live('pageshow', function(){
 $('#details-page').live('pageshow', function(){
 	// console.log("details");
 	raceId = getUrlVars().race;
+	source = getUrlVars().source;
+
+	// set navigation based on source
+	if (source === 'finished'){
+		$('#back-btn').attr('href', 'finished.html');
+		$('.active-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+		$('.finished-link').addClass('ui-btn-active').addClass('ui-state-persist');
+		$('.active-link').attr('data-direction', 'forward');
+	}
+
 	getRaceById(raceId, function(object){
 
 		// console.log(race);
@@ -565,7 +604,7 @@ $('#details-page').live('pageshow', function(){
 
 		if (race.mode === "diff"){
 			$('.map.diff').show();
-			$('.map.same').hide();
+			$('.map-wrapper').hide();
 		}
 
 		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
