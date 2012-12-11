@@ -366,15 +366,15 @@ function updatePersonalRecord(id, race){
         }
         var user = data[0];
         if(id === race.winner_id)
-            user.won_races = 1 + (user.won_races || 0);
+            user.won_races = parseInt(1) + parseInt((user.won_races || 0));
         if(race.distance){
-            user.total_dist = race.distance + (user.total_dist || 0);
+            user.total_dist = parseFloat(race.distance) + parseFloat(user.total_dist || 0);
             if(!user.record_dist || user.record_dist < race.distance){
                 user.record_dist = race.distance;
             }
         }
         if(race.duration){
-            user.total_time = race.duration + (user.total_time || 0);
+            user.total_time = parseFloat(race.duration) + parseFloat(user.total_time || 0);
         }
         if(race.pace &&
             (!user.record_pace || race.pace < user.record_pace)){
