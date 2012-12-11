@@ -38,7 +38,8 @@ var PORT = process.env.PORT || 8888;
 var FB_APP_ID = "173419086133939";
 var FB_APP_SECRET = "2cb745277dce894015c75e2de5d49fcb";
 var cmdHandler = {};
-var db = mongoose.createConnection('mongodb://localhost/race');
+var db = mongoose.createConnection(process.env.MONGOLAB_URI || 
+  process.env.MONGOHQ_URL || 'mongodb://localhost/race');
 var app = express();
 
 //Database constatns
