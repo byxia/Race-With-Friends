@@ -237,6 +237,21 @@ $('#finished-races').live('pageshow', function(){
 		console.log(object);
 		finishedRaces = object.races;
 		me = object.me;
+		// console.log(me);
+
+		// update my race count and win count
+		var numRaces=0;
+		var numWins=0;
+
+		for (var i=0; i<finishedRaces.length; i++){
+			numRaces++;
+			if (finishedRaces[i].winner_id === me.id){
+				numWins++;
+			}
+		}
+
+		$('#race-num .count').html(numRaces);
+		$('#win-num .count').html(numWins);
 
 
 		if (finishedRaces.length === 0){
