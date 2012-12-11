@@ -4,6 +4,9 @@ var maxProfileNameLength = 12;
 // max # of char to display in race pages name label
 var maxRaceNameLength = 9;
 
+// # of decimal places to display for distances (1.23mi)
+var distanceDecimals = 2;
+
 
 // active races page
 $('#active-races').live('pageshow', function(){
@@ -58,7 +61,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_distance || 0, 1);
+					var dist = metersToMiles(race.owner_distance || 0, distanceDecimals);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 					
 
@@ -144,7 +147,7 @@ $('#active-races').live('pageshow', function(){
 					// console.log(race);
 					// console.log(opponent);
 
-					var dist = metersToMiles(race.owner_distance || 0, 1);
+					var dist = metersToMiles(race.owner_distance || 0, distanceDecimals);
 					var daysAgo = daysAway(new Date(race.creation_date), new Date());
 
 					var newLi = $('<li userId="'+opponentId+'" raceId="'+race._id+'"><div class="ui-grid-c">\
@@ -304,7 +307,7 @@ $('#finished-races').live('pageinit', function(){
 					status = "You lost.";
 				}
 
-				var dist = metersToMiles(race.owner_distance || 0, 1);
+				var dist = metersToMiles(race.owner_distance || 0, distanceDecimals);
 				var daysAgo = daysAway(new Date(race.creation_date), new Date());
 
 				var newLi = $('\
@@ -390,6 +393,13 @@ $('#new-race').bind('pageshow', function(){
 		me = list.me;
 		friends = list.data;
 
+		if (friends.length === 0){
+			$('#friend-list ul').html('<li>\
+					<div class="faded">None of your friends are playing yet</div>\
+				</li>');
+			$("#friend-list").listview("refresh").trigger('create');
+		}
+
 		// console.log(friends);
 
 
@@ -401,6 +411,8 @@ $('#new-race').bind('pageshow', function(){
 
 		friends  = friends.slice(0,50);
 		$(friends).each(function(index,object){
+
+			$('#friend-list ul').html('');
 
 			var name = object.first_name + " " + object.last_name;
 			var newLi = $("<li userId='"+object.id+"'><a href='profile.html?id="+object.id+"&source=new-race'><img class='avatar'></a><p>"+name+"</p></li>");
@@ -528,7 +540,7 @@ $('#profile-page').live('pageshow', function(){
 		var totalTimeFormatted = formatTime(totalTime);
 		console.log(user.total_time);
 		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
-		$('.number.dist').html(metersToMiles(totalDist, 1) + "mi");
+		$('.number.dist').html(metersToMiles(totalDist, distanceDecimals) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
 
 		var source = getUrlVars().source;
@@ -637,7 +649,7 @@ $('#details-page').live('pageshow', function(){
 		});
 
 		//change stats
-		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, 1)+"mi");
+		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, distanceDecimals)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
 		$('.owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
@@ -734,7 +746,7 @@ $('#race-page').live('pageshow', function(){
 		race = object.race;
 		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
 		$('.owner .name').html(ownerName);
-		$('.race-distance').html(metersToMiles(race.owner_distance, 1));
+		$('.race-distance').html(metersToMiles(race.owner_distance, distanceDecimals));
 		// console.log(race);
 		getSquarePicture(race.owner_id,function(picture){
 			if (validatePicture(picture) === true){

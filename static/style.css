@@ -213,7 +213,8 @@ a + .ui-title{
 #login-logo{
 	width: 245px;
 	height: 167px;
-	background: url('images/logo-large.png');
+	background: url('images/logo-large@2X.png');
+	background-size: 245px 167px;
 	margin: 40px auto 50px auto;
 }
 
@@ -444,7 +445,7 @@ a + .ui-title{
 	height: 200px;
 	background-color: #e0d5bc;
 	position: relative;
-	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.5);
+/*	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.5);*/
 }
 
 .map-wrapper{
