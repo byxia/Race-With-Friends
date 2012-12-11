@@ -1,7 +1,7 @@
-/*=====================================================
+=====================================================
                   Race With Friends
             CMU 15-237 Fall 2012 Final Project
-  =====================================================*/
+  =====================================================
 /* Bingying Xia(bxia), Ruoyu Li(ruoyul), Zi Wang(ziw)  */
 
 
@@ -95,8 +95,8 @@ function onStart() {
         clientID: FB_APP_ID,
         clientSecret: FB_APP_SECRET,
         // TODO: only place to change for local vs. remote testing
-        callbackURL: "http://localhost:8888/auth/facebook/callback"
-        // callbackURL: "http://racewithfriends.heroku.com/auth/facebook/callback"
+        // callbackURL: "http://localhost:8888/auth/facebook/callback"
+        callbackURL: "http://racewithfriends.heroku.com/auth/facebook/callback"
     }, function(accessToken, refreshToken, profile, done) {
         FB.setAccessToken(accessToken);
         graph.setAccessToken(accessToken);
