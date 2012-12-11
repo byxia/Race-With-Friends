@@ -940,7 +940,7 @@ function meterPaceToMiles(spm){
 	return parseInt(spm/0.00062137119);
 }
 
-function daysAway( date1, date2 ) {
+function daysAway(date1, date2) {
 	//Get 1 day in milliseconds
 	var one_day=1000*60*60*24;
 

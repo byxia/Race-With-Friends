@@ -260,14 +260,15 @@ geo.prototype.finishButton = function() {
                 opponent_id: vars.opponent_id,
                 opponent_first_name: vars.opp_first,
                 opponent_last_name: vars.opp_last,
-                owner_distance : that.distance,
+                owner_distance : that.distance || 0,
                 owner_start_date : that.start_date,
                 owner_finish_date : new Date(),
-                owner_pace  : that.duration/that.distance,
+                owner_pace  : that.duration/that.distance || 0,
                 owner_time  : that.duration,
                 owner_route : JSON.stringify({route : that.route}),
                 status      : "waiting"
             }
+            console.log(raceJson);
             createRace(raceJson, function(object){
                 log("success craete race");
                 log(object);
@@ -356,7 +357,11 @@ geo.prototype.timer = function() {
     var that = this;
     that.timerId = setInterval(function() {
         navigator.geolocation.getCurrentPosition(function(position) {
+
+
             console.log("timer", that.duration);
+            console.log((position.coords.latitude + "/"+position.coords.longitude));
+
             that.duration ++;
             var path = that.runPath.getPath();
             // TODO real
