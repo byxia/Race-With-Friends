@@ -166,6 +166,7 @@ function initDatabase() {
             opponent_first_name: String,
             opponent_last_name: String,
             status: String,
+            mode  : String,
             creation_date: {
                 type: Date,
             default:
@@ -177,7 +178,6 @@ function initDatabase() {
             owner_finish_date: Date,
             opponent_finish_date: Date,
 
-            finish_date: Date,
             owner_pace : Number,
             opponent_pace : Number,
             owner_route: String,
@@ -298,6 +298,8 @@ function _updateRaceMulti_(query, newInstance, options, successCallback, errorCa
     dbUtil.updateManyInstances(RACE, query, newInstance, options, successCallback, errorCallback, "Race Model");
 }
 
+
+
 //==========================
 //     USER table CRUD
 //==========================
@@ -328,6 +330,44 @@ function removeUserById(id, successCallback, errorCallback) {
     dbUtil.removeInstance(USER, {
         id: id
     }, successCallback, errorCallback, "User model");
+
+}
+
+//add one winning race to user's personal record
+// function addOneWinning(id){
+//     if(!id || !util.validString(id)){
+//         util.serverErr("no id. can't add one winning");
+//         return;
+//     }
+//     getUserById(id,function(data){
+//         if(!data || !data[0]){
+//             util.serverErr("no user. can't add one winning");
+//             return;   
+//         }
+//         var user = data[0];
+//         user.won_races = 1 + (user.won_races || 0);
+//         user.save();
+//     },function(err){
+//         util.serverErr("err in get user by id. can't add one winning");
+//     });
+// }
+
+function updatePersonalRecord(id, record){
+    if(!id || !util.validString(id)){
+        util.serverErr("no id. can't update pr");
+        return;
+    }
+    getUserById(id,function(data){
+        if(!data || !data[0]){
+            util.serverErr("no user. can't update pr");
+            return;   
+        }
+        var user = data[0];
+        user.won_races = 1 + (user.won_races || 0);
+        user.save();
+    },function(err){
+        util.serverErr("err in get user by id. can't update pr");
+    });    
 
 }
 
@@ -365,6 +405,7 @@ function getAllRacesChallenged(id, successCallback, errorCallback) {
 function removeRaceById(id,successCallback,errorCallback){
     dbUtil.removeInstance(RACE,{_id : id},successCallback,errorCallback, "Race Model");
 }
+
 
 
 //==========================
@@ -629,7 +670,13 @@ function initCommandHandler() {
                 response.send(ERROR_OBJ);
                 return;
             }
-            response.send(list);
+            var ownedList = [];
+            for(var i=0;i<list.length;i++){
+                if(list[i] && list[i].status !== "finished"){
+                    ownedList.push(list[i]);
+                }
+            }
+            response.send(ownedList);
         }, function(err) {
             response.send(ERROR_OBJ);
         });
@@ -652,10 +699,49 @@ function initCommandHandler() {
                 response.send(ERROR_OBJ);
                 return;
             }
-            response.send(list);
+            var challengedList = [];
+            for(var i=0;i<list.length;i++){
+                if(list[i] && list[i].status !== "finished"){
+                    challengedList.push(list[i]);
+                }
+            }            
+            response.send(challengedList);
         }, function(err) {
             response.send(ERROR_OBJ);
         });
+    }
+
+    cmdHandler.getFinishedRaces = function(args,request,response){
+        if(!request.isAuthenticated() || !request.user) {
+            response.send(ERROR_OBJ);
+            return;
+        }
+        if(!util.validString(request.user.id)) {
+            util.serverErr("No id given to getFinishedRaces");
+            response.send(ERROR_OBJ);
+            return;
+        }
+        getAllRaces(function(list) {
+            if(util.isNull(list)) {
+                util.serverErr("Error occurred in getFinishedRaces. list is null");
+                response.send(ERROR_OBJ);
+                return;
+            }
+            var userList = [];
+            for(var i = 0; i < list.length; i++) {
+                if(!util.isNull(list[i]) && (list[i].owner_id === request.user.id || list[i].opponent_id === request.user.id)
+                    && list[i].status && list[i].status === "finished") {
+                    userList.push(list[i]);
+                }
+            }
+            response.send({
+                me : request.user,
+                races : userList
+            });
+        }, function() {
+            response.send(ERROR_OBJ);
+        });        
+
     }
 
     cmdHandler.getRaceById = function(args, request, response){
@@ -722,7 +808,7 @@ function initCommandHandler() {
             response.send(ERROR_OBJ);
             return;
         }
-        if(!util.validString(args.id)) {
+        if(!util.validString(request.user.id)) {
             util.serverErr("No id given to get all races");
             response.send(ERROR_OBJ);
             return;
@@ -735,7 +821,7 @@ function initCommandHandler() {
             }
             var userList = [];
             for(var i = 0; i < list.length; i++) {
-                if(!util.isNull(list[i]) && (list[i].owner_id === args.id || list[i].opponent_id === args.id)) {
+                if(!util.isNull(list[i]) && (list[i].owner_id === request.user.id|| list[i].opponent_id === request.user.id)) {
                     userList.push(list[i]);
                 }
             }
@@ -804,6 +890,8 @@ function initCommandHandler() {
         }
 
         getRaceById(args._id, function(race) {
+            log(args._id);
+            log("1111");
             if(isNull(race) || race.length !== 1) {
                 util.serverErr("No race found or more than one race found with id: " + args._id);
                 response.send(ERROR_OBJ);
@@ -821,35 +909,72 @@ function initCommandHandler() {
                 response.send(ERROR_OBJ);
                 return;
             }
-            var newRace = (userId === thisRace.owner_id) ? {
-                owner_distance: args.distance,
-                owner_time: args.duration,
-                owner_route: args.route,
-                owner_pace : args.pace,
-                owner_start_date: args.start_date,
-                owner_finish_date: args.finish_date,
-                status: "waiting"
-            } : {
-                opponent_distance: args.distance,
-                opponent_time: args.duration,
-                opponent_route: args.route,
-                opponent_pace : args.pace,
-                opponent_start_date: args.start_date,
-                opponent_finish_date: args.finish_date,
-                winner_id : args.winner_id,
-                status: "finished",
 
-            };
+            thisRace.opponent_distance = args.opponent_distance;
+            thisRace.opponent_route = args.opponent_route;
+            thisRace.opponent_time = args.opponent_time;
+            thisRace.opponent_pace = args.opponent_pace;
+            thisRace.status = "finished";
+            thisRace.mode = args.mode;
+            thisRace.opponent_start_date = args.opponent_start_date;
+            thisRace.opponent_finish_date = args.opponent_finish_date;
+            log("Saving this race:");
+            log(thisRace);
 
-            _updateRaceUnique_({_id: args._id}, newRace, function() {
-                _updatePersonalRecord_(userId,args);
-                response.send(SUCCESS_OBJ);
-            }, function(err) {
-                util.serverErr("Error when updating race");
-                response.send(ERROR_OBJ);
+            // thisRace.status = "1234567";
+            thisRace.save(function(obj,obj2){
+                log("success");
+                log(obj);
+                log(obj2);
+                response.send({});
+            },function(err){
+                log("err in save");
             });
+            // response.send({});
+
+            // log("update race:");
+            // log(args);
+            //             distance: that.distance,
+            // start_date: that.start_date,
+            // finish_date: new Date(),
+            // duration: that.duration,
+            // pace: that.duration/that.distance,
+            // owner_id: vars.owner_id,
+            // owner_first_name: vars.owner_first,
+            // owner_last_name: vars.owner_last,
+            // opponent_id: vars.opponent_id,
+            // opponent_first_name: vars.opp_first,
+            // opponent_last_name: vars.opp_last
+            // var newRace = (userId === thisRace.owner_id) ? {
+            //     owner_distance: args.distance,
+            //     owner_time: args.duration,
+            //     owner_route: args.route,
+            //     owner_pace : args.pace,
+            //     owner_start_date: args.start_date,
+            //     owner_finish_date: args.finish_date,
+            //     status: "waiting"
+            // } : {
+            //     opponent_distance: args.distance,
+            //     opponent_time: args.duration,
+            //     opponent_route: args.route,
+            //     opponent_pace : args.pace,
+            //     opponent_start_date: args.start_date,
+            //     opponent_finish_date: args.finish_date,
+            //     winner_id : args.winner_id,
+            //     status: "finished",
+
+            // };
+
+            // _updateRaceUnique_({_id: args._id}, args, null, function(obj) {
+            //     // _updatePersonalRecord_(userId,args);
+            //     response.send(obj);
+            // }, function(err) {
+            //     util.serverErr("Error when updating race");
+            //     response.send(ERROR_OBJ);
+            // });
 
         }, function(err) {
+            log("err in get race by id");
             response.send(ERROR_OBJ);
         });
 

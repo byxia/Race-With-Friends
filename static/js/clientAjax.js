@@ -31,6 +31,7 @@ var GET_PLAYING_FRIENDS = "getPlayingFriends";
 var GET_RACE_BY_ID = "getRaceById";
 var REMOVE_RACE_BY_ID = "removeRaceById";
 var POST_TO_FB = "postToFacebook";
+var GET_FINISHED_RACES = "getFinishedRaces";
 
 //========================
 //       Ajax Request
@@ -107,6 +108,10 @@ function removeRaceById(id, successCallback, errorCallback){
 
 function postToFacebook(content, successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(POST_TO_FB,{content: content}),true,successCallback,errorCallback);
+}
+
+function getFinishedRaces(successCallback, errorCallback){
+	_sendAjaxRequest_(prepareURL(GET_FINISHED_RACES),true,successCallback,errorCallback);
 }
 
 //======================
