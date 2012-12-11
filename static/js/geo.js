@@ -214,6 +214,13 @@ geo.prototype.finishButton = function() {
             }
         }, that.errCallBack, that.geoOptions);
 
+
+        // if(that.distance < 170 ){
+        //     alert("Your run is too short");
+        //     $.mobile.changePage("/static/active.html"); 
+        //     return;
+        // }
+
         vars = getUrlVars();
 
         // send to server

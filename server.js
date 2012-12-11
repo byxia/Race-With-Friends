@@ -298,6 +298,8 @@ function _updateRaceMulti_(query, newInstance, options, successCallback, errorCa
     dbUtil.updateManyInstances(RACE, query, newInstance, options, successCallback, errorCallback, "Race Model");
 }
 
+
+
 //==========================
 //     USER table CRUD
 //==========================
@@ -328,6 +330,44 @@ function removeUserById(id, successCallback, errorCallback) {
     dbUtil.removeInstance(USER, {
         id: id
     }, successCallback, errorCallback, "User model");
+
+}
+
+//add one winning race to user's personal record
+// function addOneWinning(id){
+//     if(!id || !util.validString(id)){
+//         util.serverErr("no id. can't add one winning");
+//         return;
+//     }
+//     getUserById(id,function(data){
+//         if(!data || !data[0]){
+//             util.serverErr("no user. can't add one winning");
+//             return;   
+//         }
+//         var user = data[0];
+//         user.won_races = 1 + (user.won_races || 0);
+//         user.save();
+//     },function(err){
+//         util.serverErr("err in get user by id. can't add one winning");
+//     });
+// }
+
+function updatePersonalRecord(id, record){
+    if(!id || !util.validString(id)){
+        util.serverErr("no id. can't update pr");
+        return;
+    }
+    getUserById(id,function(data){
+        if(!data || !data[0]){
+            util.serverErr("no user. can't update pr");
+            return;   
+        }
+        var user = data[0];
+        user.won_races = 1 + (user.won_races || 0);
+        user.save();
+    },function(err){
+        util.serverErr("err in get user by id. can't update pr");
+    });    
 
 }
 
@@ -365,6 +405,7 @@ function getAllRacesChallenged(id, successCallback, errorCallback) {
 function removeRaceById(id,successCallback,errorCallback){
     dbUtil.removeInstance(RACE,{_id : id},successCallback,errorCallback, "Race Model");
 }
+
 
 
 //==========================
@@ -693,7 +734,10 @@ function initCommandHandler() {
                     userList.push(list[i]);
                 }
             }
-            response.send(userList);
+            response.send({
+                me : request.user,
+                races : userList
+            });
         }, function() {
             response.send(ERROR_OBJ);
         });        
