@@ -230,6 +230,94 @@ $('#active-races').live('pageshow', function(){
 });
 
 
+// finished races page
+$('#finished-races').live('pageshow', function(){
+	$('#finished-list').html('');
+	getFinishedRaces(function(object){
+		console.log(object);
+		finishedRaces = object.races;
+		me = object.me;
+
+
+		if (finishedRaces.length === 0){
+			$('#finished-list').append('\
+				<li>\
+					<div class="faded">no races yet</div>\
+				</li>');
+			$("#finished-list").listview("refresh").trigger('create');
+		}
+		else{
+			finishedRaces.sort(function(a,b){
+				// if (a.creation_date !== null && b.c)
+				if (a.creation_date < b.creation_date){
+					return 1;
+				}
+				else{
+					return -1;
+				}
+			});
+			$(finishedRaces).each(function(index, race){
+				var ownerId = race.owner_id;
+				var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
+				var opponentId = race.opponent_id;
+				var opponent = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
+				
+				var winningTime = 0;
+				if (race.owner_time !== undefined && race.opponent_time){
+					winningTime = Math.min(race.owner_time, race.opponent_time);
+				}
+				winningTime = formatTime(winningTime);
+				winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
+
+				var status;
+				if (race.winner_id === me.id){
+					status = "You won!";
+				}
+				else{
+					status = "You lost.";
+				}
+
+				var dist = metersToMiles(race.owner_distance || 0, 1);
+				var daysAgo = daysAway(new Date(race.creation_date), new Date());
+
+				var newLi = $('\
+					<li ownerId="'+ownerId+'" oppId="'+opponentId+'">\
+						<div class="vs">\
+							<div class="person">\
+								<a href="profile.html?id='+ownerId+'&source=finished"><img class="avatar owner"></a>\
+								<div class="name">'+owner+'</div>\
+							</div>\
+							<div class="vs-text">VS</div>\
+							<div class="person">\
+								<a href="profile.html?id='+opponentId+'&source=finished"><img class="avatar opponent"></a>\
+								<div class="name">'+opponent+'</div>\
+							</div>\
+						</div>\
+						<a href="details.html?race='+race._id+'&source=finished" class="info">\
+							<p class="winner lost">'+status+'</p>\
+							<p class="result">\
+								'+dist+' race<br/>\
+								winner: '+winningTime+'\
+							</p>\
+						</a>\
+					</li>').appendTo('#finished-list');
+
+				if (race.winner_id === ownerId){
+					newLi.find('.avatar.owner').addClass('won').after('<div class="crown"></div>');
+				}
+				else{
+					newLi.find('.avatar.opponent').addClass('won').after('<div class="crown"></div>');
+				}
+
+
+			});
+			$("#finished-list").listview("refresh").trigger('create');
+		}
+	});
+});
+
+
+
 // populate new race page with friend list
 $('#new-race').bind('pageshow', function(){
 
@@ -447,6 +535,12 @@ $('#details-page').live('pageshow', function(){
 	console.log("details");
 	raceId = getUrlVars().race;
 	getRaceById(raceId, function(object){
+
+		if (race.mode === "diff"){
+			$('.map.diff').show();
+			$('.map.same').hide();
+		}
+
 		// console.log(race);
 		race = object.race;
 		me = object.me;
@@ -484,9 +578,9 @@ $('#details-page').live('pageshow', function(){
 		$('.detail-stats .owner .number.pace').html(ownerPace.m + "'" + ownerTime.s+'"');
 
 		var oppTime = formatTime(race.opponent_time || 0);
-		$('.detail-stats .owner .number.time').html(oppTime.h + ":" + oppTime.m + ":" + oppTime.s);
+		$('.detail-stats .opponent .number.time').html(oppTime.h + ":" + oppTime.m + ":" + oppTime.s);
 		var oppPace = formatTime(meterPaceToMiles(race.opponent_pace || 0));
-		$('.detail-stats .owner .number.pace').html(oppPace.m + "'" + oppTime.s+'"');
+		$('.detail-stats .opponent .number.pace').html(oppPace.m + "'" + oppTime.s+'"');
 
 
 		// change display for race startd by me
@@ -555,6 +649,8 @@ $('#details-page').live('pageshow', function(){
 			}
 		}
 
+		// add animation
+		new playback(race.mode);
 
 	});
 
