@@ -217,30 +217,39 @@ geo.prototype.finishButton = function() {
         vars = getUrlVars();
 
         // send to server
-        var raceJson = {
-            // _id: that._id,
+        // var raceJson = {
+        //     // _id: that._id,
 
-            // route: that.route,
-            distance: that.distance,
-            start_date: that.start_date,
-            finish_date: new Date(),
-            duration: that.duration,
-            pace: that.duration/that.distance,
-            owner_id: vars.owner_id,
-            owner_first_name: vars.owner_first,
-            owner_last_name: vars.owner_last,
-            opponent_id: vars.opponent_id,
-            opponent_first_name: vars.opp_first,
-            opponent_last_name: vars.opp_last
-        };
-
+        //     // route: that.route,
+        //     distance: that.distance,
+        //     start_date: that.start_date,
+        //     finish_date: new Date(),
+        //     duration: that.duration,
+        //     pace: that.duration/that.distance,
+        //     owner_id: vars.owner_id,
+        //     owner_first_name: vars.owner_first,
+        //     owner_last_name: vars.owner_last,
+        //     opponent_id: vars.opponent_id,
+        //     opponent_first_name: vars.opp_first,
+        //     opponent_last_name: vars.opp_last
+        // };
+        var raceJson;
         if(vars.source === 'new-race'){
-            raceJson.owner_route = JSON.stringify({
-                    route: that.route
-            });
-            raceJson.owner_distance = that.distance;
-            raceJson.status = "waiting";
-
+            raceJson = {
+                owner_id: vars.owner_id,
+                owner_first_name: vars.owner_first,
+                owner_last_name: vars.owner_last,
+                opponent_id: vars.opponent_id,
+                opponent_first_name: vars.opp_first,
+                opponent_last_name: vars.opp_last,
+                owner_distance : that.distance,
+                owner_start_date : that.start_date,
+                owner_finish_date : new Date(),
+                owner_pace  : that.duration/that.distance,
+                owner_time  : that.duration,
+                owner_route : JSON.stringify({route : that.route}),
+                status      : "waiting"
+            }
             createRace(raceJson, function(object){
                 log("success craete race");
                 log(object);
@@ -253,19 +262,24 @@ geo.prototype.finishButton = function() {
             });
         }
         else if(vars.source === 'active'){
-            raceJson.opponent_route = JSON.stringify({
-                    route: that.route
-            });
+            var raceJson = $('body').data('race');
             raceJson.opponent_distance = that.distance;
-            raceJson.status = "finished";
+            raceJson.opponent_start_date =that.start_date;
+            raceJson.opponent_finish_date = new Date();
+            raceJson.opponent_pace  =that.duration/that.distance;
+            raceJson.opponent_time  =that.duration;
+            raceJson.opponent_route = JSON.stringify({route : that.route});
+            raceJson.status      = "finished";
+            raceJson.mode        = vars.mode;
+            log("before send. front end json");
             log(raceJson);
-            // updateRace(raceJson, function(object){
-            //     log(object);
-            //     $.mobile.changePage("/static/details.html?race=" + object._id+"&source=finished"); 
-            // },function(err){
-            //     log("err update race");
-            //     log(err);
-            // });
+            updateRace(raceJson, function(object){
+                log("from server. backend json");
+                $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
+            },function(err){
+                log("err update race");
+                log(err);
+            });
         }
                 //         var race = {
                 //     owner_id: me.id,
