@@ -128,6 +128,17 @@ geo.prototype.startButton = function() {
         }, that.errCallBack, that.geoOptions);
 
         ////////////////////////////// RUN PATH //////////////////////////////
+        console.log(getUrlVars().source);
+
+        // BXIA
+        var color;
+        if(getUrlVars.source === 'active-race'){
+            color = "#ed3e7c";
+        }
+        else{
+            color = "#37c874";
+        }
+
         var runPathOptions = {
             strokeColor: "#3E7BED",
             strokeOpacity: 0.8,

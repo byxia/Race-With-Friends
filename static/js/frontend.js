@@ -50,7 +50,7 @@ $('#active-races').live('pageshow', function(){
 
 				$(challengedRaces).each(function(index, race){
 
-					console.log(race);
+					// console.log(race);
 					var ownerId = race.owner_id;
 					var owner = formatName(race.owner_first_name, race.owner_last_name, 'race');
 					// console.log(race);
@@ -231,10 +231,10 @@ $('#active-races').live('pageshow', function(){
 
 
 // finished races page
-$('#finished-races').live('pageshow', function(){
-	$('#finished-list').html('');
+$('#finished-races').live('pageinit', function(){
 	getFinishedRaces(function(object){
-		console.log(object);
+		// $('#finished-list').html('');
+		// console.log(object);
 		finishedRaces = object.races;
 		me = object.me;
 		// console.log(me);
@@ -255,6 +255,7 @@ $('#finished-races').live('pageshow', function(){
 
 
 		if (finishedRaces.length === 0){
+			$('#finished-list').html('');
 			$('#finished-list').append('\
 				<li>\
 					<div class="faded">no races yet</div>\
@@ -262,6 +263,7 @@ $('#finished-races').live('pageshow', function(){
 			$("#finished-list").listview("refresh").trigger('create');
 		}
 		else{
+			$('#finished-list').html('');
 			finishedRaces.sort(function(a,b){
 				// if (a.creation_date !== null && b.c)
 				if (a.creation_date < b.creation_date){
@@ -283,9 +285,11 @@ $('#finished-races').live('pageshow', function(){
 				}
 				winningTime = formatTime(winningTime);
 				if (winningTime.h === '00'){
-
+					winningTime = winningTime.m + ":" + winningTime.s;
 				}
-				winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
+				else{
+					winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
+				}
 
 				var status;
 				if (race.winner_id === me.id){
@@ -314,7 +318,7 @@ $('#finished-races').live('pageshow', function(){
 						<a href="details.html?race='+race._id+'&source=finished" class="info">\
 							<p class="winner lost">'+status+'</p>\
 							<p class="result">\
-								'+dist+' race<br/>\
+								'+dist+'mi race<br/>\
 								winner: '+winningTime+'\
 							</p>\
 						</a>\
@@ -357,7 +361,7 @@ $('#new-race').bind('pageshow', function(){
 		me = list.me;
 		friends = list.data;
 
-		console.log(friends);
+		// console.log(friends);
 
 
 		// console.log(list);
@@ -453,11 +457,11 @@ $('#profile-page').live('pageshow', function(){
 		return;
 	}
 
-	console.log($._data( $("#profile-page")[0], "events" ));
+	// console.log($._data( $("#profile-page")[0], "events" ));
 
 	// console.log($('#profile-link-btn').data('events'))
 
-	console.log("profile page showing");
+	// console.log("profile page showing");
 
 	// hide page and show loading screen
 	$('#profile-content').hide();
@@ -465,7 +469,7 @@ $('#profile-page').live('pageshow', function(){
 
 	getUserById(getUrlVars().id, function(object){
 		var user = object[0];
-		console.log(object);
+		// console.log(object);
 
 		if (isNull(user)){
 			console.log("error - null");
@@ -550,14 +554,14 @@ $('#profile-page').live('pageshow', function(){
 
 // race details page
 $('#details-page').live('pageshow', function(){
-	console.log("details");
+	// console.log("details");
 	raceId = getUrlVars().race;
 	getRaceById(raceId, function(object){
 
 		// console.log(race);
 		race = object.race;
 		me = object.me;
-		console.log(me);
+		// console.log(me);
 
 		if (race.mode === "diff"){
 			$('.map.diff').show();
@@ -644,6 +648,9 @@ $('#details-page').live('pageshow', function(){
 			if(me.id === race.owner_id){	// if user is owner and waiting
 				$('.detail-info .status').html('Waiting for their run');
 			}
+			console.log("waiting");
+			// console.log($('.map .opponent').html());
+			$('#people-label .opponent').hide();
 		}
 		else{	// finished
 			$('.opponent.waiting').remove();
@@ -734,7 +741,7 @@ $('#race-recording').live('pageshow', function(){
 	else if (vars.source === 'active'){	
 		getRaceById(raceId, function(object){
 			race = object.race;
-			console.log(race.owner_first_name);
+			// console.log(race.owner_first_name);
 			name = race.owner_first_name + " " + race.owner_last_name;
 			$('#racing-with').html(name);
 			$('body').data('race', race);
@@ -834,15 +841,15 @@ function validatePicture(picture){
 function goBack(){
 	var params = getUrlVars();
 	var url = "/back/";
-	console.log("prepare url : " );
-	console.log(params);
+	// console.log("prepare url : " );
+	// console.log(params);
 	if(!params.source){
 		url += "active.html";
 	}
 	else{
 		url += params.source +".html";
 	}
-	console.log("done url : " + url);
+	// console.log("done url : " + url);
 	window.location.href = url;
 } 
 
