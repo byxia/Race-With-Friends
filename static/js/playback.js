@@ -72,9 +72,18 @@ playback.prototype.showMap = function() {
     }
     
     ///////////////////////// PATH ////////////////////////////////
+
+    //BXIA
+    var color;
+        if(getUrlVars().source === 'active'){
+            color = "#ed3e7c";
+        }
+        else{
+            color = "#37c874";
+        }
     var runPathOptions = {
-        strokeColor: "#3E7BED",
-        strokeOpacity: 0.8,
+        strokeColor: color,
+        strokeOpacity: 0.6,
         strokeWeight: 6
     }
 

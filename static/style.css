@@ -390,8 +390,24 @@ a + .ui-title{
 	font-weight: bold;
 }
 
+.bar.detail-info{
+	-webkit-box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+	position: relative;
+}
+.bar.detail-stats{
+	-webkit-box-shadow: 0px -10px 20px 0px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+	position: relative;
+}
+
+.detail-info .ui-block-a{
+	margin-left: -5px;
+	margin-right: 5px;
+}
+
 .detail-info .status{
-	padding: 5px;
+	padding: 5px 3px;
 	border-radius: 5px;
 	color: #fff;
 	text-shadow: none;
@@ -455,7 +471,7 @@ a + .ui-title{
 	height: 34px;
 	background: url('images/play-btn.png');
 	position: absolute;
-	bottom: 15px;
+	bottom: 25px;
 	right: 15px;
 }
 
@@ -686,8 +702,15 @@ a + .ui-title{
 	height: 33px;
 	background: url('images/rec.png') no-repeat;
 	position: absolute;
-	top: 125px;
+	top: 100px;
 	right: 5px;
+	-webkit-animation:flicker 0.5s linear 0s infinite alternate;
+}
+
+@-webkit-keyframes flicker /* Safari and Chrome */
+{
+from {opacity: 1;}
+to {opacity: 0.7;}
 }
 
 #running-actions p{

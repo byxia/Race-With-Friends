@@ -132,7 +132,7 @@ geo.prototype.startButton = function() {
 
         // BXIA
         var color;
-        if(getUrlVars.source === 'active-race'){
+        if(getUrlVars().source === 'new-race'){
             color = "#ed3e7c";
         }
         else{
@@ -140,7 +140,7 @@ geo.prototype.startButton = function() {
         }
 
         var runPathOptions = {
-            strokeColor: "#3E7BED",
+            strokeColor: color,
             strokeOpacity: 0.8,
             strokeWeight: 6
         }
@@ -252,6 +252,7 @@ geo.prototype.finishButton = function() {
         //     opponent_last_name: vars.opp_last
         // };
         var raceJson;
+        // console.log(that.route);
         if(vars.source === 'new-race'){
             raceJson = {
                 owner_id: vars.owner_id,
@@ -372,11 +373,16 @@ geo.prototype.timer = function() {
             that.mapBounds.extend(pt);
             that.map.fitBounds(that.mapBounds);
             that.route.push({
-                lat: pt.$a,
-                lon: pt.ab
+                /////ZIW
+                lat : pt.Ya,
+                lon : pt.Za
+
+                // lat: pt.$a,
+                // lon: pt.ab
             });
-            that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
-            
+            that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]) || 0;
+            console.log(that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]));
+            console.log(that.distance);
             // TODO dummy
             // if (that.arr.length !== 0) { 
             //     var pt = that.arr.pop();

@@ -526,6 +526,7 @@ $('#profile-page').live('pageshow', function(){
 		var totalDist = user.total_dist || 0;
 		var totalTime = user.total_time || 0;
 		var totalTimeFormatted = formatTime(totalTime);
+		console.log(user.total_time);
 		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
 		$('.number.dist').html(metersToMiles(totalDist, 1) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
@@ -607,12 +608,17 @@ $('#details-page').live('pageshow', function(){
 			$('.map-wrapper').hide();
 		}
 
+		ownerId = race.owner_id;
+		opponentId = race.opponent_id;
 		ownerName = formatName(race.owner_first_name, race.owner_last_name, 'race');
 		opponentName = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
 		$('.detail-info .owner .name').html(ownerName);
 		$('.detail-info .opponent .name').html(opponentName);
+		$('.owner a').attr('href', 'profile.html?id='+ownerId+'&source=active');
+
 		$('#people-label .owner').html(ownerName);
 		$('#people-label .opponent').html(opponentName);
+		$('.opponent a').attr('href', 'profile.html?id='+opponentId+'&source=active');
 
 		// console.log(race.owner_id);
 		getSquarePicture(race.owner_id,function(picture){
@@ -634,9 +640,9 @@ $('#details-page').live('pageshow', function(){
 		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, 1)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
-		$('.detail-stats .owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
+		$('.owner .number.time').html(ownerTime.h + ":" + ownerTime.m + ":" + ownerTime.s);
 		var ownerPace = formatTime(meterPaceToMiles(race.owner_pace || 0));
-		$('.detail-stats .owner .number.pace').html(ownerPace.m + "'" + ownerTime.s+'"');
+		$('.owner .number.pace').html(ownerPace.m + "'" + ownerPace.s+'"');
 
 		var oppTime = formatTime(race.opponent_time || 0);
 		$('.detail-stats .opponent .number.time').html(oppTime.h + ":" + oppTime.m + ":" + oppTime.s);
