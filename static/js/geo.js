@@ -397,7 +397,7 @@ geo.prototype.timer = function() {
             //     that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
             // }
         }, that.errCallBack, that.geoOptions);
-    }, 1000);
+    }, 3500);
 }
 
 /**
