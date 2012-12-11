@@ -1,5 +1,6 @@
-var playback = function() {
+var playback = function(type) {
     this.setup();
+    this.t = type;
 }
 
 playback.prototype.setup = function() {
@@ -41,6 +42,7 @@ playback.prototype.showMap = function() {
     var pt = this.jsonArr.pop();
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
 
+
     ///////////////////////// MAP ////////////////////////////////
     var mapOptions = {
         zoom: 18,
@@ -50,7 +52,8 @@ playback.prototype.showMap = function() {
         zoomControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    this.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+    console.log("hehe");
+    this.map = new google.maps.Map(document.getElementById('map00'), mapOptions);
 
     ///////////////////////// MARKER ////////////////////////////////
     var startMarker = new google.maps.Marker({
@@ -80,7 +83,10 @@ playback.prototype.showMap = function() {
     this.runPath.getPath().push(startCoord);
     this.mapBounds = new google.maps.LatLngBounds();
 
-    this.timer();
+    var that = this;
+    $("#same-play-btn").click(function() {
+        that.timer();
+    });
 }
 
 playback.prototype.timer = function() {
@@ -116,4 +122,4 @@ playback.prototype.timer = function() {
     }, 1000);
 }
 
-new playback();
+// new playback();
