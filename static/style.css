@@ -424,20 +424,57 @@ a + .ui-title{
 	width: 60px;
 }
 
-.map{
+.map.same, .map-left, .map-right{
 	height: 200px;
-	background-color: #aaa;
+	background-color: #e0d5bc;
 	position: relative;
-	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.6);
+	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.5);
 }
 
-.map .playbtn{
+.map.diff{
+	display: none;
+}
+
+.map.diff{
+	position: relative;
+	height: 200px;
+	width: 100%;
+}
+
+.map-left, .map-right{
+	width: 50%;
+	float:left;
+}
+
+.playbtn{
 	width: 34px;
 	height: 34px;
 	background: url('images/play-btn.png');
 	position: absolute;
 	bottom: 15px;
 	right: 15px;
+}
+
+#people-label{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 12px;
+	padding: 5px 8px;
+	background-color: rgba(0,0,0,0.6);
+	border-radius: 5px;
+	color: #fff;
+	text-shadow: none;
+}
+
+#people-label .owner, #people-label .opponent{
+	padding-left: 15px;
+}
+#people-label .owner{
+	background: url('images/icons/map-label-owner.png') no-repeat left center;
+}
+#people-label .opponent{
+	background: url('images/icons/map-label-opp.png') no-repeat left center;
 }
 
 .detail-stats{
@@ -610,7 +647,7 @@ a + .ui-title{
 	width: 100%;
 	height: 290px;
 /*	min-height: 80%;
-*/	background-color: #ccc;
+*/	background-color: #e0d5bc;
 	position: relative;
 }
 

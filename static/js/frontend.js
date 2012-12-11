@@ -456,6 +456,8 @@ $('#details-page').live('pageshow', function(){
 		opponentName = formatName(race.opponent_first_name, race.opponent_last_name, 'race');
 		$('.detail-info .owner .name').html(ownerName);
 		$('.detail-info .opponent .name').html(opponentName);
+		$('#people-label .owner').html(ownerName);
+		$('#people-label .opponent').html(opponentName);
 
 		// console.log(race.owner_id);
 		getSquarePicture(race.owner_id,function(picture){
