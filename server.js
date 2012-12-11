@@ -194,6 +194,7 @@ function initDatabase() {
         USER = db.model(T_USER, USER_SCHEMA);
         RACE = db.model(T_RACE, RACE_SCHEMA);
 
+
     });
 }
 
@@ -333,26 +334,26 @@ function removeUserById(id, successCallback, errorCallback) {
 
 }
 
-//add one winning race to user's personal record
-// function addOneWinning(id){
-//     if(!id || !util.validString(id)){
-//         util.serverErr("no id. can't add one winning");
-//         return;
-//     }
-//     getUserById(id,function(data){
-//         if(!data || !data[0]){
-//             util.serverErr("no user. can't add one winning");
-//             return;   
-//         }
-//         var user = data[0];
-//         user.won_races = 1 + (user.won_races || 0);
-//         user.save();
-//     },function(err){
-//         util.serverErr("err in get user by id. can't add one winning");
-//     });
-// }
+function _updateRaceCount_(id,type){
+    if(type !== "win" && type !== "total")
+        return;
+    getUserById(id,function(data){
+        if(!data || !data[0]){
+            util.serverErr("no user. can't add race");
+            return;   
+        }
+        var user = data[0];
+        if(type === "win")
+            user.won_races = 1 + (user.won_races  ||0);
+        else if(type === "total")
+            user.total_races= 1+ (user.total_races||0);
+        user.save();
+    },function(err){
+        util.serverErr("err in get user by id. can't add one race");
+    });    
+}
 
-function updatePersonalRecord(id, record){
+function updatePersonalRecord(id, race){
     if(!id || !util.validString(id)){
         util.serverErr("no id. can't update pr");
         return;
@@ -363,7 +364,21 @@ function updatePersonalRecord(id, record){
             return;   
         }
         var user = data[0];
-        user.won_races = 1 + (user.won_races || 0);
+        if(id === race.winner_id)
+            user.won_races = 1 + (user.won_races || 0);
+        if(race.distance){
+            user.total_dist = race.distance + (user.total_dist || 0);
+            if(!user.record_dist || user.record_dist < race.distance){
+                user.record_dist = race.distance;
+            }
+        }
+        if(race.duration){
+            user.total_time = race.duration + (user.total_time || 0);
+        }
+        if(race.pace &&
+            (!user.record_pace || race.pace < user.record_pace)){
+            user.pace = race.pace;
+        }
         user.save();
     },function(err){
         util.serverErr("err in get user by id. can't update pr");
@@ -647,6 +662,15 @@ function initCommandHandler() {
             return;
         }
         createRace(args, function(data) {
+            updatePersonalRecord(args.owner_id,{
+                duration : args.owner_time,
+                pace     : args.owner_pace,
+                distance : args.owner_distance,
+                // duration : 15,
+                // pace     : 20,
+                // distance : 500,
+                winner_id: undefined
+            });
             response.send(data);
         }, function() {
             response.send(ERROR_OBJ);
@@ -890,8 +914,6 @@ function initCommandHandler() {
         }
 
         getRaceById(args._id, function(race) {
-            log(args._id);
-            log("1111");
             if(isNull(race) || race.length !== 1) {
                 util.serverErr("No race found or more than one race found with id: " + args._id);
                 response.send(ERROR_OBJ);
@@ -918,15 +940,25 @@ function initCommandHandler() {
             thisRace.mode = args.mode;
             thisRace.opponent_start_date = args.opponent_start_date;
             thisRace.opponent_finish_date = args.opponent_finish_date;
-            log("Saving this race:");
-            log(thisRace);
 
-            // thisRace.status = "1234567";
-            thisRace.save(function(obj,obj2){
-                log("success");
-                log(obj);
-                log(obj2);
-                response.send({});
+
+            thisRace.save(function(err,object){
+                if(err){
+                    util.serverErr("Error in race.save() in updateRace");
+                    response.send(ERROR_OBJ);
+                    return;
+                }
+                updatePersonalRecord(thisRace.opponent_id,{
+                    duration : args.opponent_time,
+                    pace     : args.oppoent_pace,
+                    distance : args.opponent_distance,
+                    winner_id: args.winner_id                  
+                });
+                _updateRaceCount_(args.owner_id,"total");
+                _updateRaceCount_(args.opponent_id,"total");
+                _updateRaceCount_(args.winner_id,"win");
+
+                response.send(SUCCESS_OBJ);
             },function(err){
                 log("err in save");
             });
