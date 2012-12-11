@@ -34,7 +34,7 @@ var ERROR_OBJ = {
 var SUCCESS_OBJ = {
     status: 1
 };
-var PORT = 8888;
+var PORT = process.env.PORT || 8888;
 var FB_APP_ID = "173419086133939";
 var FB_APP_SECRET = "2cb745277dce894015c75e2de5d49fcb";
 var cmdHandler = {};
