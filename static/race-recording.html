@@ -15,9 +15,13 @@
 	<script src="js/geo.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjPAxk0JAu_vpzQz-_RjNqV3yWJ74hKKY&sensor=true"></script>
+	<script type="text/javascript">
 
+	window.onbeforeunload = function(e) {
+		alert("111");}
+</script>
 </head> 
-<body onunload="return confirm('leave?')"> 
+<body> 
 
 <div data-role="page" id="race-recording">
 	<div data-role="header">
