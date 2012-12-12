@@ -237,6 +237,8 @@ $('#active-races').live('pageshow', function(){
 
 // finished races page
 $('#finished-races').live('pageinit', function(){
+	$.mobile.showPageLoadingMsg();
+
 	getFinishedRaces(function(object){
 		// $('#finished-list').html('');
 		// console.log(object);
@@ -367,6 +369,7 @@ $('#finished-races').live('pageinit', function(){
 				});
 			});
 		}
+		$.mobile.hidePageLoadingMsg();
 	});
 });
 
@@ -393,94 +396,62 @@ $('#new-race').bind('pageshow', function(){
 		me = list.me;
 		friends = list.data;
 
+		$('#friend-list ul').html('');
+
 		if (friends.length === 0){
 			$('#friend-list ul').html('<li>\
 					<div class="faded">None of your friends are playing yet</div>\
 				</li>');
 			$("#friend-list").listview("refresh").trigger('create');
 		}
-
-		// console.log(friends);
-
-
-		// console.log(list);
-		// sort alphabetically (by first then last name)
-		friends.sort(function(a,b) {
-			return compare(a, b, "name"); 
-		});
-
-		friends  = friends.slice(0,50);
-		$(friends).each(function(index,object){
-
-			$('#friend-list ul').html('');
-
-			var name = object.first_name + " " + object.last_name;
-			var newLi = $("<li userId='"+object.id+"'><a href='profile.html?id="+object.id+"&source=new-race'><img class='avatar'></a><p>"+name+"</p></li>");
-
-			newLi.appendTo('#friend-list ul');
-			$(newLi.find('p')[0]).bind('click', function(){
-				$.mobile.showPageLoadingMsg();
-				// parse full name into first + last
-				var matches = name.split(' ');
-				var friendFirst = matches[0]; 
-				var friendLast = matches[1]; 
-
-				// console.log(object.id);
-
-				if (friendLast === undefined){
-					friendLast = "";
-				}
-
-				var race = {
-					owner_id: me.id,
-					owner_first_name: me.name.givenName,
-					owner_last_name: me.name.familyName,
-					opponent_id: object.id,
-					opponent_first_name: friendFirst,
-					opponent_last_name: friendLast,
-					status: "created",
-				};
-
-				// console.log(race);
-				// console.log("new race");
-				// console.log(race);
-				// createRace(race, function(object){
-				// 	if (isNull(object)){
-				// 		console.log("error - null");
-				// 		window.location.href="/";
-				// 		alert("ERROR - NULL");
-				// 		return;
-				// 	}
-				// 	else if (object.status === 0){
-				// 		console.log("error");
-				// 		console.log(object.status);
-				// 		window.location.href="/";
-				// 		alert("ERROR - STATUS0");
-				// 		return;	
-				// 	}
-				// 	window.location.href="race-recording.html?raceId="+object._id+"&source=new-race";
-				// 	// alert("race created");
-				// });
-				
-				window.location.href="race-recording.html?owner_id="+me.id+"&opponent_id="+object.id+
-				"&owner_first="+me.name.givenName+"&owner_last="+me.name.familyName+
-				"&opp_first="+friendFirst+"&opp_last="+friendLast+"&source=new-race";
-
+		else{
+			// console.log(friends);
+			// console.log(list);
+			// sort alphabetically (by first then last name)
+			friends.sort(function(a,b) {
+				return compare(a, b, "name"); 
 			});
-			$("#friend-list ul").listview("refresh").trigger("create");
-		});
 
-		$("#friend-list ul li").each(function(index, object){
-			// if(index ===0) return;
-			// console.log($(object).attr('userId'));
+			friends  = friends.slice(0,50);
+			$(friends).each(function(index,object){
 
-			getSquarePicture($(object).attr('userId'),function(picture){
-				if (validatePicture(picture) === true){
-					$($(object).find('img.avatar')[0]).attr('src', picture.location);
-				}
-			});
+				var name = object.first_name + " " + object.last_name;
+				var newLi = $("<li userId='"+object.id+"'><a href='profile.html?id="+object.id+"&source=new-race'><img class='avatar'></a><p>"+name+"</p></li>");
+
+				newLi.appendTo('#friend-list ul');
+				$(newLi.find('p')[0]).bind('click', function(){
+					$.mobile.showPageLoadingMsg();
+					// parse full name into first + last
+					var matches = name.split(' ');
+					var friendFirst = matches[0]; 
+					var friendLast = matches[1]; 
+
+					// console.log(object.id);
+
+					if (friendLast === undefined){
+						friendLast = "";
+					}
 					
-		});
+					window.location.href="race-recording.html?owner_id="+me.id+"&opponent_id="+object.id+
+					"&owner_first="+me.name.givenName+"&owner_last="+me.name.familyName+
+					"&opp_first="+friendFirst+"&opp_last="+friendLast+"&source=new-race";
+
+				});
+				$("#friend-list ul").listview("refresh").trigger("create");
+			});
+
+			$("#friend-list ul li").each(function(index, object){
+				// if(index ===0) return;
+				// console.log($(object).attr('userId'));
+
+				getSquarePicture($(object).attr('userId'),function(picture){
+					if (validatePicture(picture) === true){
+						$($(object).find('img.avatar')[0]).attr('src', picture.location);
+					}
+				});
+						
+			});
+		}
 
 		$.mobile.hidePageLoadingMsg();
 		
@@ -492,6 +463,7 @@ $('#new-race').bind('pageshow', function(){
 // $("#profile-page").die("pageinit");
 $('#profile-page').live('pageshow', function(){
 	// $("#profile-page").die("pagebeforeshow");
+	$.mobile.showPageLoadingMsg();
 
 	if ($._data($("#profile-page")[0], "events").pagebeforeshow.length>3){
 		$._data($("#profile-page")[0], "events").pagebeforeshow.slice(0,1);
@@ -506,7 +478,7 @@ $('#profile-page').live('pageshow', function(){
 
 	// hide page and show loading screen
 	$('#profile-content').hide();
-	$.mobile.showPageLoadingMsg();
+	
 
 	getUserById(getUrlVars().id, function(object){
 		var user = object[0];
@@ -573,6 +545,8 @@ $('#profile-page').live('pageshow', function(){
 		// show page
 		$('#profile-content').show();
 
+		$.mobile.hidePageLoadingMsg();
+
 	}, function(error){
 		console.log(error);
 	});
@@ -596,6 +570,8 @@ $('#profile-page').live('pageshow', function(){
 
 // race details page
 $('#details-page').live('pageshow', function(){
+	$.mobile.showPageLoadingMsg();
+
 	// console.log("details");
 	raceId = getUrlVars().race;
 	source = getUrlVars().source;
@@ -734,6 +710,8 @@ $('#details-page').live('pageshow', function(){
 		// add animation
 		new playback(race.mode);
 
+		$.mobile.hidePageLoadingMsg();
+
 	});
 
 });
@@ -741,6 +719,8 @@ $('#details-page').live('pageshow', function(){
 
 // accept race page
 $('#race-page').live('pageshow', function(){
+	$.mobile.showPageLoadingMsg();
+
 	raceId = getUrlVars().race;
 	getRaceById(raceId, function(object){
 		race = object.race;
@@ -759,6 +739,7 @@ $('#race-page').live('pageshow', function(){
 				$('.opponent .avatar').attr('src', picture.location);
 			}
 		});
+		$.mobile.hidePageLoadingMsg();
 	});
 	$('#same-route-btn').bind('click', function(){
 		window.location.href='race-recording.html?race='+raceId+'&source=active&mode=same'
@@ -771,6 +752,8 @@ $('#race-page').live('pageshow', function(){
 
 // recording race
 $('#race-recording').live('pageshow', function(){
+	$.mobile.showPageLoadingMsg();
+
 	// get and display other person's name
 	var name;
 	var vars = getUrlVars();
@@ -813,6 +796,8 @@ $('#race-recording').live('pageshow', function(){
 		});
 
 	}
+
+	$.mobile.hidePageLoadingMsg();
 					
 
 	// $('#back-btn').bind('click', function(){

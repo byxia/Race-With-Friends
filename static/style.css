@@ -288,7 +288,7 @@ a + .ui-title{
 	font-size: 18px;
 }
 
-.race-list .faded, #finished-list .faded{
+.race-list .faded, #finished-list .faded, #friend-list .faded{
 	font-size: 18px;
 	text-align: center;
 	padding: 10px;
