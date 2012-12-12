@@ -228,11 +228,12 @@ geo.prototype.finishButton = function() {
         }, that.errCallBack, that.geoOptions);
 
 
-        // if(that.distance < 170 ){
-        //     alert("Your run is too short");
-        //     $.mobile.changePage("/static/active.html"); 
-        //     return;
-        // }
+        if(that.distance < 170 ){
+            alert("Your run is too short. Dev purpose, saving the race anyway");
+
+            // $.mobile.changePage("/static/active.html"); 
+            // return;
+        }
 
         vars = getUrlVars();
 
@@ -266,11 +267,12 @@ geo.prototype.finishButton = function() {
                 owner_distance : that.distance || 0,
                 owner_start_date : that.start_date,
                 owner_finish_date : new Date(),
-                owner_pace  : that.duration/that.distance || 0,
+                // owner_pace  : that.duration/that.distance || 0,
                 owner_time  : that.duration,
                 owner_route : JSON.stringify({route : that.route}),
                 status      : "waiting"
             }
+            raceJson.owner_pace = (that.distance)? that.duration/that.distance : 0;
             console.log(raceJson);
             createRace(raceJson, function(object){
                 log("success craete race");
@@ -280,6 +282,8 @@ geo.prototype.finishButton = function() {
 
             },function(err){
                 log("err create race");
+                alert("err in creating the race.");
+                $.mobile.changePage("/static/active.html");
                 log(err);
             });
         }
@@ -288,11 +292,12 @@ geo.prototype.finishButton = function() {
             raceJson.opponent_distance = that.distance;
             raceJson.opponent_start_date =that.start_date;
             raceJson.opponent_finish_date = new Date();
-            raceJson.opponent_pace  =that.duration/that.distance;
+            // raceJson.opponent_pace  =that.duration/that.distance;
             raceJson.opponent_time  =that.duration;
             raceJson.opponent_route = JSON.stringify({route : that.route});
             raceJson.status      = "finished";
             raceJson.mode        = vars.mode;
+            raceJson.opponent_pace = (that.distance)? that.duration/that.distance : 0;
             log("before send. front end json");
             log(raceJson);
             updateRace(raceJson, function(object){

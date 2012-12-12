@@ -731,9 +731,18 @@ $('#details-page').live('pageshow', function(){
 			}
 		}
 
-		// add animation
-		new playback(race.mode);
+		// new playback(race.mode);
 
+
+		// add animation
+		try{
+			window.playback = new playback(race.mode);
+			playback.go();
+			console.log("playback created");
+		}
+		catch(e){
+			location.reload(true);
+		}
 	});
 
 });
@@ -775,7 +784,7 @@ $('#race-recording').live('pageshow', function(){
 	var name;
 	var vars = getUrlVars();
 	var raceId = vars.race;
-	new geo({
+	window.geo = new geo({
 		startButtonId : "start-run-btn",
 		finishButtonId: "finish-run-btn"
 	});
@@ -785,7 +794,13 @@ $('#race-recording').live('pageshow', function(){
 	$("#start-run-btn").hide();
 
 	$('#rec-icon').hide();
-
+	$('#back-btn').bind('click',function(){
+		if(geo && geo.timerId){
+			console.log("clear timer when back is clicked");
+			clearInterval(geo.timerId);
+		}
+		$.mobile.changePage("/static/active.html");
+	});
 	if (vars.source === 'new-race'){
 		name = vars.opp_first + " " + vars.opp_last;
 		$("#start-run-btn").show();
@@ -983,6 +998,31 @@ function formatDaysAgo(daysAgo){
 	else{
 		return daysAgo + " days ago";
 	}
+}
+
+function loadScript(url, callback){
+
+    var script = document.createElement("script")
+    script.type = "text/javascript";
+
+    if (script.readyState){  //IE
+        script.onreadystatechange = function(){
+            if (script.readyState == "loaded" ||
+                    script.readyState == "complete"){
+                script.onreadystatechange = null;
+
+                callback();
+            }
+        };
+    } else {  //Others
+        script.onload = function(){
+            callback();
+        };
+    }
+
+    script.src = url;
+    // document.getElementsByTagName("head")[0].appendChild(script);
+    $('head').append($(script));
 }
 
 
