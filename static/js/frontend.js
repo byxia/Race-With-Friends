@@ -688,6 +688,12 @@ $('#details-page').live('pageshow', function(){
 		else{	// finished
 			$('.opponent.waiting').remove();
 			$('.opponent.finished').show();
+			$('#people-label .opponent').show();
+
+			if (race.mode === 'diff'){
+				$('.map-wrapper').hide();
+				$('.map.diff').show();
+			}
 
 			// change button to share
 			// $('.detail-info .action-btn a .ui-btn-text').html('Share');
