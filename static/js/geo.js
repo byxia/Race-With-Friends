@@ -100,7 +100,10 @@ geo.prototype.showMap = function() {
  * When user press start, drop the start pin and start tracking the user's run
  */
 geo.prototype.startButton = function() {
-    getCurr();
+    $("#"+this.startButtonId).click(function(){
+            getCurr();
+    });
+
     // var that = this;
 
     // $("#"+this.startButtonId).click(function(){
@@ -239,8 +242,11 @@ navigator.geolocation.getCurrentPosition(function(position) {
  * finish the race, send server the racing data
  */
 geo.prototype.finishButton = function() {
-    var that = this;
-    getCurr();
+    // var that = this;
+    $("#"+this.finishButtonId).click(function(){
+        getCurr();
+    });
+
     // $("#"+this.finishButtonId).click(function() {
     //         console.log("clearing: " + that.timerId);
 
