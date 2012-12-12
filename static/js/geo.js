@@ -101,7 +101,12 @@ geo.prototype.showMap = function() {
  */
 geo.prototype.startButton = function() {
     $("#"+this.startButtonId).click(function(){
-            getCurr();
+            // getCurr();
+        $("#start-run-btn").hide();
+        $("#finish-run-btn").show();
+        $('#rec-icon').show();
+        clearInterval(that.preTimerId);
+
     });
 
     // var that = this;
@@ -198,6 +203,7 @@ geo.prototype.preTimer = function() {
                     new google.maps.LatLng(position.coords.latitude, 
                         position.coords.longitude)
                 );
+            console.log("Pretimer got curr position: " + position.coords.latitude + " / " + position.coords.longitude);
         }, that.errCallBack, that.geoOptions);
     }, 500);
 }
