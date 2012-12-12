@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Geolocation</title>
+	<meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+<!--    
+	<script src="http://192.168.1.10:9994/target/target-script-min.js"></script>
+-->
+
+    <link rel=StyleSheet href="style.css" type="text/css">
+
+    <script src='jquery.js'></script>
+
+</head>
+<body>
+
+	<button id="toggle" class="start">Start Watching Position</button>
+
+	<div id="location"></div>
+
+	<div id="updateDiv"></div>
+
+	<table id="positions">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Latitude</th>
+				<th>Longitude</th>
+				<th>Accuracy</th>
+				<th>Speed</th>
+				<th>Altitude</th>
+				<th>AltAccuracy</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr id="row0">
+				<td class="num">0</td>
+				<td class="lat"></td>
+				<td class="lon"></td>
+				<td class="acc"></td>
+				<td class="spd"></td>
+				<td class="alt"></td>
+				<td class="altacc"></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<script src='script.js'></script>
+</body>
+</html>
