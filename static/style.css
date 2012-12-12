@@ -696,6 +696,9 @@ a + .ui-title{
 .racing-label{
 	padding: 7px;
 	text-align: center;
+
+/*	TODO: SMALL FONT FOR TESTING ONLY*/
+/*	font-size: 14px;*/
 }
 
 #rec-icon{

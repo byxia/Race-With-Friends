@@ -943,6 +943,24 @@ function initCommandHandler() {
             thisRace.opponent_finish_date = args.opponent_finish_date;
 
 
+            if( !thisRace.owner_pace && !args.opponent_pace ){
+                util.serverErr("Race :" + args._id +" has no owner/opponent pace. Can't determine winner");
+                //TODO
+                util.serverErr("For now, set owner as the winner if neither pace exists");
+                thisRace.winner_id = thisRace.owner_id;
+            }
+            else if(!thisRace.owner_pace){
+                thisRace.winner_id = thisRace.opponent_id;
+            }
+            else if(!args.opponent_pace){
+                thisRace.winner_id = thisRace.owner_id;
+            }
+            else {
+                thisRace.winner_id = ( parseFloat(thisRace.owner_pace) < parseFloat(args.opponent_pace) )?
+                        thisRace.owner_id : thisRace.opponent_id;
+            }
+            util.serverErr("winner id is " + thisRace.winner_id);
+
             thisRace.save(function(err,object){
                 if(err){
                     util.serverErr("Error in race.save() in updateRace");
@@ -951,13 +969,13 @@ function initCommandHandler() {
                 }
                 updatePersonalRecord(thisRace.opponent_id,{
                     duration : args.opponent_time,
-                    pace     : args.oppoent_pace,
+                    pace     : args.opponent_pace,
                     distance : args.opponent_distance,
                     winner_id: args.winner_id                  
                 });
                 _updateRaceCount_(args.owner_id,"total");
                 _updateRaceCount_(args.opponent_id,"total");
-                _updateRaceCount_(args.winner_id,"win");
+                _updateRaceCount_(thisRace.winner_id,"win");
 
                 response.send(SUCCESS_OBJ);
             },function(err){
