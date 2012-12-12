@@ -274,23 +274,6 @@ geo.prototype.finishButton = function() {
 
         vars = getUrlVars();
 
-        // send to server
-        // var raceJson = {
-        //     // _id: that._id,
-
-        //     // route: that.route,
-        //     distance: that.distance,
-        //     start_date: that.start_date,
-        //     finish_date: new Date(),
-        //     duration: that.duration,
-        //     pace: that.duration/that.distance,
-        //     owner_id: vars.owner_id,
-        //     owner_first_name: vars.owner_first,
-        //     owner_last_name: vars.owner_last,
-        //     opponent_id: vars.opponent_id,
-        //     opponent_first_name: vars.opp_first,
-        //     opponent_last_name: vars.opp_last
-        // };
         var raceJson;
         // console.log(that.route);
         if(vars.source === 'new-race'){
@@ -346,51 +329,7 @@ geo.prototype.finishButton = function() {
                 log(err);
             });
         }
-                //         var race = {
-                //     owner_id: me.id,
-                //     owner_first_name: me.name.givenName,
-                //     owner_last_name: me.name.familyName,
-                //     opponent_id: object.id,
-                //     opponent_first_name: friendFirst,
-                //     opponent_last_name: friendLast,
-                //     status: "waiting",
-                // };
-        // console.log(raceJson);
-
-        // if(vars.source === 'new-race'){
-        //     createRace(raceJson, function(object){
-        //         log("success craete race");
-        //         log(object);
-        //         log(JSON.parse(object.owner_route).route);
-        //         $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
-
-        //     },function(err){
-        //         log("err create race");
-        //         log(err);
-        //     });
-        // }
-        // else if(vars.source === 'active'){
-        //     updateRace(raceJson, function(object){
-        //         log(object);
-        //         $.mobile.changePage("/static/details.html?race=" + object._id+"&source=finished"); 
-        //     },function(err){
-        //         log("err update race");
-        //         log(err);
-        //     });
-        // }
-
-        // race = {
-
-        // };
-
-        // createRace(race,function(newRace){
-        //     if(newRace){
-
-        //     }
-        // });
-        // updateRace(raceJson, that.ajaxSuccess, that.ajaxFailure);
-
-        // redirect to race details after finish
+    
 
     });
 }
@@ -406,6 +345,7 @@ geo.prototype.timer = function() {
 
 
             console.log("timer", that.duration);
+            console.log(position.coords);
             console.log((position.coords.latitude + "/"+ position.coords.longitude));
 
             // TODO: testing output
