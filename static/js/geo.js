@@ -203,7 +203,6 @@ geo.prototype.preTimer = function() {
 }
 
 function getCurr(that){
-    window.count =0;
 navigator.geolocation.getCurrentPosition(function(position) {
             // console.log("timer", that.duration);
             console.log((position.coords.latitude + "/"+ position.coords.longitude));
