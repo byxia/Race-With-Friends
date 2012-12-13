@@ -1,30 +1,45 @@
-var playback = function(type) {
-    this.setup();
-    this.t = type;
+var playbackJson = {
+    type: "solo",
+    ownerColor: "#ed3e7c",
+    ownerRoute: "#37c874",
+    ownerDuration: 100,
 }
 
-playback.prototype.setup = function() {
+new playback(playbackJson);
+
+////////////////////////////////////////////
+var playback = function(argJson) {
+    // edge cases ??
+
+    // instance variables
+    this.type = argJson.type;
+    this.ownerColor = argJson.owner_color;
+    this.ownerRoute = argJson.owner_route;
+    this.ownerDuration = argJson.owner_duration;
+    this.opponentColor = argJson.opponent_color;
+    this.opponentRoute = argJson.opponent_route;
+    this.opponentDuration = argJson.opponent_duration;
+
+    // go onload
     google.maps.event.addDomListener(window, 'load', this.go.bind(this));
 }
 
 playback.prototype.go = function() {
 
     // debug dummy
-    this.jsonArr = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
-                    {lat: 40.44360760645317, lon: -79.94475245475769},
-                    {lat: 40.44394645828453, lon: -79.94463980197906},
-                    {lat: 40.444154667598696, lon: -79.94502067565918},
-                    {lat: 40.44429347344985, lon: -79.94556248188019},
-                    {lat: 40.44426081327539, lon: -79.94597554206848}];
+    this.ownerRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
+                        {lat: 40.44360760645317, lon: -79.94475245475769},
+                        {lat: 40.44394645828453, lon: -79.94463980197906},
+                        {lat: 40.444154667598696, lon: -79.94502067565918},
+                        {lat: 40.44429347344985, lon: -79.94556248188019},
+                        {lat: 40.44426081327539, lon: -79.94597554206848}];
 
-    /*
-     * images for the map pins
-     */
+    // image for the map pins
     this.startImage = new google.maps.MarkerImage('images/geo/start.png',
-            new google.maps.Size(19, 33), // XXX this is wrong, but give it 19x33 cuts it a little
-            new google.maps.Point(0, 0), // origin
-            new google.maps.Point(9, 32) // anchor
-            );
+            // XXX this is wrong, but give it 19x33 cuts it a little
+            new google.maps.Size(19, 33),  // size of pic
+            new google.maps.Point(0, 0),   // origin
+            new google.maps.Point(9, 32)); // anchor);
     this.endImage = new google.maps.MarkerImage('images/geo/end.png',
             new google.maps.Size(19, 33),
             new google.maps.Point(0, 0),
@@ -39,9 +54,16 @@ playback.prototype.go = function() {
 }
 
 playback.prototype.showMap = function() {
+    if (this.type === "solo") {
+        show1Map();
+    } else {
+        show2Map();
+    }
+}
+
+playback.prototype.show1Map = function() {
     var pt = this.jsonArr.pop();
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
-
 
     ///////////////////////// MAP ////////////////////////////////
     var mapOptions = {
@@ -131,4 +153,3 @@ playback.prototype.timer = function() {
     }, 1000);
 }
 
-// new playback();
