@@ -482,7 +482,7 @@ $('#profile-page').live('pageshow', function(){
 
 	getUserById(getUrlVars().id, function(object){
 		var user = object[0];
-		// console.log(object);
+		console.log(object);
 
 		if (isNull(user)){
 			console.log("error - null");
@@ -515,6 +515,20 @@ $('#profile-page').live('pageshow', function(){
 		$('.number.dist').html(metersToMiles(totalDist, distanceDecimals) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
 
+		//update personal record
+		var recordDist = user.record_dist || 0;
+		var recordPace = user.record_pace || 0;
+		var recordPaceFormatted = formatTime(meterPaceToMiles(recordPace));
+		$('#personal-records .longest').html(metersToMiles(recordDist, distanceDecimals));
+		if (recordPaceFormatted.h === '00'){
+			$('#personal-records .fastest').html(recordPaceFormatted.m + "'" + recordPaceFormatted.s + '"');
+
+		}
+		else{
+			$('#personal-records .fastest').html(recordPaceFormatted.h + "&deg;" + recordPaceFormatted.m + "'" + recordPaceFormatted.s + '"');
+		}
+		
+
 		var source = getUrlVars().source;
 		// change current tab to active if coming from active
 		if (source==='new-race' || source==='active' || source==='details-active'){
@@ -530,6 +544,9 @@ $('#profile-page').live('pageshow', function(){
 		//coming from tab (viewing self profile)
 		else{
 			$('#back-btn').remove();
+			$('.active-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+			$('.finished-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
+			$('.profile-link').addClass('ui-btn-active').addClass('ui-state-persist');
 		}
 
 		// change back button destination

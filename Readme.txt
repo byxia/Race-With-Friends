@@ -5,6 +5,8 @@ TO-DO
 - accept same route -- need to constrain starting position to owner's starting position
 - split screen animations for diff route
 
+- show # mi left when running
+
 BUG LIST
 (empty)
 
