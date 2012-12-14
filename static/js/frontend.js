@@ -744,7 +744,10 @@ $('#details-page').live('pageshow', function(){
 		else{		// races stared by other person
 			$('.detail-info .opponent .name').html("You");
 			//link race button
-			$('.action-btn a').attr('href', 'race.html?race='+raceId+'&source=active');
+			if (race.status !== 'finished'){
+				$('.action-btn a').attr('href', 'race.html?race='+raceId+'&source=active');
+			}
+			
 		}
 		//change display based on status
 		// console.log("status: " + race.status);
@@ -769,10 +772,14 @@ $('#details-page').live('pageshow', function(){
 			}
 
 			// change button to share
-			$('.detail-info .action-btn a .ui-btn-text').html('Share');
-			$('.detail-info .action-btn a').bind('click', function(){
-				$('#fbShare'.popup('open'));
-			});
+			$('.detail-info .action-btn a .ui-btn-text').html('Share').addClass('share-btn');
+	
+			$('.share-btn').bind('click',function(){
+				postToFeed();
+			});		
+			// $('.detail-info .action-btn a').bind('click', function(){
+			// 	$('#fbShare'.popup('open'));
+			// });
 	
 			// delete action button
 			// $('.detail-info .action-btn').remove();

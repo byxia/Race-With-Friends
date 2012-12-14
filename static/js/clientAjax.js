@@ -144,7 +144,7 @@ function postToFeed(id) {
 	var obj = {
 	  method: 'feed',
 	  link: 'http://racewithfriends.heroku.com',
-	  picture: 'http://fbrell.com/f8.jpg',
+	  picture: 'http://localhost:8888/static/images/race_128.png',
 	  name: 'Race With Friends',
 	  caption: 'Reference Documentation',
 	  description: 'Using Dialogs to interact with users.',
