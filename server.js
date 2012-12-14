@@ -102,6 +102,23 @@ function onStart() {
     }, function(accessToken, refreshToken, profile, done) {
         FB.setAccessToken(accessToken);
         graph.setAccessToken(accessToken);
+
+        // FB.api('me/feed','post',{message :  "check this out", link: "http://racewithfriends.heroku.com"},function(res){
+        //         if(!res || res.error){
+        //             util.serverErr(res || res.error);
+        //             util.serverErr("Error when posting to fb");
+        //             // response.send(ERROR_OBJ);
+        //             return;
+        //         }
+        //         else{
+        //             util.log(res);
+        //             util.serverErr("Success post");
+        //         }
+        //         // response.send(SUCCESS_OBJ);
+        //     });
+
+
+    
         getUserById(profile.id, function(user) {
             if(util.isNull(user) || util.isEmptyObj(user)) {
                 console.log("No such user exists. Creating new User");
@@ -594,20 +611,31 @@ function initCommandHandler() {
                     response.send(ERROR_OBJ);
                     return;
                 }
-                getAllUsers(function(results){
-                    var overlap = [];
-                    for(var i=0;i<results.length;i++){
-                        for(var j=0; j<list.data.length;j++){
-                            if(results[i].id === list.data[j].id){
-                                overlap.push(results[i]);
-                            }
-                        }
-                    }
+                if(args.gameOnly === "false"){
+                    console.log("not game onyl");
                     response.send({
                         me : request.user,
-                        data : overlap
+                        data : list ? list.data : []
                     });
-                });
+                }
+                else{
+                                        console.log(" game onyl");
+
+                    getAllUsers(function(results){
+                        var overlap = [];
+                        for(var i=0;i<results.length;i++){
+                            for(var j=0; j<list.data.length;j++){
+                                if(results[i].id === list.data[j].id){
+                                    overlap.push(results[i]);
+                                }
+                            }
+                        }
+                        response.send({
+                            me : request.user,
+                            data : overlap
+                        });
+                    });
+                }
             });
 
         });
@@ -883,14 +911,13 @@ function initCommandHandler() {
                 return;
             }
             FB.setAccessToken(data[0].token);
-            FB.api('me/feed','post',{message : args.content? args.content : ""},function(res){
-                if(!res || res.error){
-                    util.serverErr(res || res.error);
-                    util.serverErr("Error when posting to fb");
-                    response.send(ERROR_OBJ);
-                    return;
-                }
+            FB.api('/me/feed', 'post', { message: args.msg, link : "http://www.racewithfriends.heroku.com" }, function(res) {
+              if (!res || res.error) {
+                log('Error occured in fb posting');
+              } else {
+                log('Post ID: ' + res.id);
                 response.send(SUCCESS_OBJ);
+              }
             });
 
         });      
