@@ -599,7 +599,6 @@ geo.prototype.showMap = function() {
                     ownerMapBounds.extend(coord);
                     that.map.fitBounds(ownerMapBounds);
                     if (i === ownerRoute.length-1) {
-                        // alert("hehe");
                         var ownerFinishMarker = new google.maps.Marker({
                             map: that.map,
                             draggable: false,
