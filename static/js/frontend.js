@@ -641,7 +641,7 @@ $('#details-page').live('pageshow', function(){
 	$('#share-btn').hide();
 	console.log('hid button');
 
-	// console.log("details");
+	console.log("details");
 	raceId = getUrlVars().race;
 	source = getUrlVars().source;
 
@@ -823,7 +823,8 @@ $('#details-page').live('pageshow', function(){
 			}
 		}
 
-		// new playback(race.mode);
+		window.p = new playback(playbackJson);
+		p.go();
 
 		$.mobile.hidePageLoadingMsg();
 
