@@ -262,9 +262,9 @@ geo.prototype.preTimer = function() {
 geo.prototype.finishButton = function() {
     // navigator.geolocation.clearWatch(window.wid);
     // clearInterval(window.sid);
-    // var that = this;
-    // $("#"+this.finishButtonId).click(function() {
-    //         console.log("clearing: " + that.timerId);
+    var that = this;
+    $("#"+this.finishButtonId).click(function() {
+            console.log("clearing: " + that.timerId);
 
         $('#rec-icon').hide();
         // stop tracking
