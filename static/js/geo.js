@@ -288,7 +288,7 @@ geo.prototype.finishButton = function() {
                 draggable: false,
                 icon: that.endImage,
                 shadow: that.shadow,
-                animation: google.maps.Animation.DROP,
+                // animation: google.maps.Animation.DROP,
                 position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
             });
             finishMarker.setMap(that.map);
