@@ -25,7 +25,7 @@ var graph = require('fbgraph');
 var dbUtil = require('./dbUtil.js').util;
 var util = require('./Util.js').util;
 
-var local = false;
+var local = true;
 
 //server side constants
 var errorMsg = "Error occurred in processing the request.";
