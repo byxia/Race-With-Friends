@@ -144,7 +144,7 @@ function postToFeed(id) {
 	var obj = {
 	  method: 'feed',
 	  link: 'http://racewithfriends.heroku.com',
-	  picture: 'http://localhost:8888/static/images/race_128.png',
+	  picture: 'http://fbrell.com/f8.jpg',
 	  name: 'Race With Friends',
 	  caption: 'Reference Documentation',
 	  description: 'Using Dialogs to interact with users.',
@@ -153,6 +153,8 @@ function postToFeed(id) {
 
 	function callback(response) {
 	  //do something here
+	  console.log("response from post");
+	  console.log(response);
 	}
 
 	FB.ui(obj, callback);

@@ -224,11 +224,6 @@ function initRequestHandler() {
         return;
     }
 
-    // app.post('/api/:cmd',function(req,res){
-    //     log(req.body.arr.length);
-    //     res.send(ERROR_OBJ);
-    //     return;
-    // });
 
     app.get('/', function(req, res) {
         if(!req.isAuthenticated()) {
@@ -236,6 +231,11 @@ function initRequestHandler() {
             return;
         }
         res.redirect("/static/active.html");
+    });
+
+    app.get('/details',function(req,res){
+        console.log(req.url.substring(8));
+        res.redirect('/static/details.html'+req.url.substring(8));
     });
 
     app.get('/logout', function(req, res) {
