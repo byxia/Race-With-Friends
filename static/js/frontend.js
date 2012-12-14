@@ -636,8 +636,10 @@ $('#profile-page').live('pageshow', function(){
 $('#details-page').live('pageshow', function(){
 	$.mobile.showPageLoadingMsg();
 
+	console.log($('#cancel-race-btn'))
 	$('#cancel-race-btn').hide();
 	$('#share-btn').hide();
+	console.log('hid button');
 
 	// console.log("details");
 	raceId = getUrlVars().race;
