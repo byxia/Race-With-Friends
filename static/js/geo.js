@@ -246,22 +246,36 @@ geo.prototype.preTimer = function() {
                         position.coords.longitude)
                 );
             console.log("Pretimer got curr position: " + position.coords.latitude + " / " + position.coords.longitude);
+        
+
+            // BXIA
+            // if accepting race with same route, activate start button only when close enough to start point
+            
+            console.log(getUrlVars().mode);
+            if (getUrlVars().mode === 'same'){
+
+                // FOR DEMO ONLY: click on arrive instruction to be able to start racing anywhere
+                $('#arrive-instruction').bind('click',function(){
+                    $('#arrive-instruction').hide();
+                    $('#start-run-btn').show();
+                })
+
+                if($('body').data('race')){
+                    var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+                    var startPoint = ownerRoute[1] || ownerRoute[2] || ownerRoute[3];
+                    var distToStart = that.delta2Pts(startPoint, {lat: position.coords.latitude, lon:position.coords.longitude});
+                    if(distToStart < finishDistTolerace){
+                        $('#arrive-instruction').hide();
+                        $('#start-run-btn').show();
+                    }
+                    
+                }
+                
+            }
+
         }, that.errCallBack, that.geoOptions);
 
-        // BXIA
-        // if accepting race with same route, activate start button only when close enough to start point
         
-        console.log(getUrlVars().mode);
-        if (getUrlVars().mode === 'same'){
-
-            if($('body').data('race')){
-                console.log($('body').data('race').owner_route.route);
-                // console.log($('body').data('race'));
-                // console.log($('body').data('race').owner_route[0]);
-                // console.log(JSON.parse($('body').data('race').owner_route));
-            }
-            
-        }
     }, 3000);
 
 
