@@ -161,7 +161,7 @@ geo.prototype.showMap = function() {
                     that.map.fitBounds(mapBounds);
                     if (i === ownerRoute.length-1) {
                         var ownerFinishMarker = new google.maps.Marker({
-                            map: map,
+                            map: that.map,
                             draggable: false,
                             icon: that.endImage,
                             shadow: that.shadow,
