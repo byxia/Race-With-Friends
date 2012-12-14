@@ -505,7 +505,6 @@ function detectPos(successCallback,errCallBack, option){
         // console.log("lastPosition: " + window.lastPosition);
         // $('.racing-label').html("#" + count + " : " + window.lastPosition);
         successCallback(window.toReturn);
-            count ++;
     } ,700)
 }
 
@@ -696,17 +695,6 @@ geo.prototype.startButton = function() {
         });
         that.mapBounds = new google.maps.LatLngBounds();
         that.mapBounds.extend(that.startCoord);
-
-        // debug dummy
-        that.arr = [new google.maps.LatLng(40.44350962488237, -79.94512796401978),
-            new google.maps.LatLng(40.44360760645317, -79.94475245475769),
-            new google.maps.LatLng(40.44394645828453, -79.94463980197906),
-            new google.maps.LatLng(40.444154667598696, -79.94502067565918),
-            new google.maps.LatLng(40.44429347344985, -79.94556248188019),
-            new google.maps.LatLng(40.44426081327539, -79.94597554206848),
-            new google.maps.LatLng(0, 0)
-                ];
-
         that.timer();
     });
 }
@@ -928,24 +916,9 @@ geo.prototype.timer = function() {
 
                 // mark race as finished if distance left is too small
                 if (distLeft < finishDistTolerace){
-                    //TODO
                     $('#'+that.finishButtonId).click();
                 }
             }
-            // $('h1').html( that.distance);
-            // TODO dummy
-            // if (that.arr.length !== 0) { 
-            //     var pt = that.arr.pop();
-            //     that.map.setCenter(pt);
-            //     path.push(pt); 
-            //     that.mapBounds.extend(pt);
-            //     that.map.fitBounds(that.mapBounds);
-            //     that.route.push({
-            //         lat: pt.$a,
-            //         lon: pt.ab
-            //     });
-            //     that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
-            // }
         }, that.errCallBack, that.geoOptions);
     }, 2000);
     console.log(that.timerId + " timer id");
