@@ -254,6 +254,12 @@ geo.prototype.preTimer = function() {
             console.log(getUrlVars().mode);
             if (getUrlVars().mode === 'same'){
 
+                // FOR DEMO ONLY: click on arrive instruction to be able to start racing anywhere
+                $('#arrive-instruction').bind('click',function(){
+                    $('#arrive-instruction').hide();
+                    $('#start-run-btn').show();
+                })
+
                 if($('body').data('race')){
                     var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
                     var startPoint = ownerRoute[1] || ownerRoute[2] || ownerRoute[3];
