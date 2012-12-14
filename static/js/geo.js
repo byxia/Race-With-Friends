@@ -486,7 +486,7 @@ geo.prototype.errCallBack = function(err) {
 }
 
 
-function foo(successCallback,errCallBack, option){
+function detectPos(successCallback,errCallBack, option){
         // console.log("getPosition called once");
     var nop = function() { };
     if (!navigator.geolocation) {
@@ -599,12 +599,14 @@ geo.prototype.showMap = function() {
                     ownerMapBounds.extend(coord);
                     that.map.fitBounds(ownerMapBounds);
                     if (i === ownerRoute.length-1) {
+                        alert("hehe");
                         var ownerFinishMarker = new google.maps.Marker({
                             map: that.map,
                             draggable: false,
                             icon: that.endImage,
                             shadow: that.shadow,
-                            animation: google.maps.Animation.DROP
+                            animation: google.maps.Animation.DROP,
+                            position: coord
                         });
                         ownerFinishMarker.setMap(that.map);
                     }
@@ -626,7 +628,7 @@ geo.prototype.startButton = function() {
     //                 $("#start-run-btn").hide();
     //     $("#finish-run-btn").show();
     //     window.sid = setInterval(function(){
-    //         foo(log);
+    //         detectPos(log);
     //     }, 1000);
     // });
 
@@ -652,7 +654,7 @@ geo.prototype.startButton = function() {
         }
 
         //////////////////////////// START MARKER ////////////////////////////
-        foo(function(position) {
+        detectPos(function(position) {
             var startMarker = new google.maps.Marker({
                 map: that.map,
                 draggable: false,
@@ -719,7 +721,7 @@ geo.prototype.startButton = function() {
 geo.prototype.preTimer = function() {
     var that = this;
     that.preTimerId = setInterval(function() {
-        foo(function(position) {
+        detectPos(function(position) {
             // update
             if (that.centerMarker !== null) {
                 that.centerMarker.setMap(null);
@@ -790,7 +792,7 @@ geo.prototype.finishButton = function() {
         // stop tracking
         clearInterval(that.timerId);
         clearInterval(that.preTimerId);
-        foo(function(position) {
+        detectPos(function(position) {
             // TODO, possible bug here, what if a finish is pressed before any timer fire
             var finishMarker = new google.maps.Marker({
                 map: that.map,
@@ -883,8 +885,7 @@ geo.prototype.finishButton = function() {
 geo.prototype.timer = function() {
     var that = this;
     that.timerId = setInterval(function() {
-        foo(function(position) {
-
+        detectPos(function(position) {
 
             console.log("timer", that.duration);
             console.log(position.coords);
