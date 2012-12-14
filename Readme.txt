@@ -3,11 +3,19 @@ TO-DO
 - accept same route -- need to constrain starting position to owner's starting position
 - split screen animations for diff route
 
-- show # mi left when running
+- share to Facebook
+
+- alert 111
+- pre timer show loading before marker shows
+- reject run to short
+- redirect after finish run
+
+- share to Facebook default text
 
 BUG LIST
-- finished races winner ID
-- finished races "you won color" should be green
+(not sure if still exists) details page in finished goes back to active
+- playback.js in details loads only after refresh
+- timer doesn't stop after back/finish
 
 
 

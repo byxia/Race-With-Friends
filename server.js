@@ -224,11 +224,6 @@ function initRequestHandler() {
         return;
     }
 
-    // app.post('/api/:cmd',function(req,res){
-    //     log(req.body.arr.length);
-    //     res.send(ERROR_OBJ);
-    //     return;
-    // });
 
     app.get('/', function(req, res) {
         if(!req.isAuthenticated()) {
@@ -236,6 +231,11 @@ function initRequestHandler() {
             return;
         }
         res.redirect("/static/active.html");
+    });
+
+    app.get('/details',function(req,res){
+        console.log(req.url.substring(8));
+        res.redirect('/static/details.html'+req.url.substring(8));
     });
 
     app.get('/logout', function(req, res) {
@@ -972,24 +972,28 @@ function initCommandHandler() {
             thisRace.opponent_finish_date = args.opponent_finish_date;
 
 
-            if( !thisRace.owner_pace && !args.opponent_pace ){
-                util.serverErr("Race :" + args._id +" has no owner/opponent pace. Can't determine winner");
-                //TODO
-                util.serverErr("For now, set owner as the winner if neither pace exists");
-                thisRace.winner_id = thisRace.owner_id;
-            }
-            else if(!thisRace.owner_pace){
-                util.serverErr("no owner pace. set opponent_id as winner");
-                thisRace.winner_id = thisRace.opponent_id;
-            }
-            else if(!args.opponent_pace){
-                util.serverErr("no opponent_pace, set owner_id as winner");
-                thisRace.winner_id = thisRace.owner_id;
-            }
-            else {
-                thisRace.winner_id = ( parseFloat(thisRace.owner_pace) < parseFloat(args.opponent_pace) )?
-                        thisRace.owner_id : thisRace.opponent_id;
-            }
+            // if( !thisRace.owner_pace && !args.opponent_pace ){
+            //     util.serverErr("Race :" + args._id +" has no owner/opponent pace. Can't determine winner");
+            //     //TODO
+            //     util.serverErr("For now, set owner as the winner if neither pace exists");
+            //     thisRace.winner_id = thisRace.owner_id;
+            // }
+            // else if(!thisRace.owner_pace){
+            //     util.serverErr("no owner pace. set opponent_id as winner");
+            //     thisRace.winner_id = thisRace.opponent_id;
+            // }
+            // else if(!args.opponent_pace){
+            //     util.serverErr("no opponent_pace, set owner_id as winner");
+            //     thisRace.winner_id = thisRace.owner_id;
+            // }
+            // else {
+            //     thisRace.winner_id = ( parseFloat(thisRace.owner_pace) < parseFloat(args.opponent_pace) )?
+            //             thisRace.owner_id : thisRace.opponent_id;
+            // }
+
+            //TEST
+            thisRace.winner_id = thisRace.owner_id;
+            
             util.serverErr("winner id is " + thisRace.winner_id);
 
             thisRace.save(function(err,object){

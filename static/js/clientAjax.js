@@ -153,6 +153,8 @@ function postToFeed(id) {
 
 	function callback(response) {
 	  //do something here
+	  console.log("response from post");
+	  console.log(response);
 	}
 
 	FB.ui(obj, callback);
