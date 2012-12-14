@@ -102,22 +102,6 @@ function onStart() {
     }, function(accessToken, refreshToken, profile, done) {
         FB.setAccessToken(accessToken);
         graph.setAccessToken(accessToken);
-
-        // FB.api('me/feed','post',{message :  "check this out", link: "http://racewithfriends.heroku.com"},function(res){
-        //         if(!res || res.error){
-        //             util.serverErr(res || res.error);
-        //             util.serverErr("Error when posting to fb");
-        //             // response.send(ERROR_OBJ);
-        //             return;
-        //         }
-        //         else{
-        //             util.log(res);
-        //             util.serverErr("Success post");
-        //         }
-        //         // response.send(SUCCESS_OBJ);
-        //     });
-
-
     
         getUserById(profile.id, function(user) {
             if(util.isNull(user) || util.isEmptyObj(user)) {
@@ -143,7 +127,6 @@ function onStart() {
         });
 
         return done(null, profile);
-        // });
     }));
 
     initRequestHandler();
@@ -258,11 +241,6 @@ function initRequestHandler() {
         }
         res.redirect('/static/new-race.html');
     });
-
-    // app.get('/details',function(req,res){
-    //     console.log(args);
-    //     res.redirect('/static/details.html'+req.params.args);
-    // });
 
 
     app.get('/auth/facebook', passport.authenticate('facebook'), function(req, res) {
@@ -516,8 +494,6 @@ function handleCommands(request, response) {
 
 //Init command hanlder to handle different ajax request 
 //and send back JSON object
-
-
 function initCommandHandler() {
     cmdHandler.getAllUsers = function(args, request, response) {
         //no args needed
@@ -920,15 +896,7 @@ function initCommandHandler() {
               }
             });
 
-        });      
-                // var body = 'Post using Facebook-SDK from node.js module';
-        // FB.api('me/feed', 'post', { message: body}, function (res) {
-        //   if(!res || res.error) {
-        //     console.log(!res ? 'error occurred' : res.error);
-        //     return;
-        //   }
-        //   console.log('Post Id: ' + res.id);
-        // });
+        });     
 
     }
 

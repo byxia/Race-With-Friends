@@ -599,7 +599,7 @@ geo.prototype.showMap = function() {
                     ownerMapBounds.extend(coord);
                     that.map.fitBounds(ownerMapBounds);
                     if (i === ownerRoute.length-1) {
-                        alert("hehe");
+                        // alert("hehe");
                         var ownerFinishMarker = new google.maps.Marker({
                             map: that.map,
                             draggable: false,
@@ -744,7 +744,7 @@ geo.prototype.preTimer = function() {
             // BXIA
             // if accepting race with same route, activate start button only when close enough to start point
             
-            console.log(getUrlVars().mode);
+            // console.log(getUrlVars().mode);
             if (getUrlVars().mode === 'same') {
 
                 // FOR DEMO ONLY: click on arrive instruction to be able to start racing anywhere
@@ -812,7 +812,7 @@ geo.prototype.finishButton = function() {
 
 
         if(that.distance < 17 ){
-            alert("Your run is too short. Dev purpose, saving the race anyway");
+            // alert("Your run is too short. Dev purpose, saving the race anyway");
 
             // $.mobile.changePage("/static/active.html"); 
             // return;
@@ -844,7 +844,10 @@ geo.prototype.finishButton = function() {
                 log("success craete race");
                 log(object);
                 log(JSON.parse(object.owner_route).route);
-                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+                setTimeout(function(){
+                    $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+                }, 1000);
+                
 
             },function(err){
                 log("err create race");

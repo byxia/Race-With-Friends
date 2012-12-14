@@ -17,9 +17,22 @@
     <script type="text/javascript" src="js/geo.js"></script>
 	<script type="text/javascript" src="js/playback.js"></script>
 	<script type="text/javascript" src="js/frontend.js"></script>
+		<script src='http://connect.facebook.net/en_US/all.js'></script>
 </head> 
 <body> 
 <div data-role="page" id="details-page">
+	<div id='fb-root'></div>
+	<script type="text/javascript">
+	if(FB){
+		FB.init({appId: "173419086133939", status: true, cookie: true});
+		$('#share-btn').bind('click',function  () {
+			postToFeed();
+		});
+	}
+	else{
+		$('#share-btn').hide();
+	}
+	</script>
 	<div data-role="header">
 		<a href="active.html" data-role="button" data-icon="arrow-l" data-transition="slide" data-direction="reverse" id="back-btn">
 			back
