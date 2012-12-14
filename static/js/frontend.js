@@ -313,7 +313,7 @@ $('#finished-races').live('pageinit', function(){
 
 				var dist = metersToMiles(race.owner_distance || 0, distanceDecimals);
 				var daysAgo = daysAway(new Date(race.creation_date), new Date());
-
+				var detailsURL = "'/static/details.html?race=" + race._id + "&source=finished'";
 				var newLi = $('\
 					<li ownerId="'+ownerId+'" oppId="'+opponentId+'">\
 						<div class="vs">\
@@ -327,7 +327,7 @@ $('#finished-races').live('pageinit', function(){
 								<div class="name opponent">'+opponent+'</div>\
 							</div>\
 						</div>\
-						<a href="details.html?race='+race._id+'&source=finished" class="info">\
+						<a onclick="$.mobile.changePage(' +detailsURL + ')" class="info">\
 							'+status+'\
 							<p class="result">\
 								'+dist+'mi race<br/>\
