@@ -301,6 +301,8 @@ $('#finished-races').live('pageinit', function(){
 					winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
 				}
 
+				console.log(race.winner_id);
+
 				var status;
 				if (race.winner_id === me.id){
 					status = "You won!";
@@ -482,7 +484,7 @@ $('#profile-page').live('pageshow', function(){
 
 	getUserById(getUrlVars().id, function(object){
 		var user = object[0];
-		console.log(object);
+		// console.log(object);
 
 		if (isNull(user)){
 			console.log("error - null");
@@ -510,7 +512,7 @@ $('#profile-page').live('pageshow', function(){
 		var totalDist = user.total_dist || 0;
 		var totalTime = user.total_time || 0;
 		var totalTimeFormatted = formatTime(totalTime);
-		console.log(user.total_time);
+		// console.log(user.total_time);
 		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
 		$('.number.dist').html(metersToMiles(totalDist, distanceDecimals) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
@@ -608,9 +610,15 @@ $('#details-page').live('pageshow', function(){
 		me = object.me;
 		// console.log(me);
 
+		console.log(race.mode);
 		if (race.mode === "diff"){
+			console.log("mode is diff");
 			$('.map.diff').show();
 			$('.map-wrapper').hide();
+		}
+		else{
+			$('.map.diff').hide();
+			$('.map-wrapper').show();
 		}
 
 		ownerId = race.owner_id;
