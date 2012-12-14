@@ -374,6 +374,7 @@ geo.prototype.timer = function() {
             that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]) || 0;
             console.log(that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]));
             console.log(that.distance);
+            $('h1').html( that.distance);
             // TODO dummy
             // if (that.arr.length !== 0) { 
             //     var pt = that.arr.pop();
