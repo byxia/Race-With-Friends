@@ -1,0 +1,178 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="js/clientAjax.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjPAxk0JAu_vpzQz-_RjNqV3yWJ74hKKY&sensor=true"></script>
+
+	<script type="text/javascript" src="js/playback.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page" id="profile-page">
+	<div data-role="header">
+		<a onclick='goBack();' data-transition="slide" data-direction="reverse" data-role="button" data-icon="arrow-l" id="back-btn">
+			back
+		</a>
+		<h1>Race With Friends</h1>
+	</div>
+	
+	<div id="profile-content">
+		<div class="bar" id="profile">
+			<div class="ui-grid-a">
+				<div class="ui-block-a">
+					<div class="avatar">
+						<div class="img-wrapper">
+							<img/>
+						</div>
+						<div class="name" id="profile-name"></div>
+					</div>
+				</div>
+				<div class="ui-block-b">
+					<div class="stats-row">
+						<div class="icon wins"></div>
+						<div class="text">
+							<div class="small">total wins</div>
+							<div class="number wins">8 / 13 races</div>
+						</div>
+					</div>
+					<div class="stats-row">
+						<div class="icon distance"></div>
+						<div class="text">
+							<div class="small">total distance</div>
+							<div class="number dist">12.3mi</div>
+						</div>
+					</div>
+					<div class="stats-row">
+						<div class="icon time"></div>
+						<div class="text">
+							<div class="small">total time</div>
+							<div class="number time">00:46:25</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /grid-a -->
+
+
+			<div class="challenge">
+<!-- 				<div data-role="button" data-theme="f" id="start-race-btn"></div> -->
+			</div>
+
+		</div>
+
+		<div class="bar dark records">
+			Personal Records
+		</div>
+
+		<div class="bar" id="personal-records">
+			<div class="ui-grid-a">
+				<div class="ui-block-a">
+					<div class="small">longest race</div>
+					<div><span class="longest"></span>mi</div>
+				</div>
+				<div class="ui-block-b">
+					<div class="small">fastest pace</div>
+					<div><span class="fastest"></span>/mi</div>
+				</div>
+			</div><!-- /grid-a -->
+		</div>
+
+		
+
+<!-- 		<div class="bar dark achievements">
+			Achievements
+		</div>
+
+		<div id="achievement-list">
+			<a href="#badge-popup" data-rel="popup">
+				<div class="badge bff"></div>
+			</a>
+			<a href="#badge-popup" data-rel="popup">
+				<div class="badge bff"></div>
+			</a>
+			<a href="#badge-popup" data-rel="popup">
+				<div class="badge bff"></div>
+			</a>
+			<a href="#badge-popup" data-rel="popup">
+				<div class="badge bff"></div>
+			</a>
+			<a href="#badge-popup" data-rel="popup">
+				<div class="badge bff"></div>
+			</a>
+		</div>
+
+		<div data-role="popup" id="badge-popup" class="ui-content" data-theme="d" data-overlay-theme="a">
+			<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			<div class="popup-content">
+				<div class="badge bff"></div>
+				<div class="description">
+				      <p class="title">BFF</p>
+				      <p>Complete 5 races with the same friend.</p>
+				</div>
+			</div>
+	    </div> -->
+
+
+	</div>
+
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" class="active-link" data-transition="slide" data-direction="reverse" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link" data-direction="reverse" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=me" id="profile-link-button" class="profile-link ui-btn-active ui-state-persist" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+	<script type="text/javascript" src="js/frontend.js"></script>
+
+	 <script type="text/javascript">
+	// 	$('#profile-link-button').bind('click',function  () {
+	// 		getMyself(function(myself){
+	// 			// show page after load
+	// 			$.mobile.hidePageLoadingMsg();
+
+	// 			var displayName = formatName(myself.first_name, myself.last_name, 'profile');
+
+
+	// 			// show user name
+	// 			$('#profile-name').html(displayName);
+	// 			$('#start-race-btn').remove();
+	// 			$('#back-btn').remove();
+
+	// 			getLargePicture("me", function(picture){
+	// 				var result = validatePicture(picture);
+	// 				if (result === true){
+	// 					$('#profile .avatar img').attr("src", picture.location);
+	// 				}
+
+	// 				formatPicture(picture);
+	// 			});
+
+	// 			$('#profile-content').show();
+	// 		});
+	// 	});
+	// </script>
+	
+
+</div>
+
+
+
+</body>
+</html>

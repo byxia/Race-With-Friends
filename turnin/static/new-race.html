@@ -1,0 +1,68 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-mobile.js"></script>
+	<script type="text/javascript" src="js/clientAjax.js"></script>
+	 <script src='http://connect.facebook.net/en_US/all.js'></script>
+</head> 
+<body> 
+<div data-role="page" id="new-race">
+	<div data-role="header">
+		<a href="active.html" data-transition="slide" class="active-link" data-direction="reverse" data-role="button" data-icon="arrow-l" id="back-btn">
+			back
+		</a>
+		<h1>Race With Friends</h1>
+	</div>
+
+	<div class="bar dark new-instruction">
+		<p>Choose a friend to challenge!</p>
+	</div>
+
+	<div data-role="content" id="friend-list">
+		<ul data-role="listview">
+<!-- 				<li>
+					<img class="avatar">
+					<a href="profile.html">Adam Kinkaid</a>
+				</li>
+				<li>
+					<img class="avatar">
+					<a href="profile.html">Alex Wickerham</a>
+				</li> -->
+		</ul>
+	</div>
+
+	<div id="invitebtn-wrapper">
+		<div data-role="button" data-theme="e" id="invite-btn" onclick="$.mobile.changePage('/static/invite.html')">Invite more friends</div>
+	</div>
+
+
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" data-transition="slide" class="active-link ui-btn-active ui-state-persist" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=me" class="profile-link" data-transition="slide" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+
+	<script type="text/javascript" src="js/frontend.js"></script>
+</div>
+
+
+</body>
+</html>

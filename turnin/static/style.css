@@ -1,0 +1,972 @@
+/* FONTS */
+
+@font-face {
+    font-family: 'Museo';
+    src: url('fonts/Museo300-Regular.otf') format('opentype');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Museo';
+    src: url('fonts/Museo500-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTS55F.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PTSans';
+    src: url('fonts/PTS75F.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lobster';
+    src: url('fonts/Lobster.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#login-btn, .ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c{
+	font-family: 'PTSans', sans-serif;
+}
+
+.ui-btn-text{
+	font-family: 'PTSans', sans-serif;
+}
+
+.ui-navbar .ui-btn-text, .challenge .ui-btn-text{
+	font-family: 'Museo', sans-serif;
+}
+
+.small{
+	font-size: 12px;
+}
+
+
+
+/* BLOCK BACKGROUNDS */
+
+.bar{
+	padding: 10px 10px 5px 10px;
+	background: #ffffff;
+	background: -moz-linear-gradient(top,  #ffffff 0%, #f6f6f6 47%, #ededed 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(47%,#f6f6f6), color-stop(100%,#ededed));
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -o-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: -ms-linear-gradient(top,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	background: linear-gradient(to bottom,  #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 );
+}
+
+.bar.dark{
+	color: #fff;
+	text-shadow: none;
+	background: #333333;
+	background: -moz-linear-gradient(top,  #333333 0%, #111111 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#333333), color-stop(100%,#111111));
+	background: -webkit-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: -o-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: -ms-linear-gradient(top,  #333333 0%,#111111 100%);
+	background: linear-gradient(to bottom,  #333333 0%,#111111 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#333333', endColorstr='#111111',GradientType=0 );
+
+}
+
+
+
+/* BASICS */
+
+.ui-loader .ui-icon{
+	border-radius: 8px;
+}
+
+.ui-content .ui-listview{
+	margin-bottom: 15px;
+}
+
+.ui-btn-corner-all{
+	border-radius: 10px;
+}
+
+.ui-btn-inner{
+	padding: 8px 5px;
+}
+
+.ui-btn-icon-right .ui-btn-inner {
+	padding-right: 5px;
+}
+
+.ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
+	padding: .4em 15px;
+	display: block;
+}
+
+.ui-grid-c{
+	padding-top: -20px;
+}
+
+.faded{
+	color: #999;
+}
+
+.toast{
+	padding: 10px 20px;
+	width: 100px;
+	margin: auto;
+	display: block;
+	opacity: 0.8;
+	position: absolute;
+	left: 50%;
+	margin-left: -70px;
+	text-align: center;
+}
+
+/* HEADER */
+
+.ui-header .ui-title, .ui-footer .ui-title {
+	margin: .5em 0px !important;
+}
+.ui-header.ui-bar-a{
+	border-bottom: 1px solid #000;
+}
+
+.ui-title{
+	font-size: 20px !important;
+	text-overflow: ellipsis;
+	overflow: visible;
+	white-space: normal !important;
+	margin: none !important;
+}
+
+.ui-header .ui-btn-left{
+	top:5px;
+}
+
+a + .ui-title{
+	padding-left: 50px !important;
+}
+
+.ui-header:after{
+	content: '';
+	display: block;
+	height: 12px;
+	width: 100%;
+	background: url('images/checker.png') top left repeat-x;
+}
+
+.ui-header.popup-link:after{
+	background: none;
+	height: 0px;
+}
+
+/* navbar */
+
+.footer .ui-btn-text{
+	text-shadow: none;
+}
+
+
+/* LOGIN */
+
+#login{
+	background: #dc2511; /* Old browsers */
+	background:url('images/noise.png'),  -moz-linear-gradient(top, #dc2511 0%, #6f0000 100%); 
+	background:url('images/noise.png'),  -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dc2511), color-stop(100%,#6f0000)); 
+	background:url('images/noise.png'),  -webkit-linear-gradient(top, #dc2511 0%,#6f0000 100%);
+	background:url('images/noise.png'),  -o-linear-gradient(top, #dc2511 0%,#6f0000 100%);
+	background:url('images/noise.png'),  -ms-linear-gradient(top, #dc2511 0%,#6f0000 100%); 
+	background:url('images/noise.png'),  linear-gradient(to bottom, #dc2511 0%,#6f0000 100%); 
+}
+
+.checker-bar{
+	height: 12px;
+	background: url('images/checker.png') top left repeat-x;
+}
+
+.checker-bar.bottom{
+	position: absolute;
+	height: 12px;
+	width: 100%;
+	bottom: 0px;
+}
+
+#login .ui-content{
+	background: 
+}
+
+#login h1{
+	color: white;
+	text-shadow: none;
+	text-align: center;
+	font-size: 30px;
+}
+
+#login-logo{
+	width: 245px;
+	height: 167px;
+	background: url('images/logo-large@2X.png');
+	background-size: 245px 167px;
+	margin: 40px auto 50px auto;
+}
+
+#login-btn-wrapper{
+	width: 260px;
+	margin: auto;
+}
+
+#login-btn-wrapper .ui-btn-inner{
+	padding-left: 50px;
+}
+
+#login-btn{
+/*	padding-left: 10px;*/
+	border-radius: 5px;
+}
+
+.ui-icon-fb {
+	background-image: url("images/icons/fb.png");
+	width: 22px;
+	height: 22px;
+	moz-border-radius : 0 px ; -webkit-border-radius :  0px ; border-radius :  0px ;
+	margin-left: 7px;
+}
+
+.ui-icon-active-races, .ui-icon-finished-races, .ui-icon-profile{
+	background-color: transparent;
+	box-shadow: none;
+	moz-border-radius : 0 px ; -webkit-border-radius :  0px ; border-radius :  0px ;
+}
+
+.ui-icon-active-races {
+	background-image: url("images/icons/active-races.png");
+	width: 20px;
+	height: 19px;
+	margin-top: 1px;
+}
+
+.ui-icon-finished-races {
+	background-image: url("images/icons/finished-races.png");
+	width: 18px;
+	height: 20px;
+}
+
+.ui-icon-profile {
+	background-image: url("images/icons/profile.png");
+	width: 19px;
+	height: 19px;
+	margin-top: 1px;
+}
+
+
+/* active races */
+
+.race-list li.ui-li-static{
+	padding: 10px 10px 5px 10px !important;
+}
+
+#newbtn-wrapper{
+	width: 250px;
+	margin: auto;
+	margin-top: 30px;
+}
+
+#new-btn .ui-btn-inner{
+	padding: 15px 30px;
+}
+
+#new-btn .ui-icon, #new-btn .ui-btn-text{
+	margin-left: 15px;
+	font-size: 18px;
+}
+
+.race-list .faded, #finished-list .faded, #friend-list .faded{
+	font-size: 18px;
+	text-align: center;
+	padding: 10px;
+}
+
+/*a .avatar{
+	border: 3px solid #fff;
+}*/
+
+.avatar{
+	width: 40px;
+	height: 40px;
+	background: #fff;
+	display: inline-block;
+	position: relative;
+/*	border: 3px solid #fff;*/
+	padding: 3px;
+	margin: 0px 3px;
+	box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+}
+
+.avatar.won{
+	/*border: 3px solid #ffd45a;*/
+	background-color: #ffe18d;
+}
+/*.avatar:before{
+	position: absolute;
+	content:'';
+	right: -10px;
+	top: -10px;
+	width: 32px;
+	height: 32px;
+	background: url('images/crown.png') no-repeat;
+}*/
+.crown{
+	position: absolute;
+	top: -14px;
+	right: -14px;
+	width: 32px;
+	height: 32px;
+	background: url('images/crown.png') no-repeat;
+	border: none;
+}
+
+.person{
+	color: #990000;
+	font-size: 13px;
+	padding-left: 3px;
+	margin-top: 3px;
+	margin-bottom: 5px;
+	position: relative;
+}
+
+.person .name{
+	width: 62px;
+/*	width: 60px;*/
+	overflow: hidden;
+	text-align: center;
+	margin-left: -5px;
+	margin-right: -5px;
+/*	text-align: right;*/
+}
+
+.race-list .info{
+	color: #555;
+	font-size: 14px;
+	padding-top: 8px;
+	line-height: 26px;
+	margin-left: -10px;
+}
+
+.race-list .btn{
+	padding-top: 6px;
+}
+
+.race-list .ui-btn-inner{
+	font-size: 14px;
+}
+
+#confirm .ui-btn-inner{
+	padding: 8px 40px;
+}
+
+#confirm .btns{
+	margin: auto;
+	width: 240px;
+}
+
+
+/* race details */
+
+.vs .person, .vs .vs-text{
+	float: left;
+}
+
+.vs .vs-text{
+	margin: 20px 2px 0px 6px;
+	color: #990000;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.bar.detail-info{
+	-webkit-box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+	position: relative;
+	padding-top: 0px;
+}
+.bar.detail-stats{
+	-webkit-box-shadow: 0px -10px 20px 0px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+	position: relative;
+}
+
+.detail-info .ui-block-a{
+	margin-left: -5px;
+	margin-right: 5px;
+	margin-top: 12px;
+}
+.detail-info .ui-block-b{
+	margin-top: 12px;
+}
+
+.detail-info .status{
+	padding: 5px 3px;
+	border-radius: 5px;
+	color: #fff;
+	text-shadow: none;
+	text-align: center;
+	margin-top: 5px;
+	font-size: 13px;
+}
+
+.status.waiting{
+	background-color: #888;
+}
+.status.won{
+	background-color: #51ac14;
+}
+.status.lost{
+	background-color: #9e1414;
+}
+
+.dist-button .dist{
+	float: left;
+	margin-left: 3px;
+	margin-top: 6px;
+	line-height: 14px;
+}
+.dist-button .action-btn{
+	float: right;
+}
+.dist-button .action-btn .ui-btn-inner{
+	padding: 4px 10px;
+	width: 60px;
+}
+
+.map.same, .map-left, .map-right{
+	height: 200px;
+	background-color: #e0d5bc;
+	position: relative;
+/*	box-shadow: inset 0 0 15px 0px rgba(0,0,0,0.5);*/
+}
+
+.map-wrapper{
+	position: relative;
+}
+
+.map.diff{
+	display: none;
+}
+
+.map.diff{
+	position: relative;
+	height: 200px;
+	width: 100%;
+}
+
+.map-left, .map-right{
+	width: 50%;
+	float:left;
+}
+
+.map-left:after {
+  content: '';
+  position: absolute;
+  width: 99%;
+  height: 200px;
+  border-right: 2px solid rgba(0,0,0,0.3);
+  left: 1px; top: 1px;
+}
+
+.playbtn{
+	width: 34px;
+	height: 34px;
+	background: url('images/play-btn.png');
+	position: absolute;
+	bottom: 25px;
+	right: 15px;
+}
+
+.playbtn:hover{
+	cursor: pointer;
+}
+
+#people-label{
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 12px;
+	padding: 5px 8px;
+	background-color: rgba(0,0,0,0.6);
+	border-radius: 5px;
+	color: #fff;
+	text-shadow: none;
+}
+
+#people-label .owner, #people-label .opponent{
+	padding-left: 15px;
+}
+#people-label .owner{
+	background: url('images/icons/map-label-owner.png') no-repeat left center;
+}
+#people-label .opponent{
+	background: url('images/icons/map-label-opp.png') no-repeat left center;
+}
+
+.detail-stats{
+	overflow: hidden;
+}
+.detail-stats .wrapper{
+	width: 320px;
+	margin: auto;
+}
+.detail-stats .left, .detail-stats .center, .detail-stats .right, .detail-stats .person, .detail-stats .stats{
+	float: left;
+}
+
+.detail-stats .left .person{
+	margin-right: 10px;
+	margin-top: 20px;
+}
+.detail-stats .right .person{
+	margin-left: 10px;
+	margin-top: 20px;
+}
+
+.detail-stats .line{
+	margin-bottom: 5px;
+}
+
+.detail-stats .center{
+	margin: 0px 12px;
+}
+
+.detail-stats .center .icon{
+	width: 22px;
+	height: 22px;
+}
+
+.detail-stats .center .icon.time{
+	background: url('images/icons/time.png') no-repeat;
+	margin-top: 12px;
+}
+.detail-stats .center .icon.pace{
+	background: url('images/icons/pace.png') no-repeat;
+	margin-top: 23px;
+}
+
+.detail-stats .left.waiting p, .detail-stats .right.waiting p{
+	width: 90px;
+	margin-left: 25px;
+	margin-top: 25px;
+	color: #999;
+	text-shadow: none;
+}
+
+/*.detail-stats .left.waiting, .detail-stats .right.waiting{
+	display: none;
+}*/
+
+
+
+/* new race */
+
+.new-instruction p{
+	text-align: center;
+}
+
+.bar.new-instruction p{
+	margin: 0px 15px 0px 15px;
+	padding-top: 10px;
+}
+
+#friend-list li{
+	overflow: hidden;
+/*	padding-bottom: 5px;*/
+}
+#friend-list a, #friend-list img{
+	float: left;
+}
+#friend-list .avatar{
+/*	float: left;*/
+	margin-top: 12px;
+}
+#friend-list p{
+	padding-top: 30px;
+	padding-bottom: 10px;
+	font-size: 18px;
+	font-weight: bold;
+}
+/*#friend-list a{
+	margin-top: 15px;
+	font-size: 18px;
+}*/
+
+#friend-list .ui-icon{
+	margin-top: 0px;
+}
+
+#invitebtn-wrapper{
+	width: 250px;
+	margin: auto;
+	margin-top: 30px;
+}
+
+#invite-btn .ui-btn-inner{
+	padding: 10px 15px;
+}
+
+#invite-btn .ui-btn-text{
+	font-size: 18px;
+}
+
+
+
+/* accept race */
+
+.race-info .info p{
+	margin-bottom: 6px;
+	margin-top: 10px;
+	font-size: 14px;
+}
+.race-info .info .label{
+	color: #fff;
+	text-shadow: none;
+	padding: 3px;
+	background-color: #429311;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 13px;
+}
+
+.accept-btns .ui-btn{
+	margin: 15px 10px;
+	height: 200px;
+}
+
+.accept-btns .ui-btn-text{
+	font-size: 18px;
+	line-height: 14px;
+	font-weight: normal;
+}
+
+.accept-btns .ui-btn-text .small{
+	font-size: 13px;
+	color: #666;
+}
+
+.accept-btns .icon{
+	height: 122px;
+	margin: 5px 0px 15px 0px;
+	display: block;
+	background-position: center bottom;
+	background-repeat: no-repeat;
+}
+
+.accept-btns .same .icon{
+	background-image: url('images/icons/same-route.png');
+}
+
+.accept-btns .diff .icon{
+	background-image: url('images/icons/diff-route.png');
+}
+
+
+
+/* running */
+
+#race-recording{
+	position: relative;
+}
+
+#map_canvas{
+	width: 100%;
+	height: 290px;
+/*	min-height: 80%;
+*/	background-color: #e0d5bc;
+	position: relative;
+}
+
+@media all and (max-height: 550px) and (min-height: 510px){
+	#map_canvas{
+		height: 320px;
+	}
+}
+@media all and (max-height: 620px) and (min-height: 551px){
+	#map_canvas{
+		height: 360px;
+	}
+}
+@media all and (max-height: 680px) and (min-height: 621px){
+	#map_canvas{
+		height: 430px;
+	}
+}
+@media all and (min-height: 681px){
+	#map_canvas{
+		height: 510px;
+	}
+}
+
+.racing-label{
+	padding: 7px;
+	text-align: center;
+
+/*	TODO: SMALL FONT FOR TESTING ONLY*/
+/*	font-size: 14px;*/
+}
+
+#rec-icon{
+	width: 74px;
+	height: 33px;
+	background: url('images/rec.png') no-repeat;
+	position: absolute;
+	top: 100px;
+	right: 5px;
+	-webkit-animation:flicker 0.5s linear 0s infinite alternate;
+}
+
+@-webkit-keyframes flicker /* Safari and Chrome */
+{
+from {opacity: 1;}
+to {opacity: 0.7;}
+}
+
+#running-actions p{
+	color: #fff;
+	text-shadow: none;
+	text-align: center;
+	font-size: 18px;
+}
+
+#running-actions{
+	padding: 5px 20px;
+}
+
+#running-actions .ui-btn-text{
+	font-size: 26px !important;
+}
+
+#distance-left{
+	font-size: 26px;
+}
+
+/*#finish-run-btn, #stop-run-btn, #arrive-instruction, #start-run-btn{
+	display:none;
+}*/
+
+
+/* finished races */
+
+.bar.finished, .bar.new-instruction{
+	overflow: hidden;
+	padding: 0px;
+	padding-bottom: 10px;
+}
+
+.bar.finished p{
+	margin: 10px 15px 0px 15px;
+}
+
+.bar.finished #race-num{
+	float: left;
+}
+.bar.finished #win-num{
+	float: right;
+}
+
+#finished-list li{
+/*	padding: 15px 10px 5px 10px;*/
+	overflow: hidden;
+}
+
+#finished-list li .ui-btn-inner{
+	padding: 15px 10px 5px 10px;
+}
+
+#finished-list .ui-icon{
+	margin-top: -7px;
+/*	margin-right: -10px;*/
+
+}
+
+#finished-list .vs{
+	float:left;
+}
+#finished-list .vs .vs-text{
+	margin: 20px 5px 0px 8px;
+}
+
+
+#finished-list .info{
+	padding-left: 25px;
+	padding-top: 13px;
+/*	margin-top: 3px;*/
+}
+#finished-list .winner{
+	font-size: 18px;
+	font-weight: bold;
+}
+#finished-list .winner.won{
+	color: #398e01;
+}
+#finished-list .winner.lost{
+	color: #b10202;
+}
+#finished-list .result{
+	font-size: 14px;
+}
+
+
+
+/* profile */
+
+#profile{
+	margin: -15px;
+	margin-right: 0px;
+}
+
+#profile .avatar{
+	padding: 12px;
+	width: 100px;
+	height: 120px;
+	margin: 20px;
+	margin-left: 25px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+
+#profile .avatar .img-wrapper{
+	width: 100px;
+	height: 100px;
+	outline: 1px solid #ccc;
+	overflow: hidden;
+	margin-bottom: 4px;
+}
+
+#profile .avatar img.vertical{
+	max-width: 100px;
+}
+#profile .avatar img.horizontal{
+	max-height: 100px;
+}
+
+#profile .avatar .name{
+	font-family: 'Lobster';
+	font-size: 18px;
+	text-align: center;
+}
+
+#profile .ui-block-b{
+	padding-top: 5px;
+}
+
+#profile .stats-row{
+	overflow: hidden;
+	margin-top: 19px;
+	margin-left: 20px;
+}
+
+#profile .stats-row .icon, #profile .stats-row .text{
+	float: left;
+}
+
+#profile .stats-row .icon{
+	width: 27px;
+	height: 27px;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+
+#profile .stats-row .icon.wins{
+	background: url('images/icons/wins.png') no-repeat;
+}
+#profile .stats-row .icon.distance{
+	background: url('images/icons/distance.png') no-repeat;
+}
+#profile .stats-row .icon.time{
+	background: url('images/icons/time-total.png') no-repeat;
+}
+
+#profile .challenge{
+	padding: 0px 10px 20px 25px;
+	margin-top: -5px;
+}
+
+#profile .challenge .ui-btn-text{
+	font-size: 20px;
+}
+
+.bar.records{
+	padding-bottom: 10px;
+	font-size: 18px;
+	text-align: center;
+}
+
+#personal-records{
+	padding: 20px;
+}
+
+#personal-records .ui-block-a, #personal-records .ui-block-b{
+	padding-left: 20px;
+}
+
+#personal-records{
+	font-size: 20px;
+}
+
+#personal-records .small{
+	font-size: 14px;
+}
+
+.bar.achievements{
+	padding-bottom: 10px;
+	margin-bottom: 25px;
+	font-size: 18px;
+	text-align: center;
+}
+
+#achievement-list .badge{
+	width: 33%;
+	height: 64px;
+	float: left;
+	margin-bottom: 25px;
+}
+
+.badge.bff{
+	background: url('images/achievements/bff.png') center no-repeat;
+}
+
+#badge-popup{
+	margin:auto;
+}
+
+#badge-popup .popup-content{
+	overflow: hidden;
+}
+
+#badge-popup .badge, #badge-popup .description{
+	float: left;
+}
+
+
+#badge-popup .badge{
+	width: 64px;
+	height: 64px;
+	margin-top: 10px;
+}
+
+#badge-popup .description{
+	width: 170px;
+	margin-left: 20px;
+	margin-bottom: -10px;
+}
+
+#badge-popup .description p.title{
+	line-height: 0px;
+	font-size: 18px;
+	font-weight: bold;
+}
+

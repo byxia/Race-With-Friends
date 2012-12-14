@@ -1,0 +1,97 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery-mobile.js"></script>
+	<script type="text/javascript" src="js/clientAjax.js"></script>
+	<script type="text/javascript" src="js/frontend.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjPAxk0JAu_vpzQz-_RjNqV3yWJ74hKKY&sensor=true"></script>
+	<script type="text/javascript" src="js/playback.js"></script>
+
+</head> 
+<body> 
+
+<div data-role="page" id="finished-races">
+	<div data-role="header">
+		<h1>Race With Friends</h1>
+	</div>
+
+	<div class="bar dark finished">
+		<p id="race-num"><span class="count"></span> finished races</p>
+		<p id="win-num">you won <span class="count"></span></p>
+	</div>
+
+	<div data-role="content">
+		<ul data-role="listview" id="finished-list">
+			<!-- <li>
+				<div class="vs">
+					<div class="person">
+						<a href="profile.html"><img class="avatar"></a>
+						<div class="name">Luke S.</div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person">
+						<img class="avatar won">
+						<div class="crown"></div>
+						<div class="name">You</div>
+					</div>
+				</div>
+				<a href="details.html" class="info">
+					<p class="winner won">You won!</p>
+					<p class="result">
+						2.3mi race<br/>
+						winner: 01'32"
+					</p>
+				</a>
+			</li>
+			<li>
+				<div class="vs">
+					<div class="person">
+						<img class="avatar won">
+						<div class="crown"></div>
+						<div class="name">Luke S.</div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person">
+						<a href="profile.html"><img class="avatar"></a>
+						<div class="name">You</div>
+					</div>
+				</div>
+				<a href="details.html" class="info">
+					<p class="winner lost">You lost.</p>
+					<p class="result">
+						2.3mi race<br/>
+						winner: 01'32"
+					</p>
+				</a>
+			</li> -->
+		</ul>
+	</div>
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" data-transition="slide" class="active-link" data-direction="reverse" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link ui-btn-active ui-state-persist" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=me" class="profile-link" data-transition="slide" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>

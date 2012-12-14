@@ -1,0 +1,89 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Race With Friends</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<link rel="stylesheet" href="css/themes/race.css" />
+	<link rel="stylesheet" href="style.css" />
+
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script type="text/javascript" src="js/clientAjax.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjPAxk0JAu_vpzQz-_RjNqV3yWJ74hKKY&sensor=true"></script>
+
+	<script type="text/javascript" src="js/playback.js"></script>
+		<script src='http://connect.facebook.net/en_US/all.js'></script>
+
+</head> 
+<body> 
+
+<div data-role="page" id="race-page">
+	<div data-role="header">
+		<a href="active.html" data-role="button" data-icon="arrow-l">
+			back
+		</a>
+		<h1>Race With Friends</h1>
+	</div>
+	
+	<div class="bar race-info">
+		<div class="ui-grid-a">
+			<div class="ui-block-a">
+				<div class="vs">
+					<div class="person owner">
+						<a href="profile.html"><img class="avatar"></a>
+						<div class="name"></div>
+					</div>
+					<div class="vs-text">VS</div>
+					<div class="person opponent">
+						<a href="profile.html"><img class="avatar"></a>
+						<div class="name">You</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui-block-b info">
+				<p><span class="race-distance"></span>mi run</p>
+				<div class="label">Please choose a route</div>
+			</div>
+		</div><!-- /grid-a -->
+	</div>
+
+		<div class="ui-grid-a accept-btns">
+			<div class="ui-block-a">
+				<a class="same" data-role="button" id="same-route-btn">
+					<div class="icon"></div>
+					same route
+				</a>
+			</div>
+			<div class="ui-block-b">
+				<a class="diff" data-role="button" id="diff-route-btn">
+					<div class="icon"></div>
+					different route<br/>
+					<span class="small">(same distance)</span>
+				</a>
+		</div><!-- /grid-a -->
+		
+		
+	</div>
+
+	<div data-role="footer" data-position="fixed" class="footer"  data-tap-toggle="false">		
+		<div data-role="navbar">
+			<ul>
+				<li>
+					<a href="active.html" data-transition="slide" class="active-link ui-btn-active ui-state-persist" data-icon="active-races">
+						Active Races
+					</a>
+				</li>
+				<li><a href="finished.html" data-transition="slide" class="finished-link" data-icon="finished-races">Past Races</a></li>
+				<li><a href="profile.html?id=me" class="profile-link" data-transition="slide" data-icon="profile">Profile</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer --><!-- /footer -->
+</div>
+
+
+
+</body>
+</html>
