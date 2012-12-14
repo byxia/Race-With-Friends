@@ -1,13 +1,3 @@
-var playbackJson = {
-    type: "solo",
-    ownerColor: "#ed3e7c",
-    ownerRoute: "#37c874",
-    ownerDuration: 100,
-}
-
-new playback(playbackJson);
-
-////////////////////////////////////////////
 var playback = function(argJson) {
     // edge cases ??
 
@@ -39,7 +29,7 @@ playback.prototype.go = function() {
             // XXX this is wrong, but give it 19x33 cuts it a little
             new google.maps.Size(19, 33),  // size of pic
             new google.maps.Point(0, 0),   // origin
-            new google.maps.Point(9, 32)); // anchor);
+            new google.maps.Point(9, 32)); // anchor
     this.endImage = new google.maps.MarkerImage('images/geo/end.png',
             new google.maps.Size(19, 33),
             new google.maps.Point(0, 0),
@@ -49,20 +39,20 @@ playback.prototype.go = function() {
             new google.maps.Point(0, 0),
             new google.maps.Point(0, 17));
 
-    // $.mobile.hidePageLoadingMsg();
+    $.mobile.hidePageLoadingMsg();
     this.showMap();
 }
 
 playback.prototype.showMap = function() {
     if (this.type === "solo") {
-        show1Map();
+        this.mapHelper(this.ownerRoute, "map00", "owner");
     } else {
-        show2Map();
+        this.show2Map();
     }
 }
 
-playback.prototype.show1Map = function() {
-    var pt = this.jsonArr.pop();
+playback.prototype.mapHelper = function(route, htmlId, who) {
+    var pt = route.pop();
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
 
     ///////////////////////// MAP ////////////////////////////////
@@ -74,19 +64,18 @@ playback.prototype.show1Map = function() {
         zoomControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    console.log("hehe");
-    this.map = new google.maps.Map(document.getElementById('map00'), mapOptions);
+    var map = new google.maps.Map(document.getElementById(htmlId), mapOptions);
 
     ///////////////////////// MARKER ////////////////////////////////
     var startMarker = new google.maps.Marker({
-        map: this.map,
+        map: map,
         draggable: false,
         icon: this.startImage,
         shadow: this.shadow,
         animation: google.maps.Animation.DROP,
         position: startCoord
     });
-    startMarker.setMap(this.map);
+    startMarker.setMap(map);
     google.maps.event.addListener(startMarker, 'click', bounce);
     function bounce() {
         startMarker.setAnimation(google.maps.Animation.BOUNCE);
@@ -95,61 +84,67 @@ playback.prototype.show1Map = function() {
     
     ///////////////////////// PATH ////////////////////////////////
 
-    //BXIA
-    var color;
-        if(getUrlVars().source === 'active'){
-            color = "#ed3e7c";
-        }
-        else{
-            color = "#37c874";
-        }
+    var routeColor;
+    if (who === "owner") {
+        routeColor = this.ownerColor;
+    } else {
+        routeColor = this.opponentColor;
+    }
     var runPathOptions = {
-        strokeColor: color,
+        strokeColor: routeColor,
         strokeOpacity: 0.6,
         strokeWeight: 6
     }
 
-    this.runPath = new google.maps.Polyline(runPathOptions);
-    this.runPath.setMap(this.map);
-    this.runPath.getPath().push(startCoord);
-    this.mapBounds = new google.maps.LatLngBounds();
+    var runPath = new google.maps.Polyline(runPathOptions);
+    runPath.setMap(map);
+    runPath.getPath().push(startCoord);
+    var mapBounds = new google.maps.LatLngBounds();
 
     var that = this;
     $("#same-play-btn").click(function() {
-        that.timer();
+        that.timerId = setInterval(function() {
+            var path = runPath.getPath();
+
+            console.log(runPathOptions);
+            if (route.length !== 0) { 
+                // push subsequent point in the route and update the map
+                var pt = route.pop();
+                var ptCoord = new google.maps.LatLng(pt.lat, pt.lon);
+                map.setCenter(ptCoord);
+                path.push(ptCoord); 
+                mapBounds.extend(ptCoord);
+                map.fitBounds(mapBounds);
+                // last point drop a finish pin
+                if (route.length === 0) {
+                    var finishMarker = new google.maps.Marker({
+                        map: map,
+                        draggable: false,
+                        icon: that.endImage,
+                        shadow: that.shadow,
+                        animation: google.maps.Animation.DROP,
+                        position: ptCoord
+                    });
+                    finishMarker.setMap(map);
+                    google.maps.event.addListener(finishMarker, 'click', bounce);
+                    function bounce() {
+                        finishMarker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function() { finishMarker.setAnimation(null);}, 500);
+                    }
+                }
+            }
+        }, 1000);
     });
 }
 
-playback.prototype.timer = function() {
-    var that = this;
 
-    that.timerId = setInterval(function() {
-        var path = that.runPath.getPath();
+////////////////////////
+var playbackJson = {
+    type: "solo",
+    owner_color: "#ed3e7c",
+    owner_route: [],
+    owner_duration: 100
+    // opponentColor: "#37c874",
+};
 
-        if (that.jsonArr.length !== 0) { 
-            var pt = that.jsonArr.pop();
-            var ptCoord = new google.maps.LatLng(pt.lat, pt.lon);
-            that.map.setCenter(ptCoord);
-            path.push(ptCoord); 
-            that.mapBounds.extend(ptCoord);
-            that.map.fitBounds(that.mapBounds);
-            if (that.jsonArr.length === 0) {
-                var finishMarker = new google.maps.Marker({
-                    map: that.map,
-                    draggable: false,
-                    icon: that.endImage,
-                    shadow: that.shadow,
-                    animation: google.maps.Animation.DROP,
-                    position: ptCoord
-                });
-                finishMarker.setMap(that.map);
-                google.maps.event.addListener(finishMarker, 'click', bounce);
-                function bounce() {
-                    finishMarker.setAnimation(google.maps.Animation.BOUNCE);
-                    setTimeout(function() { finishMarker.setAnimation(null);}, 500);
-                }
-            }
-        }
-    }, 1000);
-}
-
+new playback(playbackJson);
