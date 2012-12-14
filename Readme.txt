@@ -1,6 +1,4 @@
 TO-DO
-- show entire route when first opening details page
-- play animation multiple times
 - show owner route when accepting a race with same route
 - accept same route -- need to constrain starting position to owner's starting position
 - split screen animations for diff route
