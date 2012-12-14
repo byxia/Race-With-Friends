@@ -2,6 +2,9 @@ var geo = function(option) {
     this.setup(option);
 }
 
+// when accepting a race, if distance left is smaller than this (meters), race is considered as finished
+var finishDistTolerace = 5;
+
 geo.prototype.setup = function(option) {
     var nop = function() {};
     if (!navigator.geolocation) {
@@ -139,13 +142,15 @@ geo.prototype.startButton = function() {
     $("#"+this.startButtonId).click(function(){
         $("#start-run-btn").hide();
 
+        // if starting a new race, show finish button
         if(getUrlVars().source === 'new-race'){
             $("#finish-run-btn").show();
         }
+        // if accepting a race, show how many mi there are left
         else{
             $('#distance-instruction').show();
             $('#distance-left').html(metersToMiles($('body').data('race').owner_distance, 3))
-            console.log($('body').data('race'));
+            // console.log($('body').data('race'));
         }
         
         $('#rec-icon').show();
@@ -386,9 +391,17 @@ geo.prototype.timer = function() {
             console.log(that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]));
             console.log(that.distance);
 
+            // BXIA
+            // show distance left (only when accepting race)
             if(getUrlVars().source !== 'new-race'){
                 var ownerDist = $('body').data('race').owner_distance;
-                $('#distance-left').html(metersToMiles(ownerDist-that.distance, 3))
+                var distLeft = ownerDist-that.distance;
+                $('#distance-left').html(metersToMiles(distLeft, 3));
+
+                // mark 
+                if (dist < finishDistTolerace){
+                    //TODO
+                }
             }
             // $('h1').html( that.distance);
             // TODO dummy

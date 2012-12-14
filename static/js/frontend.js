@@ -301,7 +301,7 @@ $('#finished-races').live('pageinit', function(){
 					winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
 				}
 
-				console.log(race.winner_id);
+				// console.log(race.winner_id);
 
 				var status;
 				if (race.winner_id === me.id){
