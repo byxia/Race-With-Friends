@@ -142,7 +142,7 @@ geo.prototype.showMap = function() {
     }, that.errCallBack, that.geoOptions);
 
     // track current location
-    // that.preTimer();
+    that.preTimer();
 }
 
 /**
@@ -150,7 +150,7 @@ geo.prototype.showMap = function() {
  */
 geo.prototype.startButton = function() {
     
-    // var that = this;
+    var that = this;
     // $('#'+this.startButtonId).click(function(){
     //                 $("#start-run-btn").hide();
     //     $("#finish-run-btn").show();
@@ -234,7 +234,7 @@ geo.prototype.startButton = function() {
 geo.prototype.preTimer = function() {
     var that = this;
     that.preTimerId = setInterval(function() {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        foo(function(position) {
             // update
             if (that.centerMarker !== null) {
                 that.centerMarker.setMap(null);
