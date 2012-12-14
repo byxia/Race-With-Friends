@@ -38,15 +38,16 @@ playback.prototype.go = function() {
 playback.prototype.showMap = function() {
     // show the maps
     if (this.type === "solo") {
-        this.soloMapHelper("map00");
+        this.soloMapHelper("map00", "#same-play-btn");
     } else if (this.type === "same"){
         this.sameMapHelper();
     } else { // diff
+        console.log("hehe");
         this.diffMapHelper();
     }
 }
 
-playback.prototype.soloMapHelper = function(htmlId) {
+playback.prototype.soloMapHelper = function(htmlId, whichBtn) {
     // dummy
     this.ownerRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
                         {lat: 40.44360760645317, lon: -79.94475245475769},
@@ -123,8 +124,8 @@ playback.prototype.soloMapHelper = function(htmlId) {
     
     ///////////////////////// 1st TIMER ////////////////////////////////
     var that = this;
-    $("#same-play-btn").click(function() {
-        $("#same-play-btn").hide();
+    $(whichBtn).click(function() {
+        $(whichBtn).hide();
         path.clear();
         path.push(new google.maps.LatLng(that.ownerRoute[0].lat, that.ownerRoute[0].lon));
         finishMarker.setMap(null);
@@ -137,7 +138,7 @@ playback.prototype.soloMapHelper = function(htmlId) {
             marker: finishMarker,
             cnt: 1,
             who: "owner",
-            btnName: "#same-play-btn"
+            btnName: whichBtn
         });
     });
 
@@ -156,7 +157,7 @@ playback.prototype.sameMapHelper = function() {
                         {lat: 40.44526081327536, lon: -79.94697554206848}];
                         
     // draw owners map, which is also opponent's map since same map
-    var map = this.soloMapHelper("map00");
+    var map = this.soloMapHelper("map00", "#same-play-btn");
 
     var pt = this.opponentRoute[0];
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
@@ -231,7 +232,7 @@ playback.prototype.diffMapHelper = function() {
                         {lat: 40.44526081327536, lon: -79.94697554206848}];
                         
     // draw owners map, which is not opponent's map
-    this.soloMapHelper("map01");
+    this.soloMapHelper("map01", "#diff-play-btn");
 
     /////////////////////////// 2nd MAP /////////////////////////////
     var pt = this.opponentRoute[0];
@@ -345,7 +346,7 @@ playback.prototype.timer = function(arg) {
 
 ////////////////////////
 var playbackJson = {
-    type: "same",
+    type: "diff",
     ownerColor: "#ed3e7c",
     ownerRoute: [],
     ownerDuration: 100,
