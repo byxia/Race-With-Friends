@@ -257,10 +257,12 @@ geo.prototype.preTimer = function() {
                 if($('body').data('race')){
                     var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
                     var startPoint = ownerRoute[1] || ownerRoute[2] || ownerRoute[3];
-                    console.log(delta2Pts(startPoint, {lat: position.coords.latitude, lon:position.coords.longitude}));
-                    // console.log($('body').data('race'));
-                    // console.log($('body').data('race').owner_route[0]);
-                    // console.log(JSON.parse($('body').data('race').owner_route));
+                    var distToStart = that.delta2Pts(startPoint, {lat: position.coords.latitude, lon:position.coords.longitude});
+                    if(distToStart < finishDistTolerace){
+                        $('#arrive-instruction').hide();
+                        $('#start-run-btn').show();
+                    }
+                    
                 }
                 
             }
