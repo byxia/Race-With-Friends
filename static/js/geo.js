@@ -61,7 +61,7 @@ function foo(successCallback,errCallBack, option){
     setTimeout( function(){
         navigator.geolocation.clearWatch(window.wid);
         console.log("lastPosition: " + window.lastPosition);
-        $('.racing-label').html("#" + count + " : " + window.lastPosition);
+        // $('.racing-label').html("#" + count + " : " + window.lastPosition);
         successCallback(window.toReturn);
             count ++;
     } ,700)
@@ -138,7 +138,16 @@ geo.prototype.startButton = function() {
 
     $("#"+this.startButtonId).click(function(){
         $("#start-run-btn").hide();
-        $("#finish-run-btn").show();
+
+        if(getUrlVars().source === 'new-race'){
+            $("#finish-run-btn").show();
+        }
+        else{
+            $('#distance-instruction').show();
+            $('#distance-left').html(metersToMiles($('body').data('race').owner_distance, 3))
+            console.log($('body').data('race'));
+        }
+        
         $('#rec-icon').show();
         clearInterval(that.preTimerId);
         that.start_date = new Date();
@@ -268,7 +277,7 @@ geo.prototype.finishButton = function() {
         }, that.errCallBack, that.geoOptions);
 
 
-        if(that.distance < 170 ){
+        if(that.distance < 17 ){
             alert("Your run is too short. Dev purpose, saving the race anyway");
 
             // $.mobile.changePage("/static/active.html"); 
@@ -301,7 +310,7 @@ geo.prototype.finishButton = function() {
                 log("success craete race");
                 log(object);
                 log(JSON.parse(object.owner_route).route);
-                // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+                $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
 
             },function(err){
                 log("err create race");
@@ -326,7 +335,7 @@ geo.prototype.finishButton = function() {
             updateRace(raceJson, function(object){
                 log("from server. backend json");
                 log(object);
-                // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
+                $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
             },function(err){
                 log("err update race");
                 log(err);
@@ -352,7 +361,9 @@ geo.prototype.timer = function() {
             console.log((position.coords.latitude + "/"+ position.coords.longitude));
 
             // TODO: testing output
-            $('.racing-label').html("#" + that.duration + " : " +position.coords.latitude + "/"+ position.coords.longitude);
+            // $('.racing-label').html("#" + that.duration + " : " +position.coords.latitude + "/"+ position.coords.longitude);
+            // $('.racing-label').html("hello");
+
 
             that.duration ++;
             var path = that.runPath.getPath();
@@ -374,7 +385,12 @@ geo.prototype.timer = function() {
             that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]) || 0;
             console.log(that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]));
             console.log(that.distance);
-            $('h1').html( that.distance);
+
+            if(getUrlVars().source !== 'new-race'){
+                var ownerDist = $('body').data('race').owner_distance;
+                $('#distance-left').html(metersToMiles(ownerDist-that.distance, 3))
+            }
+            // $('h1').html( that.distance);
             // TODO dummy
             // if (that.arr.length !== 0) { 
             //     var pt = that.arr.pop();

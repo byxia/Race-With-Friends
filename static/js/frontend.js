@@ -305,10 +305,10 @@ $('#finished-races').live('pageinit', function(){
 
 				var status;
 				if (race.winner_id === me.id){
-					status = "You won!";
+					status = '<p class="winner won">You won!</p>';
 				}
 				else{
-					status = "You lost.";
+					status = '<p class="winner lost">You lost.</p>';
 				}
 
 				var dist = metersToMiles(race.owner_distance || 0, distanceDecimals);
@@ -328,7 +328,7 @@ $('#finished-races').live('pageinit', function(){
 							</div>\
 						</div>\
 						<a href="details.html?race='+race._id+'&source=finished" class="info">\
-							<p class="winner lost">'+status+'</p>\
+							'+status+'\
 							<p class="result">\
 								'+dist+'mi race<br/>\
 								winner: '+winningTime+'\
@@ -641,6 +641,7 @@ $('#details-page').live('pageshow', function(){
 	source = getUrlVars().source;
 
 	// set navigation based on source
+	console.log(source);
 	if (source === 'finished'){
 		$('#back-btn').attr('href', 'finished.html');
 		$('.active-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
@@ -655,9 +656,9 @@ $('#details-page').live('pageshow', function(){
 		me = object.me;
 		// console.log(me);
 
-		console.log(race.mode);
+		// console.log(race.mode);
 		if (race.mode === "diff"){
-			console.log("mode is diff");
+			// console.log("mode is diff");
 			$('.map.diff').show();
 			$('.map-wrapper').hide();
 		}
@@ -695,6 +696,8 @@ $('#details-page').live('pageshow', function(){
 		});
 
 		//change stats
+		console.log(race.owner_distance);
+		console.log(metersToMiles(39, distanceDecimals));
 		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, distanceDecimals)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
@@ -766,20 +769,30 @@ $('#details-page').live('pageshow', function(){
 			}
 
 			// change button to share
-			// $('.detail-info .action-btn a .ui-btn-text').html('Share');
-			// $('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-b').bind('click', function(){
-			// 	$('#fbShare'.popup('open'));
-			// });
+			$('.detail-info .action-btn a .ui-btn-text').html('Share');
+			$('.detail-info .action-btn a').bind('click', function(){
+				$('#fbShare'.popup('open'));
+			});
 	
 			// delete action button
-			$('.detail-info .action-btn').remove();
+			// $('.detail-info .action-btn').remove();
 
+
+			// console.log(race);
+			// console.log("winner: " + race.winner_id);
 			// change status label
 			if (race.winner_id === me.id){	// finished and user won
 				$('.detail-info .status').html('You won!').removeClass('waiting').addClass('won');
 			}	
 			else{	// user lost
 				$('.detail-info .status').html('You lost.').removeClass('waiting').addClass('lost');
+			}
+
+			if (race.winner_id === ownerId){
+				$('.owner .avatar').addClass('won').after('<div class="crown"></div>');
+			}
+			else{
+				$('.opponent .avatar').addClass('won').after('<div class="crown"></div>');
 			}
 		}
 
@@ -844,7 +857,7 @@ $('#race-recording').live('pageshow', function(){
 	var raceId = vars.race;
 	window.geo = new geo({
 		startButtonId : "start-run-btn",
-		finishButtonId: "finish-run-btn"
+		finishButtonId: "finish-run-btn",
 	});
 	$('#finish-run-btn').hide();
 	$('#distance-instruction').hide();
@@ -881,7 +894,6 @@ $('#race-recording').live('pageshow', function(){
 			}
 			else if (vars.mode === 'diff'){
 				$("#start-run-btn").show();
-
 			}
 		});
 
@@ -1025,7 +1037,7 @@ function formatTime(numSeconds){
 
 // converts meters to miles with specified number of decimal places, returns a string
 function metersToMiles(meters, decimal){
-	return (Math.round(meters * 0.00062137119 * 10 )/10).toFixed(decimal);
+	return (((meters * 0.00062137119 * 10)/10).toFixed(decimal));
 }
 
 // convert pace (second per meter) to second per mile

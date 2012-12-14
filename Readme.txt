@@ -6,11 +6,15 @@ TO-DO
 - split screen animations for diff route
 
 - show # mi left when running
+- share to Facebook
+
+- alert 111
+- pre timer show loading before marker shows
+- reject run to short
+- redirect after finish run
 
 BUG LIST
-- finished races winner ID
-- finished races "you won color" should be green
-
+(not sure if still exists) details page in finished goes back to active
 
 
 15237 - Final Project
