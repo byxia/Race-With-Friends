@@ -297,18 +297,18 @@ geo.prototype.finishButton = function() {
             }
             raceJson.owner_pace = (that.distance)? that.duration/that.distance : 0;
             console.log(raceJson);
-            // createRace(raceJson, function(object){
-            //     log("success craete race");
-            //     log(object);
-            //     log(JSON.parse(object.owner_route).route);
-            //     // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+            createRace(raceJson, function(object){
+                log("success craete race");
+                log(object);
+                log(JSON.parse(object.owner_route).route);
+                // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
 
-            // },function(err){
-            //     log("err create race");
-            //     alert("err in creating the race.");
-            //     $.mobile.changePage("/static/active.html");
-            //     log(err);
-            // });
+            },function(err){
+                log("err create race");
+                alert("err in creating the race.");
+                $.mobile.changePage("/static/active.html");
+                log(err);
+            });
         }
         else if(vars.source === 'active'){
             var raceJson = $('body').data('race');
@@ -323,14 +323,14 @@ geo.prototype.finishButton = function() {
             raceJson.opponent_pace = (that.distance)? that.duration/that.distance : 0;
             log("before send. front end json");
             log(raceJson);
-            // updateRace(raceJson, function(object){
-            //     log("from server. backend json");
-            //     log(object);
-            //     // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
-            // },function(err){
-            //     log("err update race");
-            //     log(err);
-            // });
+            updateRace(raceJson, function(object){
+                log("from server. backend json");
+                log(object);
+                // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
+            },function(err){
+                log("err update race");
+                log(err);
+            });
         }
     
 

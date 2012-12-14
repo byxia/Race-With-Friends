@@ -979,9 +979,11 @@ function initCommandHandler() {
                 thisRace.winner_id = thisRace.owner_id;
             }
             else if(!thisRace.owner_pace){
+                util.serverErr("no owner pace. set opponent_id as winner");
                 thisRace.winner_id = thisRace.opponent_id;
             }
             else if(!args.opponent_pace){
+                util.serverErr("no opponent_pace, set owner_id as winner");
                 thisRace.winner_id = thisRace.owner_id;
             }
             else {
