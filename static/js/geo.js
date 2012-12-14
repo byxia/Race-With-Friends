@@ -44,7 +44,7 @@ geo.prototype.errCallBack = function(err) {
 }
 
 
-function foo(callback){
+function foo(successCallback,errCallBack, option){
         // console.log("getPosition called once");
     var nop = function() { };
     if (!navigator.geolocation) {
@@ -79,54 +79,17 @@ function foo(callback){
     window.wid = navigator.geolocation.watchPosition(function(position){
         console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
         window.lastPosition  = position.coords.latitude + "/" + position.coords.longitude;
-    }, function(err){}, {
-        enableHighAccuracy: true,
-        maximumAge: 250,
-        timeout: 10000
-    });
+        window.toReturn = position;
+    }, errCallBack, option);
     setTimeout( function(){
         navigator.geolocation.clearWatch(window.wid);
         console.log("lastPosition: " + window.lastPosition);
         $('.racing-label').html("#" + count + " : " + window.lastPosition);
-
+        successCallback(window.toReturn);
             count ++;
     } ,700)
 }
 
-geo.prototype.getLastPosition = function(callback) {
-    console.log("getPosition called once");
-    var nop = function() { };
-    if (!navigator.geolocation) {
-        navigator.geolocation = {};
-    }
-    if (!navigator.geolocation.getCurrentPosition) {
-        navigator.geolocation.getCurrentPosition = nop;
-    }
-    var that = this;
-    this.cleared = false;//if the watchId is being cleared
-    this.wid  = navigator.geolocation.watchPosition(function(position){
-        console.log("watchPosition called once");
-        // console.log( position);
-        that.lastPosition = position;
-        if(that.cleared){
-            console.log("wid is already cleared");
-            return;
-        }
-        else{
-            console.log("Setting wid to cleared. Init clearWath in 500ms");
-            that.cleared = true;
-            setTimeout( function(){
-                navigator.geolocation.clearWatch(that.wid);
-                console.log("Cleared watchid. Ready for callback");
-                callback( that.lastPosition.coords.latitude +"/" + that.lastPosition.coords.longitude );
-            } ,500);
-        }
-    }, function(err){
-        alert("Error in watchPosition");
-        alert(err);
-    }, this.geoOptions);
-
-};
 
 
 /**
@@ -187,79 +150,79 @@ geo.prototype.showMap = function() {
  */
 geo.prototype.startButton = function() {
     
-    var that = this;
-    $('#'+this.startButtonId).click(function(){
-                    $("#start-run-btn").hide();
-        $("#finish-run-btn").show();
-        window.sid = setInterval(function(){
-            foo(log);
-        }, 1000);
-    });
-
-    // $("#"+this.startButtonId).click(function(){
-    //     $("#start-run-btn").hide();
+    // var that = this;
+    // $('#'+this.startButtonId).click(function(){
+    //                 $("#start-run-btn").hide();
     //     $("#finish-run-btn").show();
-    //     $('#rec-icon').show();
-    //     clearInterval(that.preTimerId);
-    //     that.start_date = new Date();
-
-    //     //////////////////////////// START MARKER ////////////////////////////
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //         var startMarker = new google.maps.Marker({
-    //             map: that.map,
-    //             draggable: false,
-    //             icon: that.startImage,
-    //             shadow: that.shadow,
-    //             animation: google.maps.Animation.DROP,
-    //             position: that.startCoord
-    //         });
-    //         startMarker.setMap(that.map);
-    //         google.maps.event.addListener(startMarker, 'click', bounce);
-    //         function bounce() {
-    //             startMarker.setAnimation(google.maps.Animation.BOUNCE);
-    //             setTimeout(function() { startMarker.setAnimation(null);}, 500);
-    //         }
-    //     }, that.errCallBack, that.geoOptions);
-
-    //     ////////////////////////////// RUN PATH //////////////////////////////
-    //     console.log(getUrlVars().source);
-
-    //     // BXIA
-    //     var color;
-    //     if(getUrlVars().source === 'new-race'){
-    //         color = "#ed3e7c";
-    //     }
-    //     else{
-    //         color = "#37c874";
-    //     }
-
-    //     var runPathOptions = {
-    //         strokeColor: color,
-    //         strokeOpacity: 0.8,
-    //         strokeWeight: 6
-    //     }
-    //     that.runPath = new google.maps.Polyline(runPathOptions);
-    //     that.runPath.setMap(that.map);
-    //     that.runPath.getPath().push(that.startCoord);
-    //     that.route.push({
-    //         lat: that.startCoord.$a,
-    //         lon: that.startCoord.ab
-    //     });
-    //     that.mapBounds = new google.maps.LatLngBounds();
-    //     that.mapBounds.extend(that.startCoord);
-
-    //     // debug dummy
-    //     that.arr = [new google.maps.LatLng(40.44350962488237, -79.94512796401978),
-    //         new google.maps.LatLng(40.44360760645317, -79.94475245475769),
-    //         new google.maps.LatLng(40.44394645828453, -79.94463980197906),
-    //         new google.maps.LatLng(40.444154667598696, -79.94502067565918),
-    //         new google.maps.LatLng(40.44429347344985, -79.94556248188019),
-    //         new google.maps.LatLng(40.44426081327539, -79.94597554206848),
-    //         new google.maps.LatLng(0, 0)
-    //             ];
-
-    //     that.timer();
+    //     window.sid = setInterval(function(){
+    //         foo(log);
+    //     }, 1000);
     // });
+
+    $("#"+this.startButtonId).click(function(){
+        $("#start-run-btn").hide();
+        $("#finish-run-btn").show();
+        $('#rec-icon').show();
+        clearInterval(that.preTimerId);
+        that.start_date = new Date();
+
+        //////////////////////////// START MARKER ////////////////////////////
+        foo(function(position) {
+            var startMarker = new google.maps.Marker({
+                map: that.map,
+                draggable: false,
+                icon: that.startImage,
+                shadow: that.shadow,
+                animation: google.maps.Animation.DROP,
+                position: that.startCoord
+            });
+            startMarker.setMap(that.map);
+            google.maps.event.addListener(startMarker, 'click', bounce);
+            function bounce() {
+                startMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() { startMarker.setAnimation(null);}, 500);
+            }
+        }, that.errCallBack, that.geoOptions);
+
+        ////////////////////////////// RUN PATH //////////////////////////////
+        console.log(getUrlVars().source);
+
+        // BXIA
+        var color;
+        if(getUrlVars().source === 'new-race'){
+            color = "#ed3e7c";
+        }
+        else{
+            color = "#37c874";
+        }
+
+        var runPathOptions = {
+            strokeColor: color,
+            strokeOpacity: 0.8,
+            strokeWeight: 6
+        }
+        that.runPath = new google.maps.Polyline(runPathOptions);
+        that.runPath.setMap(that.map);
+        that.runPath.getPath().push(that.startCoord);
+        that.route.push({
+            lat: that.startCoord.$a,
+            lon: that.startCoord.ab
+        });
+        that.mapBounds = new google.maps.LatLngBounds();
+        that.mapBounds.extend(that.startCoord);
+
+        // debug dummy
+        that.arr = [new google.maps.LatLng(40.44350962488237, -79.94512796401978),
+            new google.maps.LatLng(40.44360760645317, -79.94475245475769),
+            new google.maps.LatLng(40.44394645828453, -79.94463980197906),
+            new google.maps.LatLng(40.444154667598696, -79.94502067565918),
+            new google.maps.LatLng(40.44429347344985, -79.94556248188019),
+            new google.maps.LatLng(40.44426081327539, -79.94597554206848),
+            new google.maps.LatLng(0, 0)
+                ];
+
+        that.timer();
+    });
 }
 
 /**
@@ -293,140 +256,105 @@ geo.prototype.preTimer = function() {
     }, 500);
 }
 
-function getCurr(that){
-navigator.geolocation.getCurrentPosition(function(position) {
-            // console.log("timer", that.duration);
-            console.log((position.coords.latitude + "/"+ position.coords.longitude));
-
-            // TODO: testing output
-            $('.racing-label').html("#" + count + " : " +position.coords.latitude + "/"+ position.coords.longitude);
-
-            count ++;
-            // var path = that.runPath.getPath();
-            // TODO real
-            // var pt = new google.maps.LatLng(position.coords.latitude, 
-            //                                  position.coords.longitude);
-            // that.map.setCenter(pt);
-            // path.push(pt);
-            // that.mapBounds.extend(pt);
-            // that.map.fitBounds(that.mapBounds);
-            // that.route.push({
-            //     /////ZIW
-            //     lat : pt.Ya,
-            //     lon : pt.Za
-
-            //     // lat: pt.$a,
-            //     // lon: pt.ab
-            // });
-            // that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]) || 0;
-            // console.log(that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]));
-            // console.log(that.distance);
-        }, function(){alert("Error in get current location.")}, {
-        enableHighAccuracy: true,
-        maximumAge: 250,
-        timeout: 10000
-    });
-}
-
 /**
  * finish the race, send server the racing data
  */
 geo.prototype.finishButton = function() {
-    navigator.geolocation.clearWatch(window.wid);
-    clearInterval(window.sid);
+    // navigator.geolocation.clearWatch(window.wid);
+    // clearInterval(window.sid);
     // var that = this;
     // $("#"+this.finishButtonId).click(function() {
     //         console.log("clearing: " + that.timerId);
 
-    //     $('#rec-icon').hide();
-    //     // stop tracking
-    //     clearInterval(that.timerId);
-    //     navigator.geolocation.getCurrentPosition(function(position) {
-    //         // TODO, possible bug here, what if a finish is pressed before any timer fire
-    //         var finishMarker = new google.maps.Marker({
-    //             map: that.map,
-    //             draggable: false,
-    //             icon: that.endImage,
-    //             shadow: that.shadow,
-    //             animation: google.maps.Animation.DROP,
-    //             position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    //         });
-    //         finishMarker.setMap(that.map);
-    //         google.maps.event.addListener(finishMarker, 'click', bounce);
-    //         function bounce() {
-    //             finishMarker.setAnimation(google.maps.Animation.BOUNCE);
-    //             setTimeout(function() { finishMarker.setAnimation(null);}, 500);
-    //         }
-    //     }, that.errCallBack, that.geoOptions);
+        $('#rec-icon').hide();
+        // stop tracking
+        clearInterval(that.timerId);
+        foo(function(position) {
+            // TODO, possible bug here, what if a finish is pressed before any timer fire
+            var finishMarker = new google.maps.Marker({
+                map: that.map,
+                draggable: false,
+                icon: that.endImage,
+                shadow: that.shadow,
+                animation: google.maps.Animation.DROP,
+                position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+            });
+            finishMarker.setMap(that.map);
+            google.maps.event.addListener(finishMarker, 'click', bounce);
+            function bounce() {
+                finishMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() { finishMarker.setAnimation(null);}, 500);
+            }
+        }, that.errCallBack, that.geoOptions);
 
 
-    //     if(that.distance < 170 ){
-    //         alert("Your run is too short. Dev purpose, saving the race anyway");
+        if(that.distance < 170 ){
+            alert("Your run is too short. Dev purpose, saving the race anyway");
 
-    //         // $.mobile.changePage("/static/active.html"); 
-    //         // return;
-    //     }
+            // $.mobile.changePage("/static/active.html"); 
+            // return;
+        }
 
-    //     vars = getUrlVars();
+        vars = getUrlVars();
 
-    //     var raceJson;
-    //     // console.log(that.route);
-    //     if(vars.source === 'new-race'){
-    //         raceJson = {
-    //             owner_id: vars.owner_id,
-    //             owner_first_name: vars.owner_first,
-    //             owner_last_name: vars.owner_last,
-    //             opponent_id: vars.opponent_id,
-    //             opponent_first_name: vars.opp_first,
-    //             opponent_last_name: vars.opp_last,
-    //             owner_distance : that.distance || 0,
-    //             owner_start_date : that.start_date,
-    //             owner_finish_date : new Date(),
-    //             // owner_pace  : that.duration/that.distance || 0,
-    //             owner_time  : that.duration,
-    //             owner_route : JSON.stringify({route : that.route}),
-    //             status      : "waiting"
-    //         }
-    //         raceJson.owner_pace = (that.distance)? that.duration/that.distance : 0;
-    //         console.log(raceJson);
-    //         createRace(raceJson, function(object){
-    //             log("success craete race");
-    //             log(object);
-    //             log(JSON.parse(object.owner_route).route);
-    //             // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
+        var raceJson;
+        // console.log(that.route);
+        if(vars.source === 'new-race'){
+            raceJson = {
+                owner_id: vars.owner_id,
+                owner_first_name: vars.owner_first,
+                owner_last_name: vars.owner_last,
+                opponent_id: vars.opponent_id,
+                opponent_first_name: vars.opp_first,
+                opponent_last_name: vars.opp_last,
+                owner_distance : that.distance || 0,
+                owner_start_date : that.start_date,
+                owner_finish_date : new Date(),
+                // owner_pace  : that.duration/that.distance || 0,
+                owner_time  : that.duration,
+                owner_route : JSON.stringify({route : that.route}),
+                status      : "waiting"
+            }
+            raceJson.owner_pace = (that.distance)? that.duration/that.distance : 0;
+            console.log(raceJson);
+            // createRace(raceJson, function(object){
+            //     log("success craete race");
+            //     log(object);
+            //     log(JSON.parse(object.owner_route).route);
+            //     // $.mobile.changePage("/static/details.html?race=" + object._id+"&source=active");
 
-    //         },function(err){
-    //             log("err create race");
-    //             alert("err in creating the race.");
-    //             $.mobile.changePage("/static/active.html");
-    //             log(err);
-    //         });
-    //     }
-    //     else if(vars.source === 'active'){
-    //         var raceJson = $('body').data('race');
-    //         raceJson.opponent_distance = that.distance;
-    //         raceJson.opponent_start_date =that.start_date;
-    //         raceJson.opponent_finish_date = new Date();
-    //         // raceJson.opponent_pace  =that.duration/that.distance;
-    //         raceJson.opponent_time  =that.duration;
-    //         raceJson.opponent_route = JSON.stringify({route : that.route});
-    //         raceJson.status      = "finished";
-    //         raceJson.mode        = vars.mode;
-    //         raceJson.opponent_pace = (that.distance)? that.duration/that.distance : 0;
-    //         log("before send. front end json");
-    //         log(raceJson);
-    //         updateRace(raceJson, function(object){
-    //             log("from server. backend json");
-    //             log(object);
-    //             // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
-    //         },function(err){
-    //             log("err update race");
-    //             log(err);
-    //         });
-    //     }
+            // },function(err){
+            //     log("err create race");
+            //     alert("err in creating the race.");
+            //     $.mobile.changePage("/static/active.html");
+            //     log(err);
+            // });
+        }
+        else if(vars.source === 'active'){
+            var raceJson = $('body').data('race');
+            raceJson.opponent_distance = that.distance;
+            raceJson.opponent_start_date =that.start_date;
+            raceJson.opponent_finish_date = new Date();
+            // raceJson.opponent_pace  =that.duration/that.distance;
+            raceJson.opponent_time  =that.duration;
+            raceJson.opponent_route = JSON.stringify({route : that.route});
+            raceJson.status      = "finished";
+            raceJson.mode        = vars.mode;
+            raceJson.opponent_pace = (that.distance)? that.duration/that.distance : 0;
+            log("before send. front end json");
+            log(raceJson);
+            // updateRace(raceJson, function(object){
+            //     log("from server. backend json");
+            //     log(object);
+            //     // $.mobile.changePage("/static/details.html?race=" + raceJson._id+"&source=finished"); 
+            // },function(err){
+            //     log("err update race");
+            //     log(err);
+            // });
+        }
     
 
-    // });
+    });
 }
 
 
@@ -436,7 +364,7 @@ geo.prototype.finishButton = function() {
 geo.prototype.timer = function() {
     var that = this;
     that.timerId = setInterval(function() {
-        navigator.geolocation.getCurrentPosition(function(position) {
+        foo(function(position) {
 
 
             console.log("timer", that.duration);
@@ -480,7 +408,7 @@ geo.prototype.timer = function() {
             //     that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
             // }
         }, that.errCallBack, that.geoOptions);
-    }, 3500);
+    }, 1000);
     console.log(that.timerId + " timer id");
 }
 
