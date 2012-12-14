@@ -308,7 +308,7 @@ playback.prototype.diffMapHelper = function() {
         that.timer({
             map: map,
             mapBounds: mapBounds,
-            route: that.ownerRoute,
+            route: that.opponentRoute,
             runPath: runPath,
             interval: 10/that.opponentDuration,
             marker: finishMarker,
@@ -332,10 +332,10 @@ playback.prototype.timer = function(arg) {
             if (arg.cnt === arg.route.length-1) {
                 arg.marker.setMap(arg.map);
                 clearInterval(timerId);
-                if (arg.who === "owner" && that.ownerDuration < that.opponentDuration) {
+                if (arg.who === "owner" && that.ownerDuration <= that.opponentDuration) {
                     $(arg.btnName).show();
                 }
-                if (arg.who === "opponent" && that.opponentDuration < that.ownerDuration) {
+                if (arg.who === "opponent" && that.opponentDuration <= that.ownerDuration) {
                     $(arg.btnName).show();
                 }
             }
@@ -352,7 +352,7 @@ var playbackJson = {
     ownerDuration: 100,
     opponentColor: "#37c874",
     opponentRoute: [],
-    opponentDuration: 100
+    opponentDuration: 10
 };
 
 // new playback(playbackJson);
