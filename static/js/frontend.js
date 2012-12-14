@@ -823,7 +823,16 @@ $('#details-page').live('pageshow', function(){
 			}
 		}
 
-		window.p = new playback(playbackJson);
+
+		window.p = new playback({
+		    type: race.mode === 'diff'? 'diff' : race.mode === 'same' ? 'same' : 'solo',
+		    ownerColor: "#ed3e7c",
+		    ownerRoute: [],
+		    ownerDuration: 200,
+		    opponentColor: "#37c874",
+		    opponentRoute: [],
+		    opponentDuration: 200
+		});
 		p.go();
 
 		$.mobile.hidePageLoadingMsg();

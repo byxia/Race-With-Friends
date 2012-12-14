@@ -860,13 +860,9 @@ playback.prototype.showMap = function() {
     } else if (this.type === "same"){
         this.sameMapHelper();
     } else { // diff
-        console.log("hehe");
         this.diffMapHelper();
     }
 }
-
-// playback.prototype.soloMapHelper = function(htmlId) {
-    // route 1
 
 playback.prototype.soloMapHelper = function(htmlId, whichBtn) {
     // dummy
@@ -971,13 +967,13 @@ playback.prototype.soloMapHelper = function(htmlId, whichBtn) {
 playback.prototype.sameMapHelper = function() {
 
     // dummy
-    // this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
-    //                     {lat: 40.44360760645317, lon: -79.94475245475769},
-    //                     {lat: 40.44394645828453, lon: -79.94463980197906},
-    //                     {lat: 40.444154667598696, lon: -79.94502067565918},
-    //                     {lat: 40.44429347344985, lon: -79.94556248188019},
-    //                     {lat: 40.44426081327539, lon: -79.94597554206848},
-    //                     {lat: 40.44526081327536, lon: -79.94697554206848}];
+    this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
+                        {lat: 40.44360760645317, lon: -79.94475245475769},
+                        {lat: 40.44394645828453, lon: -79.94463980197906},
+                        {lat: 40.444154667598696, lon: -79.94502067565918},
+                        {lat: 40.44429347344985, lon: -79.94556248188019},
+                        {lat: 40.44426081327539, lon: -79.94597554206848},
+                        {lat: 40.44526081327536, lon: -79.94697554206848}];
 
     this.opponentRoute = testRoute2;
                         
@@ -1048,13 +1044,14 @@ playback.prototype.sameMapHelper = function() {
 playback.prototype.diffMapHelper = function() {
 
     // dummy
-    this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
-                        {lat: 40.44360760645317, lon: -79.94475245475769},
-                        {lat: 40.44394645828453, lon: -79.94463980197906},
-                        {lat: 40.444154667598696, lon: -79.94502067565918},
-                        {lat: 40.44429347344985, lon: -79.94556248188019},
-                        {lat: 40.44426081327539, lon: -79.94597554206848},
-                        {lat: 40.44526081327536, lon: -79.94697554206848}];
+    // this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
+    //                     {lat: 40.44360760645317, lon: -79.94475245475769},
+    //                     {lat: 40.44394645828453, lon: -79.94463980197906},
+    //                     {lat: 40.444154667598696, lon: -79.94502067565918},
+    //                     {lat: 40.44429347344985, lon: -79.94556248188019},
+    //                     {lat: 40.44426081327539, lon: -79.94597554206848},
+    //                     {lat: 40.44526081327536, lon: -79.94697554206848}];
+    this.opponentRoute = testRoute2;
                         
     // draw owners map, which is not opponent's map
     this.soloMapHelper("map01", "#diff-play-btn");
@@ -1171,7 +1168,7 @@ playback.prototype.timer = function(arg) {
 
 ////////////////////////
 var playbackJson = {
-    type: "diff",
+    type: "same",
     ownerColor: "#ed3e7c",
     ownerRoute: [],
     ownerDuration: 100,
