@@ -301,7 +301,7 @@ $('#finished-races').live('pageinit', function(){
 					winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
 				}
 
-				console.log(race.winner_id);
+				// console.log(race.winner_id);
 
 				var status;
 				if (race.winner_id === me.id){
@@ -636,6 +636,9 @@ $('#profile-page').live('pageshow', function(){
 $('#details-page').live('pageshow', function(){
 	$.mobile.showPageLoadingMsg();
 
+	$('#cancel-race-btn').hide();
+	$('#share-btn').hide();
+
 	// console.log("details");
 	raceId = getUrlVars().race;
 	source = getUrlVars().source;
@@ -696,8 +699,8 @@ $('#details-page').live('pageshow', function(){
 		});
 
 		//change stats
-		console.log(race.owner_distance);
-		console.log(metersToMiles(39, distanceDecimals));
+		// console.log(race.owner_distance);
+		// console.log(metersToMiles(39, distanceDecimals));
 		$('.dist-button .distance').html(metersToMiles(race.owner_distance || 0, distanceDecimals)+"mi");
 
 		var ownerTime = formatTime(race.owner_time || 0);
@@ -723,8 +726,14 @@ $('#details-page').live('pageshow', function(){
 
 			// change race button to cancel if race isn't finished and user is owner
 			if (race.status !== 'finished'){
-				$('.detail-info .action-btn a .ui-btn-text').html('Cancel');
-				$('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g').bind('click', function(){
+				
+				$('#share-btn').hide();
+				$('#accept-race-btn').hide();
+				// $('.detail-info .action-btn a .ui-btn-text').html('Cancel');
+				// $('.detail-info .action-btn a').removeClass('ui-btn-up-f').addClass('ui-btn-up-g')
+
+				$('#cancel-race-btn').show();
+				$('#cancel-race-btn').bind('click', function(){
 					$.mobile.showPageLoadingMsg();
 					removeRaceById(race._id, function(data){
 						if (data.status === 1){
@@ -772,7 +781,13 @@ $('#details-page').live('pageshow', function(){
 			}
 
 			// change button to share
-			$('.detail-info .action-btn a .ui-btn-text').html('Share').addClass('share-btn');
+
+			$('#cancel-race-btn').hide();
+			$('#accept-race-btn').hide();
+			$('#share-btn').show();
+
+
+			// $('.detail-info .action-btn a .ui-btn-text').html('Share').addClass('share-btn');
 	
 			$('.share-btn').bind('click',function(){
 				postToFeed();
