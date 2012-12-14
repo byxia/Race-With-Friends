@@ -39,13 +39,10 @@ playback.prototype.showMap = function() {
     // show the maps
     if (this.type === "solo") {
         this.soloMapHelper("map00");
-    } else {
-        if (this.type === "same") {
-            this.sameMapHelper();
-        } else { // diff
-            // this.mapHelper(this.ownerRoute, "owner", "map01");
-            // this.mapHelper(this.opponentRoute, "opponent", "map02");
-        }
+    } else if (this.type === "same"){
+        this.sameMapHelper();
+    } else { // diff
+        this.diffMapHelper();
     }
 }
 
@@ -58,10 +55,10 @@ playback.prototype.soloMapHelper = function(htmlId) {
                         {lat: 40.44429347344985, lon: -79.94556248188019},
                         {lat: 40.44426081327539, lon: -79.94597554206848}];
 
+    /////////////////////////// 1st MAP ////////////////////////////////
     var pt = this.ownerRoute[0];
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
 
-    ///////////////////////// MAP ////////////////////////////////
     var mapOptions = {
         zoom: 18,
         center: startCoord,
@@ -72,7 +69,7 @@ playback.prototype.soloMapHelper = function(htmlId) {
     };
     var map = new google.maps.Map(document.getElementById(htmlId), mapOptions);
 
-    ///////////////////////// MARKER ////////////////////////////////
+    ///////////////////////// 1st MARKER /////////////////////////////
     var startMarker = new google.maps.Marker({
         map: map,
         draggable: false,
@@ -83,13 +80,17 @@ playback.prototype.soloMapHelper = function(htmlId) {
     });
     startMarker.setMap(map);
     google.maps.event.addListener(startMarker, 'click', bounce);
+    function bounce() {
+        startMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() { startMarker.setAnimation(null);}, 500);
+    }
 
     var finishMarker = new google.maps.Marker({
         map: map,
         draggable: false,
         icon: this.endImage,
         shadow: this.shadow,
-        animation: google.maps.Animation.DROP,
+        animation: google.maps.Animation.DROP
     });
     google.maps.event.addListener(finishMarker, 'click', bounce);
     function bounce() {
@@ -97,12 +98,12 @@ playback.prototype.soloMapHelper = function(htmlId) {
         setTimeout(function() { finishMarker.setAnimation(null);}, 500);
     }
     
-    ///////////////////////// 1 PATH ////////////////////////////////
+    ///////////////////////// 1st PATH ////////////////////////////////
     var runPathOptions = {
         strokeColor: this.ownerColor,
         strokeOpacity: 0.6,
         strokeWeight: 6
-    }
+    };
     var runPath = new google.maps.Polyline(runPathOptions);
     runPath.setMap(map);
     var mapBounds = new google.maps.LatLngBounds();
@@ -120,9 +121,10 @@ playback.prototype.soloMapHelper = function(htmlId) {
         }
     }
     
-    ///////////////////////// TIMER ////////////////////////////////
+    ///////////////////////// 1st TIMER ////////////////////////////////
     var that = this;
     $("#same-play-btn").click(function() {
+        $("#same-play-btn").hide();
         path.clear();
         path.push(new google.maps.LatLng(that.ownerRoute[0].lat, that.ownerRoute[0].lon));
         finishMarker.setMap(null);
@@ -133,7 +135,9 @@ playback.prototype.soloMapHelper = function(htmlId) {
             runPath: runPath,
             interval: 10/that.ownerDuration,
             marker: finishMarker,
-            cnt: 1
+            cnt: 1,
+            who: "owner",
+            btnName: "#same-play-btn"
         });
     });
 
@@ -157,13 +161,13 @@ playback.prototype.sameMapHelper = function() {
     var pt = this.opponentRoute[0];
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
 
-    ///////////////////////// MARKER ////////////////////////////////
+    ///////////////////////// 2nd MARKER ////////////////////////////
     var finishMarker = new google.maps.Marker({
         map: map,
         draggable: false,
         icon: this.endImage,
         shadow: this.shadow,
-        animation: google.maps.Animation.DROP,
+        animation: google.maps.Animation.DROP
     });
     google.maps.event.addListener(finishMarker, 'click', bounce);
     function bounce() {
@@ -176,7 +180,7 @@ playback.prototype.sameMapHelper = function() {
         strokeColor: this.opponentColor,
         strokeOpacity: 0.6,
         strokeWeight: 6
-    }
+    };
     var runPath = new google.maps.Polyline(runPathOptions);
     runPath.setMap(map);
     var mapBounds = new google.maps.LatLngBounds();
@@ -197,6 +201,7 @@ playback.prototype.sameMapHelper = function() {
     ///////////////////////// 2nd TIMER /////////////////////////////
     var that = this;
     $("#same-play-btn").click(function() {
+        $("#same-play-btn").hide();
         path.clear();
         path.push(new google.maps.LatLng(that.opponentRoute[0].lat, that.opponentRoute[0].lon));
         finishMarker.setMap(null);
@@ -207,13 +212,110 @@ playback.prototype.sameMapHelper = function() {
             runPath: runPath,
             interval: 10/that.opponentDuration,
             marker: finishMarker,
-            cnt: 1
+            cnt: 1,
+            who: "opponent",
+            btnName: "#same-play-btn"
         });
     });
 }
 
 playback.prototype.diffMapHelper = function() {
+
+    // dummy
+    this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
+                        {lat: 40.44360760645317, lon: -79.94475245475769},
+                        {lat: 40.44394645828453, lon: -79.94463980197906},
+                        {lat: 40.444154667598696, lon: -79.94502067565918},
+                        {lat: 40.44429347344985, lon: -79.94556248188019},
+                        {lat: 40.44426081327539, lon: -79.94597554206848},
+                        {lat: 40.44526081327536, lon: -79.94697554206848}];
+                        
+    // draw owners map, which is not opponent's map
     this.soloMapHelper("map01");
+
+    /////////////////////////// 2nd MAP /////////////////////////////
+    var pt = this.opponentRoute[0];
+    var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
+    var mapOptions = {
+        zoom: 18,
+        center: startCoord,
+        streetViewControl: false,
+        mapTypeControl: false,
+        zoomControl: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map02"), mapOptions);
+
+    //////////////////////////// 2nd MARKERs /////////////////////////
+    var startMarker = new google.maps.Marker({
+        map: map,
+        draggable: false,
+        icon: this.startImage,
+        shadow: this.shadow,
+        animation: google.maps.Animation.DROP,
+        position: startCoord
+    });
+    startMarker.setMap(map);
+    google.maps.event.addListener(startMarker, 'click', bounce);
+    function bounce() {
+        startMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() { startMarker.setAnimation(null);}, 500);
+    }
+
+    var finishMarker = new google.maps.Marker({
+        map: map,
+        draggable: false,
+        icon: this.endImage,
+        shadow: this.shadow,
+        animation: google.maps.Animation.DROP
+    });
+    google.maps.event.addListener(finishMarker, 'click', bounce);
+    function bounce() {
+        finishMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() { finishMarker.setAnimation(null);}, 500);
+    }
+
+    /////////////////////////// 2nd PATH //////////////////////////////
+    var runPathOptions = {
+        strokeColor: this.opponentColor,
+        strokeOpacity: 0.6,
+        strokeWeight: 6
+    };
+    var runPath = new google.maps.Polyline(runPathOptions);
+    runPath.setMap(map);
+    var mapBounds = new google.maps.LatLngBounds();
+
+    // show entire route before playback
+    var path = runPath.getPath();
+    for (var i=0; i<this.opponentRoute.length; i++) {
+        var coord = new google.maps.LatLng(this.opponentRoute[i].lat, this.opponentRoute[i].lon);
+        path.push(coord);
+        mapBounds.extend(coord);
+        map.fitBounds(mapBounds);
+        if (i === this.opponentRoute.length-1) {
+            finishMarker.setPosition(coord);
+            finishMarker.setMap(map);
+        }
+    }
+
+    ///////////////////////// 2nd Timer /////////////////////////////////
+    var that = this;
+    $("#diff-play-btn").click(function() {
+        path.clear();
+        path.push(new google.maps.LatLng(that.opponentRoute[0].lat, that.opponentRoute[0].lon));
+        finishMarker.setMap(null);
+        that.timer({
+            map: map,
+            mapBounds: mapBounds,
+            route: that.ownerRoute,
+            runPath: runPath,
+            interval: 10/that.opponentDuration,
+            marker: finishMarker,
+            cnt: 1,
+            who: "opponent",
+            btnName: "diff-play-btn"
+        });
+    });
 }
 
 playback.prototype.timer = function(arg) {
@@ -229,6 +331,12 @@ playback.prototype.timer = function(arg) {
             if (arg.cnt === arg.route.length-1) {
                 arg.marker.setMap(arg.map);
                 clearInterval(timerId);
+                if (arg.who === "owner" && that.ownerDuration < that.opponentDuration) {
+                    $(arg.btnName).show();
+                }
+                if (arg.who === "opponent" && that.opponentDuration < that.ownerDuration) {
+                    $(arg.btnName).show();
+                }
             }
         }
         arg.cnt ++;
