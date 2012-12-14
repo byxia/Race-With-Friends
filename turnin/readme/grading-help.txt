@@ -1,5 +1,6 @@
 15237 - Final Project
 Ruoyu Li(ruoyul), Zi Wang(ziw), Bingying Xia(bxia)
+URL: racewithfriends.heroku.com
 
 Race with Friends
 
@@ -16,6 +17,16 @@ What it does:
 - Accept a race challenge and complete that race
 - Cancel a race that's started by yourself
 - See anyone's profile page with stats (total wins, distance, time) and personal records
+
+
+How to Run:
+To test our app, please go to racewithfriends.heroku.com
+Because we are using Facebook login which redirect to an URL, this app cannot be tested locally
+unless we change our Facebook app settings. If you run this app locally you won't be able to 
+login with Facebook and use our app. So the best way we could think of for the staff to grade
+is to inspect our code locally and test it with the remote url provided. We have been doing 
+the same thing for development as well. If this is a problem please contact us.
+
 
 Design Process:
 paper wireframes -> high-fidelity Photoshop mockups -> development -> user testing -> iterative design & development
