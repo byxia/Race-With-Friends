@@ -301,6 +301,8 @@ $('#finished-races').live('pageinit', function(){
 					winningTime = winningTime.h + ":" + winningTime.m + ":" + winningTime.s;
 				}
 
+				console.log(race.winner_id);
+
 				var status;
 				if (race.winner_id === me.id){
 					status = "You won!";
@@ -373,15 +375,60 @@ $('#finished-races').live('pageinit', function(){
 	});
 });
 
+$('#invite').bind('pageshow',function(){
+	$.mobile.showPageLoadingMsg();
+	getAllFriends(false, function(list){
+		if(isNull(list) || list.status=== 0){
+			console.log("Error in getAllFriends invite page");
+			return;
+		}
+		me = list.me;
+		friends = list.data;
+		console.log(list);
+		$('#friend-list ul').html('');
+		if(!friends || friends.length===0){
+			$('#friend-list ul').html('<li>\
+					<div class="faded">Did not find any facebook friends</div>\
+				</li>');
+			$("#friend-list").listview("refresh").trigger('create');
+
+		}
+		else{
+			friends.sort(function(a,b) {
+				return compare(a, b, "name"); 
+			});
+			$(friends).each(function(index,object){
+				var name = object.name;
+				var newLi = $("<li userId='"+object.id+"' onclick='postToFeed("+object.id+")'><a ><img class='avatar'></a><p>"+name+"</p></li>");
+				newLi.appendTo('#friend-list ul');
+				$("#friend-list ul").listview("refresh").trigger("create");
+			});	
+
+			// add avatar
+			$("#friend-list ul li").each(function(index, object){
+				// if(index ===0) return;
+				// console.log($(object).attr('userId'));
+
+				getSquarePicture($(object).attr('userId'),function(picture){
+					if (validatePicture(picture) === true){
+						$($(object).find('img.avatar')[0]).attr('src', picture.location);
+					}
+				});
+						
+			});
+
+		}
+		$.mobile.hidePageLoadingMsg();
+	});
+});
 
 
 // populate new race page with friend list
 $('#new-race').bind('pageshow', function(){
 
 	$.mobile.showPageLoadingMsg();
-
 	// get friend list
-	getAllFriends(function  (list) {
+	getAllFriends(true, function  (list) {
 		//check for error
 		if (isNull(list)){
 			console.log("error - null");
@@ -412,7 +459,7 @@ $('#new-race').bind('pageshow', function(){
 				return compare(a, b, "name"); 
 			});
 
-			friends  = friends.slice(0,50);
+			// friends  = friends.slice(0,50);
 			$(friends).each(function(index,object){
 
 				var name = object.first_name + " " + object.last_name;
@@ -482,7 +529,7 @@ $('#profile-page').live('pageshow', function(){
 
 	getUserById(getUrlVars().id, function(object){
 		var user = object[0];
-		console.log(object);
+		// console.log(object);
 
 		if (isNull(user)){
 			console.log("error - null");
@@ -510,7 +557,7 @@ $('#profile-page').live('pageshow', function(){
 		var totalDist = user.total_dist || 0;
 		var totalTime = user.total_time || 0;
 		var totalTimeFormatted = formatTime(totalTime);
-		console.log(user.total_time);
+		// console.log(user.total_time);
 		$('.number.wins').html(wonRaces + " / " + totalRaces + " races");
 		$('.number.dist').html(metersToMiles(totalDist, distanceDecimals) + "mi");
 		$('.number.time').html(totalTimeFormatted.h + ":" + totalTimeFormatted.m + ":" + totalTimeFormatted.s);
@@ -608,9 +655,15 @@ $('#details-page').live('pageshow', function(){
 		me = object.me;
 		// console.log(me);
 
+		console.log(race.mode);
 		if (race.mode === "diff"){
+			console.log("mode is diff");
 			$('.map.diff').show();
 			$('.map-wrapper').hide();
+		}
+		else{
+			$('.map.diff').hide();
+			$('.map-wrapper').show();
 		}
 
 		ownerId = race.owner_id;
@@ -735,14 +788,14 @@ $('#details-page').live('pageshow', function(){
 		$.mobile.hidePageLoadingMsg();
 
 		// add animation
-		try{
-			window.playback = new playback(race.mode);
-			playback.go();
-			console.log("playback created");
-		}
-		catch(e){
-			location.reload(true);
-		}
+		// try{
+		// 	window.playback = new playback(race.mode);
+		// 	playback.go();
+		// 	console.log("playback created");
+		// }
+		// catch(e){
+		// 	location.reload(true);
+		// }
 	});
 
 });

@@ -15,33 +15,26 @@
 	 <script src='http://connect.facebook.net/en_US/all.js'></script>
 </head> 
 <body> 
-<div data-role="page" id="new-race">
+<script> 
+      FB.init({appId: "173419086133939", status: true, cookie: true});
+
+    </script>
+<div data-role="page" id="invite">
 	<div data-role="header">
-		<a href="active.html" data-transition="slide" class="active-link" data-direction="reverse" data-role="button" data-icon="arrow-l" id="back-btn">
+		<a href="new-race.html" data-transition="slide" class="active-link" data-direction="reverse" data-role="button" data-icon="arrow-l" id="back-btn">
 			back
 		</a>
 		<h1>Race With Friends</h1>
 	</div>
 
 	<div class="bar dark new-instruction">
-		<p>Choose a friend to challenge!</p>
+		<p>Invite a friend to join!</p>
 	</div>
 
 	<div data-role="content" id="friend-list">
 		<ul data-role="listview">
-<!-- 				<li>
-					<img class="avatar">
-					<a href="profile.html">Adam Kinkaid</a>
-				</li>
-				<li>
-					<img class="avatar">
-					<a href="profile.html">Alex Wickerham</a>
-				</li> -->
-		</ul>
-	</div>
 
-	<div id="invitebtn-wrapper">
-		<div data-role="button" data-theme="e" id="invite-btn" onclick="$.mobile.changePage('/static/invite.html')">Invite more friends</div>
+		</ul>
 	</div>
 
 
@@ -61,6 +54,7 @@
 	</div><!-- /footer --><!-- /footer -->
 
 	<script type="text/javascript" src="js/frontend.js"></script>
+
 </div>
 
 

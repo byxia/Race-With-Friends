@@ -44,8 +44,8 @@ function getAllUsers(successCallback, errorCallback){
 	_sendAjaxRequest_(prepareURL(GET_ALL_USERS),true, successCallback,errorCallback);
 }
 
-function getAllFriends (successCallback, errorCallback) {
-	_sendAjaxRequest_(prepareURL(GET_ALL_FRIENDS),true, successCallback,errorCallback);
+function getAllFriends (gameOnly ,successCallback, errorCallback) {
+	_sendAjaxRequest_(prepareURL(GET_ALL_FRIENDS,{gameOnly : gameOnly}),gameOnly, successCallback,errorCallback);
 }
 
 function getUserById(id,successCallback, errorCallback){
@@ -107,7 +107,7 @@ function removeRaceById(id, successCallback, errorCallback){
 }
 
 function postToFacebook(content, successCallback, errorCallback){
-	_sendAjaxRequest_(prepareURL(POST_TO_FB,{content: content}),true,successCallback,errorCallback);
+	_sendAjaxRequest_(prepareURL(POST_TO_FB,{ msg: content}),true,successCallback,errorCallback);
 }
 
 function getFinishedRaces(successCallback, errorCallback){
@@ -136,6 +136,26 @@ function prepareURL (cmd,obj) {
 		seperator = "&";
 	}
 	return ajaxURL;
+}
+
+function postToFeed(id) {
+	console.log(id);
+    // calling the API ...
+	var obj = {
+	  method: 'feed',
+	  link: 'http://racewithfriends.heroku.com',
+	  picture: 'http://fbrell.com/f8.jpg',
+	  name: 'Race With Friends',
+	  caption: 'Reference Documentation',
+	  description: 'Using Dialogs to interact with users.',
+	  to : id
+	};
+
+	function callback(response) {
+	  //do something here
+	}
+
+	FB.ui(obj, callback);
 }
 
 function _sendAjaxPostRequest_ (requestURL,data,successCallback, errorCallback) {

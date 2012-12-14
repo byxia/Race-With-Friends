@@ -6,7 +6,8 @@ TO-DO
 - show # mi left when running
 
 BUG LIST
-(empty)
+- finished races winner ID
+- finished races "you won color" should be green
 
 
 

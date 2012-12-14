@@ -467,6 +467,15 @@ a + .ui-title{
 	float:left;
 }
 
+.map-left:after {
+  content: '';
+  position: absolute;
+  width: 99%;
+  height: 200px;
+  border-right: 2px solid rgba(0,0,0,0.3);
+  left: 1px; top: 1px;
+}
+
 .playbtn{
 	width: 34px;
 	height: 34px;
