@@ -170,10 +170,10 @@ geo.prototype.startButton = function() {
         // BXIA
         var color;
         if(getUrlVars().source === 'new-race'){
-            color = "#ed3e7c";
+            color = "#ed3e7c"; // owner
         }
         else{
-            color = "#37c874";
+            color = "#37c874"; // opponent
         }
 
         var runPathOptions = {

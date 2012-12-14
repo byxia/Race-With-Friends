@@ -67,9 +67,26 @@
 
 		</div>
 
+		<div class="bar dark records">
+			Personal Records
+		</div>
+
+		<div class="bar" id="personal-records">
+			<div class="ui-grid-a">
+				<div class="ui-block-a">
+					<div class="small">longest race</div>
+					<div><span class="longest"></span>mi</div>
+				</div>
+				<div class="ui-block-b">
+					<div class="small">fastest pace</div>
+					<div><span class="fastest"></span>/mi</div>
+				</div>
+			</div><!-- /grid-a -->
+		</div>
+
 		
 
-		<div class="bar dark achievements">
+<!-- 		<div class="bar dark achievements">
 			Achievements
 		</div>
 
@@ -100,7 +117,9 @@
 				      <p>Complete 5 races with the same friend.</p>
 				</div>
 			</div>
-	    </div>
+	    </div> -->
+
+
 	</div>
 
 
@@ -113,39 +132,39 @@
 					</a>
 				</li>
 				<li><a href="finished.html" data-transition="slide" class="finished-link" data-direction="reverse" data-icon="finished-races">Past Races</a></li>
-				<li><a id="profile-link-button" class="profile-link ui-btn-active ui-state-persist" data-icon="profile">Profile</a></li>
+				<li><a href="profile.html?id=me" id="profile-link-button" class="profile-link ui-btn-active ui-state-persist" data-icon="profile">Profile</a></li>
 			</ul>
 		</div><!-- /navbar -->
 	</div><!-- /footer --><!-- /footer -->
 	<script type="text/javascript" src="js/frontend.js"></script>
 
-	<script type="text/javascript">
-		$('#profile-link-button').bind('click',function  () {
-			getMyself(function(myself){
-				// show page after load
-				$.mobile.hidePageLoadingMsg();
+	 <script type="text/javascript">
+	// 	$('#profile-link-button').bind('click',function  () {
+	// 		getMyself(function(myself){
+	// 			// show page after load
+	// 			$.mobile.hidePageLoadingMsg();
 
-				var displayName = formatName(myself.first_name, myself.last_name, 'profile');
+	// 			var displayName = formatName(myself.first_name, myself.last_name, 'profile');
 
 
-				// show user name
-				$('#profile-name').html(displayName);
-				$('#start-race-btn').remove();
-				$('#back-btn').remove();
+	// 			// show user name
+	// 			$('#profile-name').html(displayName);
+	// 			$('#start-race-btn').remove();
+	// 			$('#back-btn').remove();
 
-				getLargePicture("me", function(picture){
-					var result = validatePicture(picture);
-					if (result === true){
-						$('#profile .avatar img').attr("src", picture.location);
-					}
+	// 			getLargePicture("me", function(picture){
+	// 				var result = validatePicture(picture);
+	// 				if (result === true){
+	// 					$('#profile .avatar img').attr("src", picture.location);
+	// 				}
 
-					formatPicture(picture);
-				});
+	// 				formatPicture(picture);
+	// 			});
 
-				$('#profile-content').show();
-			});
-		});
-	</script>
+	// 			$('#profile-content').show();
+	// 		});
+	// 	});
+	// </script>
 	
 
 </div>
