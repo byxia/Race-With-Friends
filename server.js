@@ -958,9 +958,6 @@ function initCommandHandler() {
                 thisRace.winner_id = ( parseFloat(thisRace.owner_pace) < parseFloat(args.opponent_pace) )?
                         thisRace.owner_id : thisRace.opponent_id;
             }
-
-            //TEST
-            // thisRace.winner_id = thisRace.owner_id;
             
             util.serverErr("winner id is " + thisRace.winner_id);
 

@@ -22,4 +22,16 @@ paper wireframes -> high-fidelity Photoshop mockups -> development -> user testi
 
 
 Required Elements:
+1. HTML - /static/*.html, A couple of html pages with a variety of tags and techniques.
+2. CSS  - /static/style.css,  This is the css file we wrote. 
+3. DOM Manipulation - /static/js/frontend.js, This contains all the DOM manipulations we used.
+4. jQuery - /static/js/*.js,  All js files in this directory are using jQuery.
+5. jQuery Mobile - /static/js/frontend.js, /static/*.html,  The app is built on jQuery Mobile. 
+6. AJAX Client - /static/js/clientAjax.js, This file contains frontend api that is used to send ajax request to the server.
+               - /static/js/frontend.js, This file uses the api and the JSON it returns to update the DOM.
+7. AJAX Server - /server.js, a node.js server that send back JSON object on request. (see function initCommandHandler())
+8. node.js - /server.js, a node.js server with express.
+9. serser-side database - /server.js, /dbUtil.js, These two files use mongodb to handle this app's backend storage. 
+
+10.
 
