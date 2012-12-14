@@ -44,5 +44,8 @@ Required Elements:
 8. node.js - /server.js, a node.js server with express.
 9. serser-side database - /server.js, /dbUtil.js, These two files use mongodb to handle this app's backend storage. 
 
-10.
+10. Facebook Api - /server.js, used for logging in, retrieveing user data and posting on feed.
+    Google Api - /static/js/geo.js & Playback.js, used for drawing map
 
+11. Javascript - all js file
+12. PhoneGap - a very thin layer created for the APK file.
