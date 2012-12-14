@@ -233,7 +233,7 @@ geo.prototype.preTimer = function() {
                 );
             console.log("Pretimer got curr position: " + position.coords.latitude + " / " + position.coords.longitude);
         }, that.errCallBack, that.geoOptions);
-    }, 1000);
+    }, 3000);
 }
 
 /**
@@ -389,7 +389,7 @@ geo.prototype.timer = function() {
             //     that.distance += that.delta2Pts(that.route[that.route.length-2], that.route[that.route.length-1]);
             // }
         }, that.errCallBack, that.geoOptions);
-    }, 1000);
+    }, 2000);
     console.log(that.timerId + " timer id");
 }
 
