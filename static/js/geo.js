@@ -2,133 +2,7 @@ var geo = function(option) {
     this.setup(option);
 }
 
-// when accepting a race, if distance left is smaller than this (meters), race is considered as finished
-var finishDistTolerace = 5;
-
-geo.prototype.setup = function(option) {
-    var nop = function() {};
-    if (!navigator.geolocation) {
-        navigator.geolocation = {};
-    }
-    if (!navigator.geolocation.getCurrentPosition) {
-        navigator.geolocation.getCurrentPosition = nop;
-    }
-
-    // send these to server in a json
-    this.startButtonId = option.startButtonId;
-    this.finishButtonId = option.finishButtonId;
-    this._id = getUrlVars().raceId;
-    this.route = [];
-    this.distance = 0;
-    this.start_date;
-    this.finish_date;
-    this.duration = 0;
-    this.pace = 0;
-
-    this.geoOptions = {
-        enableHighAccuracy: true,
-        maximumAge: 250,
-        timeout: 10000
-    };
-
-    this.centerMarker = null;
-
-    google.maps.event.addDomListener(window, 'load', this.go.bind(this));
-}
-
-/**
- * error call back for geolocation service
- * code: 0 => UNKNOWN_ERROR, 1 => PERMISSION_DENIED, 2 => POSITION_UNAVALIABLE, 3 => TIMEOUT
- */
-geo.prototype.errCallBack = function(err) {
-    var message = err.message;
-    var code = err.code;
-    console.log("Error: " + code + ", " + err.message);
-}
-
-
-function foo(successCallback,errCallBack, option){
-        // console.log("getPosition called once");
-    var nop = function() { };
-    if (!navigator.geolocation) {
-        navigator.geolocation = {};
-    }
-    if (!navigator.geolocation.getCurrentPosition) {
-        navigator.geolocation.getCurrentPosition = nop;
-    }
-    window.wid = navigator.geolocation.watchPosition(function(position){
-        // console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
-        window.lastPosition  = position.coords.latitude + "/" + position.coords.longitude;
-        window.toReturn = position;
-    }, errCallBack, option);
-    setTimeout( function(){
-        navigator.geolocation.clearWatch(window.wid);
-        // console.log("lastPosition: " + window.lastPosition);
-        // $('.racing-label').html("#" + count + " : " + window.lastPosition);
-        successCallback(window.toReturn);
-            count ++;
-    } ,700)
-}
-
-
-
-/**
- * start the tasks of the race
- */
-geo.prototype.go = function() {
-
-    /*
-     * images for the map pins
-     */
-    this.startImage = new google.maps.MarkerImage('images/geo/start.png',
-            new google.maps.Size(19, 33), // XXX this is wrong, but give it 19x33 cuts it a little
-            new google.maps.Point(0, 0), // origin
-            new google.maps.Point(9, 32) // anchor
-            );
-    this.endImage = new google.maps.MarkerImage('images/geo/end.png',
-            new google.maps.Size(19, 33),
-            new google.maps.Point(0, 0), // origin
-            new google.maps.Point(9, 32) // anchor
-            );
-    this.shadow = new google.maps.MarkerImage('images/geo/pin_shadow.png',
-            new google.maps.Size(26, 17),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(0, 17)
-            );
-
-    $.mobile.hidePageLoadingMsg();
-    this.showMap();
-    this.startButton();
-    this.finishButton();
-}
-
-/*
- * Initialize the map centered at the user's current position
- */
-geo.prototype.showMap = function() {
-    var that = this;
-    navigator.geolocation.getCurrentPosition(function(position) {
-        that.startCoord = new google.maps.LatLng(position.coords.latitude, 
-            position.coords.longitude);
-        var mapOptions = {
-            zoom: 18,
-            center: that.startCoord,
-            streetViewControl: false,
-            mapTypeControl: false,
-            zoomControl: false,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-
-        // show owner route
-        if (getUrlVars().mode === 'same') {
-            if($('body').data('race')) {
-
-                console.log(that.map);
-
-                // var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
-               
-                var ownerRoute = [
+var testRoute = [
                 {
                     lat: 40.444584,
                         lon: -79.942907
@@ -567,6 +441,134 @@ geo.prototype.showMap = function() {
                 }
                 ];
 
+// when accepting a race, if distance left is smaller than this (meters), race is considered as finished
+var finishDistTolerace = 5;
+
+geo.prototype.setup = function(option) {
+    var nop = function() {};
+    if (!navigator.geolocation) {
+        navigator.geolocation = {};
+    }
+    if (!navigator.geolocation.getCurrentPosition) {
+        navigator.geolocation.getCurrentPosition = nop;
+    }
+
+    // send these to server in a json
+    this.startButtonId = option.startButtonId;
+    this.finishButtonId = option.finishButtonId;
+    this._id = getUrlVars().raceId;
+    this.route = [];
+    this.distance = 0;
+    this.start_date;
+    this.finish_date;
+    this.duration = 0;
+    this.pace = 0;
+
+    this.geoOptions = {
+        enableHighAccuracy: true,
+        maximumAge: 250,
+        timeout: 10000
+    };
+
+    this.centerMarker = null;
+
+    google.maps.event.addDomListener(window, 'load', this.go.bind(this));
+}
+
+/**
+ * error call back for geolocation service
+ * code: 0 => UNKNOWN_ERROR, 1 => PERMISSION_DENIED, 2 => POSITION_UNAVALIABLE, 3 => TIMEOUT
+ */
+geo.prototype.errCallBack = function(err) {
+    var message = err.message;
+    var code = err.code;
+    console.log("Error: " + code + ", " + err.message);
+}
+
+
+function foo(successCallback,errCallBack, option){
+        // console.log("getPosition called once");
+    var nop = function() { };
+    if (!navigator.geolocation) {
+        navigator.geolocation = {};
+    }
+    if (!navigator.geolocation.getCurrentPosition) {
+        navigator.geolocation.getCurrentPosition = nop;
+    }
+    window.wid = navigator.geolocation.watchPosition(function(position){
+        // console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
+        window.lastPosition  = position.coords.latitude + "/" + position.coords.longitude;
+        window.toReturn = position;
+    }, errCallBack, option);
+    setTimeout( function(){
+        navigator.geolocation.clearWatch(window.wid);
+        // console.log("lastPosition: " + window.lastPosition);
+        // $('.racing-label').html("#" + count + " : " + window.lastPosition);
+        successCallback(window.toReturn);
+            count ++;
+    } ,700)
+}
+
+
+
+/**
+ * start the tasks of the race
+ */
+geo.prototype.go = function() {
+
+    /*
+     * images for the map pins
+     */
+    this.startImage = new google.maps.MarkerImage('images/geo/start.png',
+            new google.maps.Size(19, 33), // XXX this is wrong, but give it 19x33 cuts it a little
+            new google.maps.Point(0, 0), // origin
+            new google.maps.Point(9, 32) // anchor
+            );
+    this.endImage = new google.maps.MarkerImage('images/geo/end.png',
+            new google.maps.Size(19, 33),
+            new google.maps.Point(0, 0), // origin
+            new google.maps.Point(9, 32) // anchor
+            );
+    this.shadow = new google.maps.MarkerImage('images/geo/pin_shadow.png',
+            new google.maps.Size(26, 17),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(0, 17)
+            );
+
+    $.mobile.hidePageLoadingMsg();
+    this.showMap();
+    this.startButton();
+    this.finishButton();
+}
+
+/*
+ * Initialize the map centered at the user's current position
+ */
+geo.prototype.showMap = function() {
+    var that = this;
+    navigator.geolocation.getCurrentPosition(function(position) {
+        that.startCoord = new google.maps.LatLng(position.coords.latitude, 
+            position.coords.longitude);
+        var mapOptions = {
+            zoom: 18,
+            center: that.startCoord,
+            streetViewControl: false,
+            mapTypeControl: false,
+            zoomControl: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+        // show owner route
+        if (getUrlVars().mode === 'same') {
+            if($('body').data('race')) {
+
+                console.log(that.map);
+
+                // var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+               
+                var ownerRoute = testRoute;
+
 
 
                 var pt = ownerRoute[0] || ownerRoute[1] || ownerRoute[2];
@@ -752,9 +754,13 @@ geo.prototype.preTimer = function() {
                 })
 
                 if($('body').data('race')) {
-                    var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+                    // var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+                    var ownerRoute = testRoute;
                     var startPoint = ownerRoute[1] || ownerRoute[2] || ownerRoute[3];
+                    console.log("startPoint");
+                    console.log(startPoint);
                     var distToStart = that.delta2Pts(startPoint, {lat: position.coords.latitude, lon:position.coords.longitude});
+                    // var distToStart = 10000;
                     if(distToStart < finishDistTolerace) {
                         $('#arrive-instruction').hide();
                         $('#start-run-btn').show();
