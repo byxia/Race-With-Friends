@@ -348,7 +348,7 @@ var playbackJson = {
     type: "same",
     ownerColor: "#ed3e7c",
     ownerRoute: [],
-    ownerDuration: 10,
+    ownerDuration: 100,
     opponentColor: "#37c874",
     opponentRoute: [],
     opponentDuration: 100
