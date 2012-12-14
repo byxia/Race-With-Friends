@@ -11,8 +11,6 @@ TO-DO
 
 BUG LIST
 - details page in finished goes back to active - only when finishing a run
-- playback.js in details loads only after refresh
-- timer doesn't stop after back/finish
 - when finishing, end pin doesn't show before redirection
 
 

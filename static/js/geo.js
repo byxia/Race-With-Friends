@@ -286,6 +286,7 @@ geo.prototype.finishButton = function() {
         $('#rec-icon').hide();
         // stop tracking
         clearInterval(that.timerId);
+        clearInterval(that.preTimerId);
         foo(function(position) {
             // TODO, possible bug here, what if a finish is pressed before any timer fire
             var finishMarker = new google.maps.Marker({

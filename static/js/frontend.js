@@ -894,10 +894,12 @@ $('#race-recording').live('pageshow', function(){
 
 	$('#rec-icon').hide();
 	$('#back-btn').bind('click',function(){
-		if(geo && geo.timerId){
-			console.log("clear timer when back is clicked");
+		if(geo){
+			// console.log("clear timer when back is clicked");
 			clearInterval(geo.timerId);
+			clearInterval(geo.preTimerId);
 		}
+
 		$.mobile.changePage("/static/active.html");
 	});
 	if (vars.source === 'new-race'){
