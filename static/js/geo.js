@@ -121,6 +121,59 @@ geo.prototype.showMap = function() {
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
     }, that.errCallBack, that.geoOptions);
 
+    // show owner route
+    if (getUrlVars().mode === 'same') {
+        if($('body').data('race')) {
+
+            console.log(this.map);
+
+            var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+
+            var pt = ownerRoute[0] || ownerRoute[1] || ownerRoute[2];
+            var ownerStartCoord = new google.maps.LatLng(pt.lat, pt.lon);
+
+            // show owner start marker
+            var ownerStartMarker = new google.maps.Marker({
+                map: this.map,
+                draggable: false,
+                icon: this.startImage,
+                shadow: this.shadow,
+                animation: google.maps.Animation.DROP,
+                position: ownerStartCoord
+            });
+            ownerStartMarker.setMap(this.map);
+
+            // show owner path
+            var ownerPathOptions = {
+                strokeColor: "#ed3e7c",
+                strokeOpacity: 0.6,
+                strokeWeight: 6
+            };
+            var ownerPath = new google.maps.Polyline(ownerPathOptions);
+            ownerPath.setMap(this.map);
+            var mapBounds = new google.maps.LatLngBounds();
+
+            var path = ownerPath.getPath();
+
+            for (var i=0; i<ownerRoute.length; i++) {
+                var coord = new google.maps.LatLng(ownerRoute[i].lat, ownerRoute[i].lon);
+                path.push(coord);
+                mapBounds.extend(coord);
+                this.map.fitBounds(mapBounds);
+                if (i === ownerRoute.length-1) {
+                    var ownerFinishMarker = new google.maps.Marker({
+                        map: map,
+                        draggable: false,
+                        icon: this.endImage,
+                        shadow: this.shadow,
+                        animation: google.maps.Animation.DROP
+                    });
+                    ownerFinishMarker.setMap(this.map);
+                }
+            }
+        }
+    }
+
     // track current location
     that.preTimer();
 }
@@ -252,7 +305,7 @@ geo.prototype.preTimer = function() {
             // if accepting race with same route, activate start button only when close enough to start point
             
             console.log(getUrlVars().mode);
-            if (getUrlVars().mode === 'same'){
+            if (getUrlVars().mode === 'same') {
 
                 // FOR DEMO ONLY: click on arrive instruction to be able to start racing anywhere
                 $('#arrive-instruction').bind('click',function(){
@@ -260,19 +313,16 @@ geo.prototype.preTimer = function() {
                     $('#start-run-btn').show();
                 })
 
-                if($('body').data('race')){
+                if($('body').data('race')) {
                     var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
                     var startPoint = ownerRoute[1] || ownerRoute[2] || ownerRoute[3];
                     var distToStart = that.delta2Pts(startPoint, {lat: position.coords.latitude, lon:position.coords.longitude});
-                    if(distToStart < finishDistTolerace){
+                    if(distToStart < finishDistTolerace) {
                         $('#arrive-instruction').hide();
                         $('#start-run-btn').show();
                     }
-                    
                 }
-                
             }
-
         }, that.errCallBack, that.geoOptions);
 
         
@@ -378,8 +428,6 @@ geo.prototype.finishButton = function() {
                 log(err);
             });
         }
-    
-
     });
 }
 
@@ -482,6 +530,3 @@ geo.prototype.delta2Pts = function(a, b) {
 geo.prototype.toRad = function(number) {
     return number * Math.PI / 180;
 }
-
-// HERE WE GO
-// new geo();
