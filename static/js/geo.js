@@ -402,7 +402,7 @@ geo.prototype.timer = function() {
             // $('.racing-label').html("hello");
 
 
-            that.duration ++;
+            that.duration += 2;
             var path = that.runPath.getPath();
             // TODO real
             var pt = new google.maps.LatLng(position.coords.latitude, 
