@@ -107,14 +107,17 @@ playback.prototype.soloMapHelper = function(htmlId) {
     runPath.setMap(map);
     var mapBounds = new google.maps.LatLngBounds();
 
+    // show entire route before playback
     var path = runPath.getPath();
     for (var i=0; i<this.ownerRoute.length; i++) {
         var coord = new google.maps.LatLng(this.ownerRoute[i].lat, this.ownerRoute[i].lon);
         path.push(coord); 
         mapBounds.extend(coord);
         map.fitBounds(mapBounds);
-        finishMarker.setPosition(coord);
-        finishMarker.setMap(map);
+        if (i === this.ownerRoute.length-1) {
+            finishMarker.setPosition(coord);
+            finishMarker.setMap(map);
+        }
     }
     
     ///////////////////////// TIMER ////////////////////////////////
@@ -140,18 +143,33 @@ playback.prototype.soloMapHelper = function(htmlId) {
 playback.prototype.sameMapHelper = function() {
 
     // dummy
-    this.opponentRoute = [{lat: 40.44526081327536, lon: -79.94697554206848},
-                        {lat: 40.44350962488237, lon: -79.94512796401978}, 
+    this.opponentRoute = [{lat: 40.44350962488237, lon: -79.94512796401978}, 
                         {lat: 40.44360760645317, lon: -79.94475245475769},
                         {lat: 40.44394645828453, lon: -79.94463980197906},
                         {lat: 40.444154667598696, lon: -79.94502067565918},
                         {lat: 40.44429347344985, lon: -79.94556248188019},
-                        {lat: 40.44426081327539, lon: -79.94597554206848}];
+                        {lat: 40.44426081327539, lon: -79.94597554206848},
+                        {lat: 40.44526081327536, lon: -79.94697554206848}];
                         
-
+    // draw owners map, which is also opponent's map since same map
     var map = this.soloMapHelper("map00");
-    var pt = this.opponentRoute.shift();
+
+    var pt = this.opponentRoute[0];
     var startCoord = new google.maps.LatLng(pt.lat, pt.lon);
+
+    ///////////////////////// MARKER ////////////////////////////////
+    var finishMarker = new google.maps.Marker({
+        map: map,
+        draggable: false,
+        icon: this.endImage,
+        shadow: this.shadow,
+        animation: google.maps.Animation.DROP,
+    });
+    google.maps.event.addListener(finishMarker, 'click', bounce);
+    function bounce() {
+        finishMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() { finishMarker.setAnimation(null);}, 500);
+    }
 
     /////////////////////// 2nd PATH ////////////////////////////////
     var runPathOptions = {
@@ -161,13 +179,36 @@ playback.prototype.sameMapHelper = function() {
     }
     var runPath = new google.maps.Polyline(runPathOptions);
     runPath.setMap(map);
-    runPath.getPath().push(startCoord);
     var mapBounds = new google.maps.LatLngBounds();
-    mapBounds.extend(startCoord);
 
+    // show entire route before playback
+    var path = runPath.getPath();
+    for (var i=0; i<this.opponentRoute.length; i++) {
+        var coord = new google.maps.LatLng(this.opponentRoute[i].lat, this.opponentRoute[i].lon);
+        path.push(coord); 
+        mapBounds.extend(coord);
+        map.fitBounds(mapBounds);
+        if (i === this.opponentRoute.length-1) {
+            finishMarker.setPosition(coord);
+            finishMarker.setMap(map);
+        }
+    }
+
+    ///////////////////////// 2nd TIMER /////////////////////////////
     var that = this;
     $("#same-play-btn").click(function() {
-        that.timer(map, mapBounds, that.opponentRoute, runPath, 10/that.opponentDuration);
+        path.clear();
+        path.push(new google.maps.LatLng(that.opponentRoute[0].lat, that.opponentRoute[0].lon));
+        finishMarker.setMap(null);
+        that.timer({
+            map: map,
+            mapBounds: mapBounds,
+            route: that.opponentRoute,
+            runPath: runPath,
+            interval: 10/that.opponentDuration,
+            marker: finishMarker,
+            cnt: 1
+        });
     });
 }
 
@@ -196,13 +237,13 @@ playback.prototype.timer = function(arg) {
 
 ////////////////////////
 var playbackJson = {
-    type: "solo",
+    type: "same",
     ownerColor: "#ed3e7c",
     ownerRoute: [],
     ownerDuration: 10,
     opponentColor: "#37c874",
     opponentRoute: [],
-    opponentDuration: 10
+    opponentDuration: 100
 };
 
 new playback(playbackJson);
