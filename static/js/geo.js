@@ -40,7 +40,7 @@ geo.prototype.setup = function(option) {
 geo.prototype.errCallBack = function(err) {
     var message = err.message;
     var code = err.code;
-    alert("Error: " + code + ", " + err.message);
+    console.log("Error: " + code + ", " + err.message);
 }
 
 
@@ -53,29 +53,6 @@ function foo(successCallback,errCallBack, option){
     if (!navigator.geolocation.getCurrentPosition) {
         navigator.geolocation.getCurrentPosition = nop;
     }
-    var that = geo;
-    // that.cleared = false;//if the watchId is being cleared
-    // that.wid  = navigator.geolocation.watchPosition(function(position){
-    //     console.log("watchPosition called once");
-    //     // console.log( position);
-    //     that.lastPosition = position;
-    //     if(that.cleared){
-    //         console.log("wid is already cleared");
-    //         return;
-    //     }
-    //     else{
-    //         console.log("Setting wid to cleared. Init clearWath in 500ms");
-    //         that.cleared = true;
-    //         setTimeout( function(){
-    //             navigator.geolocation.clearWatch(that.wid);
-    //             console.log("Cleared watchid. Ready for callback");
-    //             callback( that.lastPosition.coords.latitude +"/" + that.lastPosition.coords.longitude );
-    //         } ,500);
-    //     }
-    // }, function(err){
-    //     alert("Error in watchPosition");
-    //     alert(err);
-    // }, that.geoOptions);
     window.wid = navigator.geolocation.watchPosition(function(position){
         console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
         window.lastPosition  = position.coords.latitude + "/" + position.coords.longitude;
@@ -165,6 +142,9 @@ geo.prototype.startButton = function() {
         $('#rec-icon').show();
         clearInterval(that.preTimerId);
         that.start_date = new Date();
+        if(that.centerMarker){
+            that.centerMarker.setMap(null);
+        }
 
         //////////////////////////// START MARKER ////////////////////////////
         foo(function(position) {
@@ -253,7 +233,7 @@ geo.prototype.preTimer = function() {
                 );
             console.log("Pretimer got curr position: " + position.coords.latitude + " / " + position.coords.longitude);
         }, that.errCallBack, that.geoOptions);
-    }, 500);
+    }, 1000);
 }
 
 /**
@@ -264,7 +244,7 @@ geo.prototype.finishButton = function() {
     // clearInterval(window.sid);
     var that = this;
     $("#"+this.finishButtonId).click(function() {
-            console.log("clearing: " + that.timerId);
+            // console.log("clearing: " + that.timerId);
 
         $('#rec-icon').hide();
         // stop tracking
