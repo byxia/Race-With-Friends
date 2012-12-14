@@ -3,14 +3,11 @@ TO-DO
 - accept same route -- need to constrain starting position to owner's starting position
 - split screen animations for diff route
 
-- share to Facebook
 
-- alert 111 when exiting
 - pre timer - show loading before marker shows
 - reject run too short
 - redirect after finish run
 
-- share to Facebook default text
 
 BUG LIST
 - details page in finished goes back to active - only when finishing a run
