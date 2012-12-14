@@ -18,7 +18,7 @@ What it does:
 - Cancel a race that's started by yourself
 - See anyone's profile page with stats (total wins, distance, time) and personal records
 
-Dropbox Url:
+Dropbox Url For Additional Files (designs, node_modules):
 https://dl.dropbox.com/u/1130445/237final-design_modules.zip
 
 How to Run:
