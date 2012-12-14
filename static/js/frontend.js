@@ -788,14 +788,14 @@ $('#details-page').live('pageshow', function(){
 		$.mobile.hidePageLoadingMsg();
 
 		// add animation
-		try{
-			window.playback = new playback(race.mode);
-			playback.go();
-			console.log("playback created");
-		}
-		catch(e){
-			location.reload(true);
-		}
+		// try{
+		// 	window.playback = new playback(race.mode);
+		// 	playback.go();
+		// 	console.log("playback created");
+		// }
+		// catch(e){
+		// 	location.reload(true);
+		// }
 	});
 
 });
