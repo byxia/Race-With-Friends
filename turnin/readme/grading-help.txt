@@ -18,6 +18,8 @@ What it does:
 - Cancel a race that's started by yourself
 - See anyone's profile page with stats (total wins, distance, time) and personal records
 
+Dropbox Url:
+https://dl.dropbox.com/u/1130445/237final-design_modules.zip
 
 How to Run:
 To test our app, please go to racewithfriends.heroku.com

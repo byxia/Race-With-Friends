@@ -26,6 +26,9 @@ login with Facebook and use our app. So the best way we could think of for the s
 is to inspect our code locally and test it with the remote url provided. We have been doing 
 the same thing for development as well. If this is a problem please contact us.
 
+Dropbox URL:
+https://dl.dropbox.com/u/1130445/237final-design_modules.zip
+
 
 Design documents are found in /design.
 Usability report is in usability_report.pdf
