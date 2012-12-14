@@ -5,17 +5,18 @@ TO-DO
 
 - share to Facebook
 
-- alert 111
-- pre timer show loading before marker shows
-- reject run to short
+- alert 111 when exiting
+- pre timer - show loading before marker shows
+- reject run too short
 - redirect after finish run
 
 - share to Facebook default text
 
 BUG LIST
-(not sure if still exists) details page in finished goes back to active
+- details page in finished goes back to active - only when finishing a run
 - playback.js in details loads only after refresh
 - timer doesn't stop after back/finish
+- when finishing, end pin doesn't show before redirection
 
 
 

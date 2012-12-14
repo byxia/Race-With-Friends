@@ -644,9 +644,12 @@ $('#details-page').live('pageshow', function(){
 	source = getUrlVars().source;
 
 	// set navigation based on source
-	console.log(source);
+	// console.log(source);
 	if (source === 'finished'){
+		console.log('coming from finished');
 		$('#back-btn').attr('href', 'finished.html');
+		console.log($('#back-btn').attr('href'));
+		console.log($('#back-btn'));
 		$('.active-link').removeClass('ui-btn-active').removeClass('ui-state-persist');
 		$('.finished-link').addClass('ui-btn-active').addClass('ui-state-persist');
 		$('.active-link').attr('data-direction', 'forward');
@@ -766,7 +769,7 @@ $('#details-page').live('pageshow', function(){
 			if(me.id === race.owner_id){	// if user is owner and waiting
 				$('.detail-info .status').html('Waiting for their run');
 			}
-			console.log("waiting");
+			// console.log("waiting");
 			// console.log($('.map .opponent').html());
 			$('#people-label .opponent').hide();
 		}
@@ -910,7 +913,7 @@ $('#race-recording').live('pageshow', function(){
 			name = race.owner_first_name + " " + race.owner_last_name;
 			$('#racing-with').html(name);
 			$('body').data('race', race);
-			console.log($('body').data('race'));
+			// console.log($('body').data('race'));
 			if (vars.mode === 'same'){
 				$('#arrive-instruction').show();
 			}

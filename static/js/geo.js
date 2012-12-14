@@ -57,13 +57,13 @@ function foo(successCallback,errCallBack, option){
         navigator.geolocation.getCurrentPosition = nop;
     }
     window.wid = navigator.geolocation.watchPosition(function(position){
-        console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
+        // console.log("This one : " + position.coords.latitude + "/" + position.coords.longitude);
         window.lastPosition  = position.coords.latitude + "/" + position.coords.longitude;
         window.toReturn = position;
     }, errCallBack, option);
     setTimeout( function(){
         navigator.geolocation.clearWatch(window.wid);
-        console.log("lastPosition: " + window.lastPosition);
+        // console.log("lastPosition: " + window.lastPosition);
         // $('.racing-label').html("#" + count + " : " + window.lastPosition);
         successCallback(window.toReturn);
             count ++;
@@ -247,7 +247,24 @@ geo.prototype.preTimer = function() {
                 );
             console.log("Pretimer got curr position: " + position.coords.latitude + " / " + position.coords.longitude);
         }, that.errCallBack, that.geoOptions);
+
+        // BXIA
+        // if accepting race with same route, activate start button only when close enough to start point
+        
+        console.log(getUrlVars().mode);
+        if (getUrlVars().mode === 'same'){
+
+            if($('body').data('race')){
+                console.log($('body').data('race').owner_route.route);
+                // console.log($('body').data('race'));
+                // console.log($('body').data('race').owner_route[0]);
+                // console.log(JSON.parse($('body').data('race').owner_route));
+            }
+            
+        }
     }, 3000);
+
+
 }
 
 /**
@@ -398,9 +415,10 @@ geo.prototype.timer = function() {
                 var distLeft = ownerDist-that.distance;
                 $('#distance-left').html(metersToMiles(distLeft, 3));
 
-                // mark 
-                if (dist < finishDistTolerace){
+                // mark race as finished if distance left is too small
+                if (distLeft < finishDistTolerace){
                     //TODO
+                    $('#'+that.finishButtonId).click();
                 }
             }
             // $('h1').html( that.distance);
