@@ -812,10 +812,10 @@ geo.prototype.finishButton = function() {
 
 
         if(that.distance < 17 ){
-            // alert("Your run is too short. Dev purpose, saving the race anyway");
+            alert("Your run is too short. Please try a longer run.");
 
-            // $.mobile.changePage("/static/active.html"); 
-            // return;
+            $.mobile.changePage("/static/active.html"); 
+            return;
         }
 
         vars = getUrlVars();
