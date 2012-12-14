@@ -1,5 +1,3 @@
-YOUTUBE LINK: http://www.youtube.com/watch?v=RpgBPNNe51k
-
 15237 - Final Project
 Ruoyu Li(ruoyul), Zi Wang(ziw), Bingying Xia(bxia)
 

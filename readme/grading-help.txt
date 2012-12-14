@@ -1,5 +1,5 @@
-15-237 Final Project
-Ruoyu Li, Zi Wang, Bingying Xia
+15237 - Final Project
+Ruoyu Li(ruoyul), Zi Wang(ziw), Bingying Xia(bxia)
 
 Race with Friends
 
