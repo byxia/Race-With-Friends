@@ -119,63 +119,63 @@ geo.prototype.showMap = function() {
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         that.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-    }, that.errCallBack, that.geoOptions);
 
-    // show owner route
-    if (getUrlVars().mode === 'same') {
-        if($('body').data('race')) {
+        // show owner route
+        if (getUrlVars().mode === 'same') {
+            if($('body').data('race')) {
 
-            console.log(this.map);
+                console.log(that.map);
 
-            var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
+                var ownerRoute = JSON.parse( $('body').data('race').owner_route).route;
 
-            var pt = ownerRoute[0] || ownerRoute[1] || ownerRoute[2];
-            var ownerStartCoord = new google.maps.LatLng(pt.lat, pt.lon);
+                var pt = ownerRoute[0] || ownerRoute[1] || ownerRoute[2];
+                var ownerStartCoord = new google.maps.LatLng(pt.lat, pt.lon);
 
-            // show owner start marker
-            var ownerStartMarker = new google.maps.Marker({
-                map: this.map,
-                draggable: false,
-                icon: this.startImage,
-                shadow: this.shadow,
-                animation: google.maps.Animation.DROP,
-                position: ownerStartCoord
-            });
-            ownerStartMarker.setMap(this.map);
+                // show owner start marker
+                var ownerStartMarker = new google.maps.Marker({
+                    map: that.map,
+                    draggable: false,
+                    icon: that.startImage,
+                    shadow: that.shadow,
+                    animation: google.maps.Animation.DROP,
+                    position: ownerStartCoord
+                });
+                ownerStartMarker.setMap(that.map);
 
-            // show owner path
-            var ownerPathOptions = {
-                strokeColor: "#ed3e7c",
-                strokeOpacity: 0.6,
-                strokeWeight: 6
-            };
-            var ownerPath = new google.maps.Polyline(ownerPathOptions);
-            ownerPath.setMap(this.map);
-            var mapBounds = new google.maps.LatLngBounds();
+                // show owner path
+                var ownerPathOptions = {
+                    strokeColor: "#ed3e7c",
+                    strokeOpacity: 0.6,
+                    strokeWeight: 6
+                };
+                var ownerPath = new google.maps.Polyline(ownerPathOptions);
+                ownerPath.setMap(that.map);
+                var mapBounds = new google.maps.LatLngBounds();
 
-            var path = ownerPath.getPath();
+                var path = ownerPath.getPath();
 
-            for (var i=0; i<ownerRoute.length; i++) {
-                var coord = new google.maps.LatLng(ownerRoute[i].lat, ownerRoute[i].lon);
-                path.push(coord);
-                mapBounds.extend(coord);
-                this.map.fitBounds(mapBounds);
-                if (i === ownerRoute.length-1) {
-                    var ownerFinishMarker = new google.maps.Marker({
-                        map: map,
-                        draggable: false,
-                        icon: this.endImage,
-                        shadow: this.shadow,
-                        animation: google.maps.Animation.DROP
-                    });
-                    ownerFinishMarker.setMap(this.map);
+                for (var i=0; i<ownerRoute.length; i++) {
+                    var coord = new google.maps.LatLng(ownerRoute[i].lat, ownerRoute[i].lon);
+                    path.push(coord);
+                    mapBounds.extend(coord);
+                    that.map.fitBounds(mapBounds);
+                    if (i === ownerRoute.length-1) {
+                        var ownerFinishMarker = new google.maps.Marker({
+                            map: map,
+                            draggable: false,
+                            icon: that.endImage,
+                            shadow: that.shadow,
+                            animation: google.maps.Animation.DROP
+                        });
+                        ownerFinishMarker.setMap(that.map);
+                    }
                 }
             }
         }
-    }
+        // track current location
+        that.preTimer();
+    }, that.errCallBack, that.geoOptions);
 
-    // track current location
-    that.preTimer();
 }
 
 /**
